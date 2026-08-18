@@ -1,16 +1,21 @@
 /**
- * Participating Student Builder Chapters:
- * - name: Name of the chapter
- * - university: University campus or location
- * - facebookUrl: Link to Facebook page
- * - linkedInUrl: Link to LinkedIn profile
- * - email: Contact email (optional)
- * - imgUrl: Chapter badge/logo (optional)
+ * AWS Student Community Day: South Summit 2026
+ * Pure Data Layer — Participating Student Builder Chapters Catalog
+ * 
+ * @typedef {Object} Chapter
+ * @property {string} name - Official name of the AWS Student Builder Group chapter
+ * @property {string} university - University campus name or location
+ * @property {string} facebookUrl - Official Facebook page link (or '#' for fallback)
+ * @property {string} linkedInUrl - Official LinkedIn organization link (or '#' for fallback)
+ * @property {string} email - Contact email for the chapter (optional)
+ * @property {string | null} imgUrl - Relative path to chapter badge/logo (optional)
  */
+
+/** @type {Chapter[]} */
 export const chapters = [
   {
     name: 'AWS SBG – Philippine Christian University Cavite',
-    university: 'Cavite',
+    university: 'PCU Cavite Campus',
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
@@ -26,7 +31,7 @@ export const chapters = [
   },
   {
     name: 'AWS SBG – University of Perpetual Help System Laguna – Biñan',
-    university: 'Biñan, Laguna',
+    university: 'UPHSL Biñan Campus',
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
@@ -34,7 +39,7 @@ export const chapters = [
   },
   {
     name: 'AWS SBG – Cavite State University – Main',
-    university: 'CvSU Main Campus',
+    university: 'CvSU Indang Main Campus',
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
@@ -50,7 +55,7 @@ export const chapters = [
   },
   {
     name: 'AWS SBG – Polytechnic University of the Philippines – Biñan',
-    university: 'PUP Biñan',
+    university: 'PUP Biñan Campus',
     facebookUrl: 'https://www.facebook.com/share/1F7y2K5yxg/',
     linkedInUrl: '#',
     email: 'sbg.pupbinan@gmail.com',
@@ -58,7 +63,7 @@ export const chapters = [
   },
   {
     name: 'AWS Learning Club – Polar',
-    university: 'PUP Santa Rosa',
+    university: 'PUP Santa Rosa Campus',
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
@@ -74,7 +79,7 @@ export const chapters = [
   },
   {
     name: 'AWS SBG – University of Batangas',
-    university: 'Batangas',
+    university: 'UB Batangas Campus',
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',

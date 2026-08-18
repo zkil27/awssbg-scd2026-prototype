@@ -1,17 +1,17 @@
 /* ---------- PAGE ROUTING ---------- */
-let nav, siteHeader, hamburgerBtn, mobilePanel;
+let nav, hamburgerBtn, mobilePanel;
 
+/**
+ * Apply the "scrolled" visual state.
+ */
 export function updateNavSolid() {
     if (!nav) return;
     const page = document.documentElement.getAttribute('data-page') || 'home';
-    const scrolledDown = window.scrollY > 150;
+    const isScrolled = window.scrollY > 40;
 
     /* About/Merch open on light surfaces — keep solid nav so brand + links stay visible */
-    const needsSolid = page !== 'home' || scrolledDown;
+    const needsSolid = page !== 'home' || isScrolled;
     nav.classList.toggle('scrolled', needsSolid);
-
-    /* Hide top-right AWS logo once the page is scrolled */
-    if (siteHeader) siteHeader.classList.toggle('is-scrolled', scrolledDown);
 }
 
 export function showPage(name) {
@@ -25,7 +25,7 @@ export function showPage(name) {
     document.documentElement.setAttribute('data-page', name);
 
     //update active nav button indicators
-    document.querySelectorAll('.navbtn, #mobilePanel [data-page]').forEach(b => {
+    document.querySelectorAll('.navbtn, .dock-tab, #mobilePanel [data-page]').forEach(b => {
         b.classList.toggle('active', b.dataset.page === name);
     });
 
@@ -46,13 +46,12 @@ export function showPage(name) {
 export function initRouter() {
     //assign variables
     nav = document.getElementById('siteNav');
-    siteHeader = document.querySelector('.site-header');
     hamburgerBtn = document.getElementById('hamburgerBtn');
     mobilePanel = document.getElementById('mobilePanel');
 
     document.documentElement.setAttribute('data-page', 'home');
 
-    window.addEventListener('scroll', updateNavSolid);
+    window.addEventListener('scroll', updateNavSolid, { passive: true });
     updateNavSolid();
 
     if (hamburgerBtn && mobilePanel) {
@@ -77,4 +76,4 @@ export function initRouter() {
     });
 
     window.showPage = showPage;
-}
+}

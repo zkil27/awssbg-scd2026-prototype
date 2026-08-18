@@ -20,7 +20,7 @@ function merchCardHTML(m, i) {
     <button type="button" class="merch-card ${color}" data-merch-index="${i}" aria-pressed="false">
       <div class="stair"><span class="c1"></span><span class="c2"></span></div>
       <div class="merch-top">
-        <img class="chip" src="awssbg-logo.svg" alt="">
+        <img class="chip" src="assets/South%20Summit%20logo.svg" alt="South Summit 2026">
         <span class="merch-badge">SOON</span>
       </div>
       <div class="merch-icon">
@@ -46,7 +46,7 @@ function merchSpotlightHTML(m, index) {
     <div class="merch-spotlight-card ${color}">
       <div class="stair"><span class="c1"></span><span class="c2"></span><span class="c3"></span></div>
       <div class="merch-spotlight-top">
-        <img class="chip" src="awssbg-logo.svg" alt="">
+        <img class="chip" src="assets/South%20Summit%20logo.svg" alt="South Summit 2026">
         <span class="merch-badge">SOON</span>
       </div>
       <div class="merch-spotlight-icon">

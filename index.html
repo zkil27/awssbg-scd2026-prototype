@@ -5,8 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AWS Student Community Day: South Summit 2026</title>
+  <link rel="icon" type="image/svg+xml" href="assets/South%20Summit%20logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="styles.css">
@@ -23,37 +25,35 @@
 
 <body>
 
-  <div class="site-header">
-    <img class="nav-aws-logo" src="assets/amazon-aws-logo.png" alt="AWS">
-    <header class="nav" id="siteNav">
-      <div class="nav-inner">
-        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu"
-          aria-expanded="false"><span></span></button>
-        <button class="brand" onclick="showPage('home')">
-          <img class="chip" src="awssbg-logo.svg" alt="AWS Student Builder Group">
-          <div class="brand-text">AWS SCD: SS 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
-        </button>
-        <nav class="links">
-          <button class="navbtn active" data-page="home" onclick="showPage('home')">Home</button>
-          <button class="navbtn" data-page="about" onclick="showPage('about')">About</button>
-          <button class="navbtn" data-page="merch" onclick="showPage('merch')">Merch</button>
-        </nav>
-        <div class="nav-cta">
-          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode"
-            title="Toggle theme">
+  <header class="nav" id="siteNav">
+    <div class="nav-inner">
+      <button class="brand" onclick="showPage('home')">
+        <img class="chip" src="assets/South%20Summit%20logo.svg" alt="AWS Student Community Day: South Summit 2026">
+        <div class="brand-text">AWS SCD: SS 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
+      </button>
+      <nav class="links">
+        <button class="navbtn active" data-page="home" onclick="showPage('home')">Home</button>
+        <button class="navbtn" data-page="about" onclick="showPage('about')">About</button>
+        <button class="navbtn" data-page="merch" onclick="showPage('merch')">Merch</button>
+      </nav>
+      <div class="nav-cta">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode"
+          title="Toggle theme">
+          <span class="theme-toggle-track">
             <svg class="icon-sun" aria-hidden="true">
               <use href="#icon-sun"></use>
             </svg>
             <svg class="icon-moon" aria-hidden="true">
               <use href="#icon-moon"></use>
             </svg>
-          </button>
-          <a class="btn btn-primary nav-cta-btn" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank"
-            rel="noopener">Register Now</a>
-        </div>
+          </span>
+          <span class="theme-toggle-thumb"></span>
+        </button>
+        <a class="btn btn-primary nav-cta-btn" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank"
+          rel="noopener">Register Now</a>
       </div>
-    </header>
-  </div>
+    </div>
+  </header>
 
   <svg class="defs" aria-hidden="true">
     <symbol id="chip-icon" viewBox="0 0 70 70">
@@ -73,11 +73,14 @@
       <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z" />
     </symbol>
     <symbol id="icon-sun" viewBox="0 0 24 24">
-      <path
-        d="M12 4.5a1 1 0 011 1V7a1 1 0 11-2 0V5.5a1 1 0 011-1zm0 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zm7.5-3.5a1 1 0 01-1 1H17a1 1 0 110-2h1.5a1 1 0 011 1zM7 12a1 1 0 01-1 1H4.5a1 1 0 110-2H6a1 1 0 011 1zm9.95 5.45a1 1 0 010 1.41l-1.06 1.06a1 1 0 11-1.41-1.41l1.06-1.06a1 1 0 011.41 0zM8.52 7.05a1 1 0 010-1.41L9.58 4.58a1 1 0 011.41 1.41L9.93 7.05a1 1 0 01-1.41 0zM7.05 15.48a1 1 0 00-1.41 0L4.58 16.54a1 1 0 101.41 1.41l1.06-1.06a1 1 0 000-1.41zM16.42 4.58a1 1 0 00-1.41 0L14.0 5.64a1 1 0 001.41 1.41l1.06-1.06a1 1 0 000-1.41zM12 17a1 1 0 011 1v1.5a1 1 0 11-2 0V18a1 1 0 011-1z" />
+      <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2.2" />
+      <path d="M12 2v2.5M12 19.5v2.5M2 12h2.5M19.5 12h2.5M4.93 4.93l1.8 1.8M17.27 17.27l1.8 1.8M4.93 19.07l1.8-1.8M17.27 6.73l1.8-1.8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none" />
     </symbol>
     <symbol id="icon-moon" viewBox="0 0 24 24">
-      <path d="M20.2 14.3A8.5 8.5 0 019.7 3.8a.75.75 0 00-.95-.95A10 10 0 1021.15 15.25a.75.75 0 00-.95-.95z" />
+      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    </symbol>
+    <symbol id="icon-amazon-q" viewBox="0 0 418 463">
+      <path d="M177 8.475C196.6 -2.825 220.8 -2.825 240.4 8.475L385.7 92.3744C405.3 103.674 417.4 124.575 417.4 147.275V315.075C417.4 337.675 405.3 358.675 385.7 369.975L240.4 453.874C220.8 465.174 196.6 465.174 177 453.874L31.7002 369.975C12.1002 358.675 0 337.775 0 315.075V147.275C0 124.675 12.1002 103.674 31.7002 92.3744L177 8.475ZM234.8 69.6752C219.1 60.5752 199.8 60.5752 184 69.6752L80.9004 129.175C65.2004 138.275 55.5 154.975 55.5 173.175V292.175C55.5001 310.275 65.2005 327.075 80.9004 336.175L184 395.675C199.7 404.775 219 404.775 234.8 395.675L337.9 336.175C353.6 327.075 363.3 310.375 363.3 292.175V173.175C363.3 155.075 353.6 138.275 337.9 129.175L234.8 69.6752ZM199.9 97.8744C207.8 93.3748 217.4 93.3747 225.3 97.8744L323.5 154.575C331.4 159.075 336.2 167.475 336.2 176.575V289.975C336.2 290.374 336.186 290.772 336.168 291.168L235.3 232.74V221.975C235.3 219.675 234.1 217.575 232.1 216.475L211 204.275C209 203.175 206.6 203.175 204.7 204.275L183.6 216.475C181.6 217.575 180.4 219.675 180.4 221.975V246.374C180.4 248.674 181.6 250.774 183.6 251.874L204.7 264.075C206.7 265.175 209.1 265.175 211 264.075L221.932 257.753L319.513 314.277L225.3 368.675C217.4 373.175 207.8 373.175 199.9 368.675L101.7 311.975C93.8002 307.475 89 299.075 89 289.975V176.575C89.0001 167.475 93.8003 159.175 101.7 154.575L199.9 97.8744Z" fill="currentColor" />
     </symbol>
   </svg>
 
@@ -88,12 +91,15 @@
     <div class="mobile-theme-row">
       <span>Appearance</span>
       <button class="theme-toggle" type="button" aria-label="Toggle light and dark mode" data-theme-toggle>
-        <svg class="icon-sun" aria-hidden="true">
-          <use href="#icon-sun"></use>
-        </svg>
-        <svg class="icon-moon" aria-hidden="true">
-          <use href="#icon-moon"></use>
-        </svg>
+        <span class="theme-toggle-track">
+          <svg class="icon-sun" aria-hidden="true">
+            <use href="#icon-sun"></use>
+          </svg>
+          <svg class="icon-moon" aria-hidden="true">
+            <use href="#icon-moon"></use>
+          </svg>
+        </span>
+        <span class="theme-toggle-thumb"></span>
       </button>
     </div>
     <a class="btn btn-primary" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank" rel="noopener">Register
@@ -108,7 +114,11 @@
     <!-- HERO -->
     <section class="hero">
       <div class="primer-edge primer-edge--top" aria-hidden="true">
-
+        <span class="brand-box pe-blue"></span>
+        <span class="brand-box pe-green"></span>
+        <span class="brand-box pe-pink"></span>
+        <span class="brand-box pe-orange"></span>
+        <span class="brand-box pe-purple"></span>
       </div>
       <div class="deco-layer deco-corners" aria-hidden="true">
         <span class="brand-box b1"></span>
@@ -121,22 +131,36 @@
 
       <div class="hero-main">
         <div class="hero-copy">
-          <p class="eyebrow">AWS Student Community Day: South Summit 2026</p>
-          <h1 class="hero-title">South Summit<br><span class="accent">2026</span></h1>
+          <p class="eyebrow">AWS Student Community Day</p>
+          <h1 class="hero-title">South Summit <span class="accent">2026</span></h1>
           <p class="hero-sub">Cloud × AI: Build. Power. Lead.</p>
           <p class="hero-desc">A full-day, student-led summit bringing builders, student leaders, and tech advocates
             from CALABARZON together to explore cloud computing and AI — and to build the confidence to lead with it.
           </p>
 
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span><strong>Oct 7, 2026</strong> · 8:00 AM–5:00 PM</span>
+            </div>
+            <div class="hero-meta-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>Twin venues — <strong>Laguna &amp; Batangas</strong></span>
+            </div>
+          </div>
+
           <div class="hero-actions">
             <a class="btn btn-primary" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank"
               rel="noopener">Register Now!</a>
             <button class="btn btn-ghost" onclick="showPage('merch')">Check Out Merch</button>
-          </div>
-
-          <div class="hero-meta">
-            <div><span class="dot"></span> <strong>Oct 7, 2026</strong> · 8:00 AM–5:00 PM</div>
-            <div><span class="dot"></span> Twin venues — Laguna &amp; Batangas</div>
           </div>
         </div>
 
@@ -152,7 +176,7 @@
             </div>
             <div class="credit-badge">
               <p>HEADER MAIN IMAGE<br>TEMPLATE · WILL ADD LATER</p>
-              <div class="chip-box"><img class="chip" src="awssbg-logo.svg" alt=""></div>
+              <div class="chip-box"><img class="chip" src="assets/South%20Summit%20logo.svg" alt="South Summit Logo"></div>
             </div>
           </div>
         </div>
@@ -202,32 +226,94 @@
       </div>
       <div class="wrap">
         <div class="section-head">
-          <p class="eyebrow">Sponsors</p>
-          <h2 class="section-title">Powered by our partners</h2>
+          <p class="eyebrow">Sponsors &amp; Partners</p>
+          <h2 class="section-title">Powered by our community</h2>
+          <p class="section-p">Backed by leading cloud educators, enterprise builders, and university student chapters across CALABARZON.</p>
         </div>
-        <div class="tier">
-          <div class="tier-label">Platinum</div>
-          <div class="tier-grid platinum">
-            <div class="sponsor-slot">Platinum Sponsor</div>
-            <div class="sponsor-slot">Platinum Sponsor</div>
+
+        <div class="sponsors-wrapper">
+          <!-- PLATINUM TIER -->
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge platinum">PLATINUM PARTNERS</span>
+              <span class="tier-line"></span>
+            </div>
+            <div class="tier-grid platinum">
+              <div class="sponsor-slot active-sponsor">
+                <div class="sponsor-logo-wrap">
+                  <img src="assets/South%20Summit%20logo.svg" alt="AWS Student Community" class="sponsor-logo">
+                </div>
+                <div class="sponsor-info">
+                  <strong>AWS Cloud Clubs Philippines</strong>
+                  <span>Official Organizing Partner</span>
+                </div>
+              </div>
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner">
+                  <span class="slot-badge">+ Become a Sponsor</span>
+                  <p>Platinum Partner Slot Available</p>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="tier">
-          <div class="tier-label">Gold</div>
-          <div class="tier-grid gold">
-            <div class="sponsor-slot">Gold Sponsor</div>
-            <div class="sponsor-slot">Gold Sponsor</div>
-            <div class="sponsor-slot">Gold Sponsor</div>
+
+          <!-- GOLD TIER -->
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge gold">GOLD PARTNERS</span>
+              <span class="tier-line"></span>
+            </div>
+            <div class="tier-grid gold">
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner">
+                  <span>Gold Partner Slot</span>
+                </div>
+              </div>
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner">
+                  <span>Gold Partner Slot</span>
+                </div>
+              </div>
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner">
+                  <span>Gold Partner Slot</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="tier">
-          <div class="tier-label">Community Partners</div>
-          <div class="tier-grid community">
-            <div class="sponsor-slot">Partner</div>
-            <div class="sponsor-slot">Partner</div>
-            <div class="sponsor-slot">Partner</div>
-            <div class="sponsor-slot">Partner</div>
-            <div class="sponsor-slot">Partner</div>
+
+          <!-- COMMUNITY PARTNERS TIER -->
+          <div class="tier">
+            <div class="tier-header">
+              <span class="tier-badge community">COMMUNITY &amp; CHAPTER PARTNERS</span>
+              <span class="tier-line"></span>
+            </div>
+            <div class="tier-grid community">
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner"><span>DEVCON Laguna</span></div>
+              </div>
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner"><span>AWSCC Haribon</span></div>
+              </div>
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner"><span>AWSCC Adamson</span></div>
+              </div>
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner"><span>AWSCC PUP Manila</span></div>
+              </div>
+              <div class="sponsor-slot open-slot">
+                <div class="slot-inner"><span>AWSCC UCabuyao</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROSPECTIVE SPONSOR CTA BANNER -->
+          <div class="sponsor-cta-banner">
+            <div class="sponsor-cta-copy">
+              <h4>Want to partner with South Summit 2026?</h4>
+              <p>Connect with 500+ passionate student builders, cloud engineers, and future tech leaders in CALABARZON.</p>
+            </div>
+            <a class="btn btn-primary" href="mailto:partners@awsscd2026.org" target="_blank" rel="noopener">Inquire Sponsorship</a>
           </div>
         </div>
       </div>
@@ -426,12 +512,13 @@
     <section id="register" class="register-band grid-bg">
       <div class="wrap register-inner">
         <div>
-          <p class="eyebrow" style="color:#0B1526; opacity:.7;">Registration</p>
-          <h3>Scan the QR code to register for AWS SCD South Summit 2026</h3>
-          <p>Registration runs through Luma. Choose your venue — Laguna or Batangas — at checkout.</p>
-          <div class="register-cta-row"><a class="btn btn-light" href="https://lu.ma/aws-scd-south-summit-2026"
-              target="_blank" rel="noopener">Register on Luma →</a></div>
-          <p class="register-note">Template link &amp; QR — final Luma event URL to be swapped in once created.</p>
+          <p class="eyebrow" style="color:#0B1526; opacity:.85; font-weight:700;">Registration</p>
+          <h3>Claim your summit badge</h3>
+          <p>Registration is 100% free through Luma. Select your preferred companion campus — Laguna or Batangas — during checkout.</p>
+          <div class="register-cta-row">
+            <a class="btn btn-light" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank" rel="noopener">Register on Luma →</a>
+          </div>
+          <p class="register-note">✨ Limited seats available per venue. Instant confirmation via email.</p>
         </div>
         <div class="qr-box">
           <svg class="qr-mock" viewBox="0 0 100 100" fill="#0B1526">
@@ -509,23 +596,64 @@
       </div>
     </section>
 
-    <section>
-      <div class="deco-layer deco-stagger" aria-hidden="true">
-        <span class="brand-box b1"></span>
-        <span class="brand-box b2"></span>
-        <span class="brand-box b3"></span>
-        <span class="brand-box b4"></span>
-        <span class="brand-box b5"></span>
-      </div>
+    <!-- SECTION DIVIDER -->
+    <div class="primer-edge" aria-hidden="true">
+      <span class="brand-box pe-blue"></span>
+      <span class="brand-box pe-green"></span>
+      <span class="brand-box pe-pink"></span>
+      <span class="brand-box pe-orange"></span>
+      <span class="brand-box pe-purple"></span>
+    </div>
+
+    <!-- SPEAKERS LINEUP BY CATEGORY -->
+    <section id="about-speakers" class="speakers-classified-section">
       <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">Speakers</p>
-          <h2 class="section-title">Meet the lineup</h2>
-          <p class="section-p">Tap any card to learn more about the speaker and their session.</p>
+
+        <!-- KEYNOTE SPEAKERS -->
+        <div class="speaker-category-block">
+          <div class="section-head">
+            <p class="eyebrow" style="color:var(--orange);">Keynote Speakers</p>
+            <h2 class="section-title">Visionaries &amp; Cloud Leaders</h2>
+            <p class="section-p">Opening keynotes, Women in Tech highlights, and visionary presentations setting the stage for Cloud × AI.</p>
+          </div>
+          <div class="speaker-grid" id="speakerGridKeynotes"></div>
         </div>
-        <div class="speaker-grid" id="speakerGridStatic"></div>
+
+        <!-- SECTION SUB-DIVIDER -->
+        <div class="speaker-section-divider"></div>
+
+        <!-- PANEL DISCUSSION SPEAKERS -->
+        <div class="speaker-category-block">
+          <div class="section-head">
+            <p class="eyebrow" style="color:var(--purple);">Panel Discussion</p>
+            <h2 class="section-title">Industry Panelists &amp; Founders</h2>
+            <p class="section-p">Founders, platform managers, and senior executives debating career pathways and the future of tech.</p>
+          </div>
+          <div class="speaker-grid" id="speakerGridPanels"></div>
+        </div>
+
+        <!-- SECTION SUB-DIVIDER -->
+        <div class="speaker-section-divider"></div>
+
+        <!-- SESSIONS & SUCCESS STORIES -->
+        <div class="speaker-category-block">
+          <div class="section-head">
+            <p class="eyebrow" style="color:var(--teal);">Technical Sessions &amp; Stories</p>
+            <h2 class="section-title">Builders &amp; Student Success</h2>
+            <p class="section-p">Hands-on technical talks and inspiring journeys from student builder leaders.</p>
+          </div>
+          <div class="speaker-grid" id="speakerGridSessions"></div>
+        </div>
+
       </div>
     </section>
+
+    <!-- SECTION DIVIDER -->
+    <div class="primer-edge" aria-hidden="true">
+      <span class="brand-box pe-green"></span>
+      <span class="brand-box pe-pink"></span>
+      <span class="brand-box pe-blue"></span>
+    </div>
 
     <section class="section-light grid-bg light">
       <div class="wrap">
@@ -575,26 +703,47 @@
   <!-- ============ SPEAKER MODAL ============ -->
   <div class="modal-overlay" id="speakerModal" onclick="if(event.target===this) closeSpeakerModal()">
     <div class="modal-card">
-      <button class="modal-close" onclick="closeSpeakerModal()">✕</button>
-      <div class="s-modal-head">
-        <img class="chip-icon chip" src="awssbg-logo.svg" alt="">
-        <h3 id="smName">Speaker Name</h3>
-        <span class="role" id="smRole">Role · Company</span>
+      <button class="modal-close" onclick="closeSpeakerModal()" aria-label="Close modal">✕</button>
+      
+      <!-- SPEAKER HERO HEADER WITH BRAND ELEMENTS -->
+      <div class="s-modal-header">
+        <div class="s-modal-deco" aria-hidden="true">
+          <span class="brand-box sm-b1"></span>
+          <span class="brand-box sm-b2"></span>
+          <span class="brand-box sm-b3"></span>
+          <span class="brand-box sm-b4"></span>
+          <span class="brand-box sm-b5"></span>
+        </div>
+        <div class="s-modal-avatar-frame">
+          <img id="smAvatar" class="s-modal-avatar-img" src="assets/South%20Summit%20logo.svg" alt="Speaker">
+          <div class="s-modal-avatar-fade"></div>
+        </div>
+        <div class="s-modal-intro">
+          <span class="sc-status-badge keynote" id="smBadge">KEYNOTE</span>
+          <h3 id="smName">Speaker Name</h3>
+          <span class="role" id="smRole">Role · Company</span>
+        </div>
       </div>
+
       <div class="s-modal-body">
-        <h4>Session Information</h4>
-        <p id="smSession">Details regarding the speaker's session, what they will build, and the primary takeaways for
-          students attending the summit.</p>
-        <h4>About the Speaker</h4>
-        <p id="smBio">A brief biography highlighting their journey into tech, their work with Cloud & AI, and why they
-          are passionate about empowering the student community.</p>
-      </div>
-      <div class="s-modal-foot">
-        <a class="btn btn-ghost" id="smLinkedIn" href="#" target="_blank" rel="noopener">
-          <svg width="16" height="16" fill="currentColor">
-            <use href="#li-icon"></use>
-          </svg> View LinkedIn Profile
-        </a>
+        <div class="s-modal-section">
+          <h4>Session Topic</h4>
+          <p id="smSession">Details regarding the speaker's session, what they will build, and the primary takeaways for students attending the summit.</p>
+        </div>
+
+        <div class="s-modal-section">
+          <h4>About the Speaker</h4>
+          <p id="smBio">A brief biography highlighting their journey into tech, their work with Cloud &amp; AI, and why they are passionate about empowering the student community.</p>
+        </div>
+
+        <div class="s-modal-foot">
+          <a class="btn btn-primary" id="smLinkedIn" href="#" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
+            </svg>
+            Connect on LinkedIn
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -615,8 +764,8 @@
     <div class="wrap">
       <div class="foot-grid">
         <div class="foot-brand">
-          <div class="brand" style="display:flex; align-items:center; gap:10px;"><img class="chip" src="awssbg-logo.svg"
-              alt="">
+          <div class="brand" style="display:flex; align-items:center; gap:10px;"><img class="chip" src="assets/South%20Summit%20logo.svg"
+              alt="South Summit 2026">
             <div class="brand-text">SCD SOUTH SUMMIT 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
           </div>
           <p>Sibling summits by AWS Student Builder Groups across South Luzon (CALABARZON). Cloud × AI: Build. Power.
@@ -640,7 +789,6 @@
     </div>
   </footer>
 
-  <div class="proto-badge">DRAFT PROTOTYPE — v5 · theme</div>
 
   <div class="amazon-q-wrap" id="amazonQWrap">
     <div class="amazon-q-bubble" id="amazonQBubble" role="status" hidden>
@@ -649,17 +797,85 @@
     </div>
     <button type="button" class="amazon-q-bot" id="amazonQBot" title="Ask Amazon Q"
       aria-label="Ask Amazon Q about the event">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <use href="#chat-icon"></use>
+      <svg viewBox="0 0 418 463" class="aq-btn-icon" aria-hidden="true">
+        <use href="#icon-amazon-q"></use>
       </svg>
     </button>
   </div>
 
-  <div class="sticky-cta">
-    <div class="cta-label">Oct 7, 2026 · Laguna &amp; Batangas<b>AWS SCD South Summit</b></div>
-    <a class="btn btn-primary" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank"
-      rel="noopener">Register</a>
+  <!-- AMAZON Q INTERACTIVE MODAL -->
+  <div class="aq-modal-backdrop" id="aqModalBackdrop" hidden>
+    <div class="aq-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="aqModalTitle">
+      <div class="aq-modal-header">
+        <div class="aq-modal-brand">
+          <div class="aq-badge-icon">
+            <svg viewBox="0 0 418 463" class="aq-header-icon" aria-hidden="true">
+              <use href="#icon-amazon-q"></use>
+            </svg>
+          </div>
+          <div>
+            <h4 id="aqModalTitle">Amazon Q Concierge</h4>
+            <span>AWS SCD South Summit 2026 Assistant</span>
+          </div>
+        </div>
+        <button type="button" class="aq-modal-close" id="aqModalClose" aria-label="Close Amazon Q Assistant">&times;</button>
+      </div>
+
+      <div class="aq-modal-body" id="aqModalBody">
+        <div class="aq-msg aq-msg--system">
+          <div class="aq-msg-bubble">
+            Hello Builder! 🚀 I'm your <b>Amazon Q Assistant</b> for AWS Student Community Day: South Summit 2026. How can I assist you today?
+          </div>
+        </div>
+      </div>
+
+      <div class="aq-quick-chips" id="aqQuickChips">
+        <button type="button" class="aq-chip" data-question="What is AWS SCD South Summit?">🚀 What is SCD South?</button>
+        <button type="button" class="aq-chip" data-question="When and where is the event?">📍 Date &amp; Venues</button>
+        <button type="button" class="aq-chip" data-question="Is registration free and how do I join?">🎟️ Registration &amp; Tickets</button>
+        <button type="button" class="aq-chip" data-question="How can I become a speaker or sponsor?">🎤 Speakers &amp; Sponsors</button>
+      </div>
+
+      <form class="aq-modal-footer" id="aqForm">
+        <input type="text" id="aqInput" class="aq-input" placeholder="Type a question (e.g., 'venue', 'merch', 'ticket')..." autocomplete="off">
+        <button type="submit" class="aq-send-btn" id="aqSendBtn">Send</button>
+      </form>
+    </div>
   </div>
+
+  <!-- FLOATING MOBILE DOCK BAR -->
+  <nav class="mobile-dock-nav" id="mobileDock" aria-label="Mobile Navigation">
+    <div class="mobile-dock-inner">
+      <button class="dock-tab active" data-page="home" onclick="showPage('home')" aria-label="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-icon">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Home</span>
+      </button>
+      <button class="dock-tab" data-page="about" onclick="showPage('about')" aria-label="About">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-icon">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>About</span>
+      </button>
+      <button class="dock-tab" data-page="merch" onclick="showPage('merch')" aria-label="Merch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dock-icon">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span>Merch</span>
+      </button>
+      <div class="dock-divider"></div>
+      <a class="dock-register-btn" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank" rel="noopener">
+        Register
+      </a>
+    </div>
+  </nav>
 
   <script type="module" src="assets/js/main.js"></script>
 
