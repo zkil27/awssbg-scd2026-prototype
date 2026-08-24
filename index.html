@@ -84,28 +84,6 @@
     </symbol>
   </svg>
 
-  <div class="mobile-panel" id="mobilePanel">
-    <button data-page="home" onclick="showPage('home')">Home</button>
-    <button data-page="about" onclick="showPage('about')">About</button>
-    <button data-page="merch" onclick="showPage('merch')">Merch</button>
-    <div class="mobile-theme-row">
-      <span>Appearance</span>
-      <button class="theme-toggle" type="button" aria-label="Toggle light and dark mode" data-theme-toggle>
-        <span class="theme-toggle-track">
-          <svg class="icon-sun" aria-hidden="true">
-            <use href="#icon-sun"></use>
-          </svg>
-          <svg class="icon-moon" aria-hidden="true">
-            <use href="#icon-moon"></use>
-          </svg>
-        </span>
-        <span class="theme-toggle-thumb"></span>
-      </button>
-    </div>
-    <a class="btn btn-primary" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank" rel="noopener">Register
-      Now</a>
-  </div>
-
   <!-- ================================================================= -->
   <!-- ============================ HOME PAGE =========================== -->
   <!-- ================================================================= -->
@@ -450,7 +428,7 @@
             </div>
             <div class="venue-inline-map">
               <iframe loading="lazy"
-                src="https://www.google.com/maps?q=Bi%C3%B1an+People's+Center,+Bi%C3%B1an,+Laguna&output=embed"
+                src="https://www.google.com/maps?q=Bi%C3%B1an+People's+Center,+Bi%C3%B1an,+Laguna&output=embed" title="Map of Biñan People's Center, Biñan, Laguna"
                 allowfullscreen></iframe>
             </div>
             <div class="venue-inline-foot">
@@ -486,7 +464,7 @@
               </div>
             </div>
             <div class="venue-inline-map">
-              <iframe loading="lazy" src="https://www.google.com/maps?q=Batangas+University,+Batangas+City&output=embed"
+              <iframe loading="lazy" src="https://www.google.com/maps?q=Batangas+University,+Batangas+City&output=embed" title="Map of Batangas University, Batangas City"
                 allowfullscreen></iframe>
             </div>
             <div class="venue-inline-foot">
@@ -701,7 +679,7 @@
   </div>
 
   <!-- ============ SPEAKER MODAL ============ -->
-  <div class="modal-overlay" id="speakerModal" onclick="if(event.target===this) closeSpeakerModal()">
+  <div class="modal-overlay" id="speakerModal" role="dialog" aria-modal="true" aria-labelledby="smName" aria-hidden="true" onclick="if(event.target===this) closeSpeakerModal()">
     <div class="modal-card">
       <button class="modal-close" onclick="closeSpeakerModal()" aria-label="Close modal">✕</button>
       
@@ -779,8 +757,8 @@
           <h6>Event</h6><a href="https://lu.ma/aws-scd-south-summit-2026" target="_blank" rel="noopener">Register</a>
         </div>
         <div class="foot-col">
-          <h6>Connect</h6><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">LinkedIn</a><a href="#">Contact
-            us</a>
+          <h6>Connect</h6><span class="foot-soon">Instagram</span><span class="foot-soon">Facebook</span><span
+            class="foot-soon">LinkedIn</span><span class="foot-soon">Contact us</span>
         </div>
       </div>
       <div class="foot-bottom">
@@ -837,7 +815,7 @@
       </div>
 
       <form class="aq-modal-footer" id="aqForm">
-        <input type="text" id="aqInput" class="aq-input" placeholder="Type a question (e.g., 'venue', 'merch', 'ticket')..." autocomplete="off">
+        <input type="text" id="aqInput" class="aq-input" aria-label="Ask Amazon Q about the event" placeholder="Type a question (e.g., 'venue', 'merch', 'ticket')..." autocomplete="off" autocapitalize="sentences" enterkeyhint="send">
         <button type="submit" class="aq-send-btn" id="aqSendBtn">Send</button>
       </form>
     </div>

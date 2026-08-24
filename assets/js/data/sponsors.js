@@ -21,12 +21,12 @@ export const sponsors = [
     id: 'sponsor-2',
     name: 'Gold Sponsor Partner',
     tier: 'gold',
-    imgUrl: 'assets/images/sponsors/sponsor-2.png'
+    imgUrl: null
   },
   {
     id: 'sponsor-3',
     name: 'Community Tech Partner',
     tier: 'community',
-    imgUrl: 'assets/images/sponsors/sponsor-3.png'
+    imgUrl: null
   }
 ];
