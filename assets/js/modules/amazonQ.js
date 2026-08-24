@@ -54,8 +54,7 @@ export function initAmazonQ() {
         if (aqBubble) aqBubble.hidden = true;
         aqBackdrop.hidden = !aqBackdrop.hidden;
         setExpanded(!aqBackdrop.hidden);
-        /* Only pull focus on pointer devices — on a phone the keyboard would
-           slide up over the answer the visitor just asked for. */
+        //don't autofocus on phones, the keyboard covers the panel
         if (!aqBackdrop.hidden && aqInput && canHover) {
             aqInput.focus();
         }
@@ -76,7 +75,7 @@ export function initAmazonQ() {
         if (e.key === 'Escape' && !aqBackdrop.hidden) closeModal();
     });
 
-    // Tap outside to dismiss; the launcher and bubble toggle it themselves.
+    // Tap outside to close
     document.addEventListener('click', (e) => {
         if (aqBackdrop.hidden) return;
         if (e.target.closest('#aqModalBackdrop, #amazonQBot, #amazonQBubbleCta')) return;
@@ -88,7 +87,7 @@ export function initAmazonQ() {
         msgDiv.className = `aq-msg ${isUser ? 'aq-msg--user' : 'aq-msg--system'}`;
         const bubble = document.createElement('div');
         bubble.className = 'aq-msg-bubble';
-        /* Canned answers carry their own markup; anything typed in is text. */
+        //our own replies can be HTML, whatever the user typed is not
         if (isUser) bubble.textContent = text;
         else bubble.innerHTML = text;
         msgDiv.appendChild(bubble);

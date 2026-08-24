@@ -13,8 +13,7 @@ function escapeHTML(value) {
 function sponsorSlotHTML(s) {
     const name = escapeHTML(s.name || 'Partner');
     if (s.imgUrl) {
-        /* The fallback is wired up after render — an inline handler breaks on
-           any partner whose name contains an apostrophe. */
+        //hooked up after render, an inline onerror breaks on apostrophes
         return `
       <div class="sponsor-slot" title="${name}">
         <img src="${escapeHTML(s.imgUrl)}" alt="${name}" data-fallback="${name}" style="max-width:100%; max-height:40px; object-fit:contain;">

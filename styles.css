@@ -1374,9 +1374,7 @@ html[data-theme="dark"] .sched-row:hover {
   to { transform: translateX(-50%); }
 }
 
-/* Touch devices drive the strip by hand. The auto-scroll can't be paused
-   reliably without a real pointer, and a stalled track would leave the
-   later speakers permanently out of reach behind overflow: hidden. */
+/* Touch: swipe the strip instead of autoscrolling */
 @media (hover: none), (prefers-reduced-motion: reduce) {
   .marquee {
     overflow-x: auto;
@@ -1400,7 +1398,7 @@ html[data-theme="dark"] .sched-row:hover {
     scroll-snap-align: center;
   }
 
-  /* The second copy only exists to make the loop seamless. */
+  /* second copy is only there for the seamless loop */
   .marquee-track .marquee-clone { display: none; }
 }
 
@@ -1476,8 +1474,7 @@ html[data-theme="dark"] .sc-img-wrap {
   transition: transform 0.35s ease;
 }
 
-/* Shown when a portrait file is missing — contain the logo instead of
-   cropping it like a photo. */
+/* fallback logo, don't crop it like a photo */
 .sc-portrait-fallback {
   object-fit: contain;
   object-position: center;
@@ -1628,7 +1625,7 @@ html[data-theme="dark"] .sc-bio {
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
-/* Pads the badge out to a 44px touch target without growing the dot. */
+/* 44px touch target, badge stays 30px */
 .sc-li-overlay-btn::after {
   content: "";
   position: absolute;
@@ -2722,7 +2719,7 @@ html[data-theme="dark"] .sponsor-slot.open-slot {
 }
 
 @media (max-width: 900px) {
-  /* Keep clear of the floating Amazon Q launcher pinned to the bottom right. */
+  /* move left, the Amazon Q button sits bottom right */
   .merch-spotlight-close {
     right: auto;
     left: 18px;
@@ -2811,8 +2808,7 @@ footer {
   text-align: left;
 }
 
-/* Channels that do not have a page yet — shown, but not clickable, so a tap
-   cannot jump the reader back to the top of the document. */
+/* no page yet, so not clickable */
 .foot-col .foot-soon {
   opacity: .5;
   cursor: default;
@@ -3150,7 +3146,7 @@ footer {
 
 @media (max-width: 520px) {
   .hero-title { font-size: clamp(32px, 10vw, 42px); }
-  /* The clock no longer sits beside the eyebrow at this width. */
+  /* clock drops below the copy here, so the eyebrow gets the full width */
   .hero-copy .eyebrow { max-width: 100%; }
   .hero-main {
     --hero-visual-h: clamp(132px, 38vw, 168px);
@@ -3208,8 +3204,7 @@ footer {
   position: fixed !important;
   top: auto !important;
   left: auto !important;
-  /* Track the home indicator the same way the dock and the launcher button
-     do, otherwise the dock rides up over this panel on notched iPhones. */
+  /* same safe-area offset as the dock, or it overlaps on notched iPhones */
   bottom: calc(85px + env(safe-area-inset-bottom)) !important;
   right: 20px !important;
   width: auto !important;
@@ -3567,7 +3562,7 @@ html[data-theme="dark"] .amazon-q-bot:hover .aq-btn-icon {
 }
 
 /* ===== CYBER-PILL THEME TOGGLE SWITCH ===== */
-/* The pill stays 34px tall by design; ::after gives it a 44px touch target. */
+/* pill stays 34px, ::after gives it a 44px touch target */
 .theme-toggle::after {
   content: "";
   position: absolute;
@@ -3681,10 +3676,8 @@ html[data-theme="dark"] .theme-toggle-thumb {
   box-shadow: 0 2px 10px rgba(68, 179, 254, 0.55) !important;
 }
 
-/* ===== REDUCED MOTION =====
-   Several decorative loops (the pulsing primer bars, floating brand boxes and
-   the hero shimmer) ran forever regardless of the system setting, which is both
-   an accessibility problem and a needless drain on a phone battery. */
+/* ===== REDUCED MOTION ===== */
+/* the decorative loops used to run forever and drain the battery */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -3695,8 +3688,7 @@ html[data-theme="dark"] .theme-toggle-thumb {
     scroll-behavior: auto !important;
   }
 
-  /* These two set the animation shorthand with !important, which outranks the
-     universal rule above on specificity. */
+  /* these two use !important shorthands, so override them directly */
   .box-floating,
   .aq-modal-dialog {
     animation: none !important;

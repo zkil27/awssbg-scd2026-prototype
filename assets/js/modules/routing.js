@@ -34,14 +34,12 @@ export function showPage(name, record = true) {
         else b.removeAttribute('aria-current');
     });
 
-    /* Leave a history entry behind, otherwise the Android back button walks
-       straight out of the site instead of returning to the previous tab. */
+    //keep the Android back button inside the site
     if (record) {
         history.pushState({ page: name }, '', name === 'home' ? location.pathname + location.search : '#' + name);
     }
 
-    /* The merch spotlight is per-visit state; without this the page comes
-       back zoomed into whichever card was open last time. */
+    //merch came back stuck on the last opened card
     if (window.clearMerchFocus) window.clearMerchFocus();
 
     //Scroll to top instantly

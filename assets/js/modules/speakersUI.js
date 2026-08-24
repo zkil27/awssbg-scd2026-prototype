@@ -53,16 +53,14 @@ export function openSpeakerModal(speaker) {
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
 
-    /* Hold the page still; without this the modal's scroll chains into the
-       body and drags the homepage away underneath it. */
+    //freeze the page behind the modal
     scrollLockY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollLockY}px`;
     document.body.style.left = '0';
     document.body.style.right = '0';
 
-    /* Wait for the visibility flip before moving focus; a hidden element
-       refuses it. */
+    //focus once it's actually visible
     requestAnimationFrame(() => {
         const closeBtn = modal.querySelector('.modal-close');
         if (closeBtn) closeBtn.focus();
@@ -81,10 +79,8 @@ export function closeSpeakerModal() {
     document.body.style.left = '';
     document.body.style.right = '';
 
-    /* A fixed body collapses the document height, so the page has to be
-       re-measured before the old offset can be honoured. The jump also has to
-       opt out of the stylesheet's smooth scrolling, or it animates back over
-       half a second and any tap made meanwhile strands the reader part-way. */
+    //a fixed body collapses the height, so re-measure before scrolling back
+    //instant: smooth scrolling animates it and the position drifts
     void document.body.offsetHeight;
     window.scrollTo({ top: scrollLockY, behavior: 'instant' });
 }
@@ -98,8 +94,7 @@ function speakerCardHTML(speaker, index, isClone = false) {
     const avatar = speaker.picUrl || 'assets/South%20Summit%20logo.svg';
     const linkedin = speaker.linkedInUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
 
-    /* The first few portraits are on screen immediately; lazy-loading them
-       left the leading cards blank on a slow connection. */
+    //the first few are already on screen, don't lazy load those
     const eager = index < 4;
 
     return `

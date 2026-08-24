@@ -7,8 +7,7 @@ import { chapters } from '../data/chapters.js';
 function chapterCardHTML(c) {
     const name = c.name || 'AWS Student Builder Group';
     const university = c.university || c.uni || 'CALABARZON Campus';
-    /* A placeholder '#' href combined with target="_blank" opened a whole
-       new tab containing this same page, so unset links render inert. */
+    // '#' + target=_blank opened a duplicate tab, so leave those as plain icons
     const social = (url, label, icon) => {
         const live = url && url !== '#';
         return live
