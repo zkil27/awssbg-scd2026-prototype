@@ -6,6 +6,7 @@
 import { speakers } from '../data/speakers.js';
 
 const colors = ['blue', 'green', 'pink'];
+let scrollLockY = 0;
 
 export function openSpeakerModal(speaker) {
     const modal = document.getElementById('speakerModal');
@@ -50,14 +51,45 @@ export function openSpeakerModal(speaker) {
     }
 
     modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+
+    /* Hold the page still; without this the modal's scroll chains into the
+       body and drags the homepage away underneath it. */
+    scrollLockY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollLockY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+
+    /* Wait for the visibility flip before moving focus; a hidden element
+       refuses it. */
+    requestAnimationFrame(() => {
+        const closeBtn = modal.querySelector('.modal-close');
+        if (closeBtn) closeBtn.focus();
+    });
 }
 
 export function closeSpeakerModal() {
     const modal = document.getElementById('speakerModal');
-    if (modal) modal.classList.remove('open');
+    if (!modal || !modal.classList.contains('open')) return;
+
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+
+    /* A fixed body collapses the document height, so the page has to be
+       re-measured before the old offset can be honoured. The jump also has to
+       opt out of the stylesheet's smooth scrolling, or it animates back over
+       half a second and any tap made meanwhile strands the reader part-way. */
+    void document.body.offsetHeight;
+    window.scrollTo({ top: scrollLockY, behavior: 'instant' });
 }
 
-function speakerCardHTML(speaker, index, isStatic = false) {
+function speakerCardHTML(speaker, index, isClone = false) {
     const color = colors[index % colors.length];
     const name = speaker.name || `Speaker ${index + 1}`;
     const role = speaker.role || 'Cloud Engineer · AWS Partner';
@@ -66,13 +98,19 @@ function speakerCardHTML(speaker, index, isStatic = false) {
     const avatar = speaker.picUrl || 'assets/South%20Summit%20logo.svg';
     const linkedin = speaker.linkedInUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
 
+    /* The first few portraits are on screen immediately; lazy-loading them
+       left the leading cards blank on a slow connection. */
+    const eager = index < 4;
+
     return `
-    <div class="speaker-card ${color}" data-speaker-index="${index}">
+    <div class="speaker-card ${color}${isClone ? ' marquee-clone' : ''}" data-speaker-index="${index}"${isClone ? ' aria-hidden="true"' : ''}>
       <div class="sc-img-wrap">
-        <img class="sc-portrait" src="${avatar}" alt="${name}" loading="lazy">
+        <img class="sc-portrait" src="${avatar}" alt="${name}" width="260" height="270"
+             loading="${eager ? 'eager' : 'lazy'}" decoding="async" ${eager ? 'fetchpriority="high"' : ''}
+             onerror="this.onerror=null;this.src='assets/South%20Summit%20logo.svg';this.classList.add('sc-portrait-fallback')">
         <div class="sc-fade-overlay"></div>
         <span class="sc-status-badge ${status.toLowerCase()}">${status}</span>
-        <a class="sc-li-overlay-btn" href="${linkedin}" target="_blank" rel="noopener" title="View ${name} on LinkedIn" onclick="event.stopPropagation()">
+        <a class="sc-li-overlay-btn" href="${linkedin}" target="_blank" rel="noopener"${isClone ? ' tabindex="-1"' : ''} title="View ${name} on LinkedIn" onclick="event.stopPropagation()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
           </svg>
@@ -83,7 +121,7 @@ function speakerCardHTML(speaker, index, isStatic = false) {
         <span class="sc-role">${role}</span>
         <p class="sc-bio">${abstract}</p>
         <div class="sc-card-foot">
-          <a class="sc-li-link" href="${linkedin}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+          <a class="sc-li-link" href="${linkedin}" target="_blank" rel="noopener"${isClone ? ' tabindex="-1"' : ''} onclick="event.stopPropagation()">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
             </svg>
@@ -121,26 +159,27 @@ export function initSpeakers() {
 
     // Render marquee Track (all speakers)
     if (marqueeTrack) {
-        const cards = speakers.map((s, i) => speakerCardHTML(s, i, false)).join('');
-        marqueeTrack.innerHTML = cards + cards;
+        const cards = speakers.map((s, i) => speakerCardHTML(s, i)).join('');
+        const clones = speakers.map((s, i) => speakerCardHTML(s, i, true)).join('');
+        marqueeTrack.innerHTML = cards + clones;
     }
 
     // Render static grid (if present on any page)
     if (speakerGrid) {
-        speakerGrid.innerHTML = speakers.map((s, i) => speakerCardHTML(s, i, true)).join('');
+        speakerGrid.innerHTML = speakers.map((s, i) => speakerCardHTML(s, i)).join('');
     }
 
     // Render categorized grids on About page
     if (keynotesGrid) {
-        keynotesGrid.innerHTML = keynotes.map((s, i) => speakerCardHTML(s, s.originalIndex, true)).join('');
+        keynotesGrid.innerHTML = keynotes.map((s) => speakerCardHTML(s, s.originalIndex)).join('');
     }
 
     if (panelsGrid) {
-        panelsGrid.innerHTML = panels.map((s, i) => speakerCardHTML(s, s.originalIndex, true)).join('');
+        panelsGrid.innerHTML = panels.map((s) => speakerCardHTML(s, s.originalIndex)).join('');
     }
 
     if (sessionsGrid) {
-        sessionsGrid.innerHTML = sessions.map((s, i) => speakerCardHTML(s, s.originalIndex, true)).join('');
+        sessionsGrid.innerHTML = sessions.map((s) => speakerCardHTML(s, s.originalIndex)).join('');
     }
 
     function handleCardClick(e) {

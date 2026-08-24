@@ -113,6 +113,8 @@ export function initMerch() {
 
     merchRail.innerHTML = merchItems.map((m, i) => merchCardHTML(m, i)).join('');
 
+    window.clearMerchFocus = clearMerchFocus;
+
     merchRail.addEventListener('click', (e) => {
         const card = e.target.closest('.merch-card');
         if (!card) return;

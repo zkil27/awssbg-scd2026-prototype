@@ -7,8 +7,18 @@ import { chapters } from '../data/chapters.js';
 function chapterCardHTML(c) {
     const name = c.name || 'AWS Student Builder Group';
     const university = c.university || c.uni || 'CALABARZON Campus';
-    const fbUrl = c.facebookUrl || '#';
-    const liUrl = c.linkedInUrl || '#';
+    /* A placeholder '#' href combined with target="_blank" opened a whole
+       new tab containing this same page, so unset links render inert. */
+    const social = (url, label, icon) => {
+        const live = url && url !== '#';
+        return live
+            ? `<a href="${url}" target="_blank" rel="noopener" aria-label="${label}">
+          <svg width="14" height="14"><use href="#${icon}"></use></svg>
+        </a>`
+            : `<span class="chapter-social-soon" aria-label="${label} — coming soon">
+          <svg width="14" height="14"><use href="#${icon}"></use></svg>
+        </span>`;
+    };
 
     return `
     <div class="chapter-card">
@@ -20,12 +30,8 @@ function chapterCardHTML(c) {
         <span>${university}</span>
       </div>
       <div class="chapter-socials">
-        <a href="${fbUrl}" target="_blank" rel="noopener" aria-label="${name} Facebook">
-          <svg width="14" height="14"><use href="#fb-icon"></use></svg>
-        </a>
-        <a href="${liUrl}" target="_blank" rel="noopener" aria-label="${name} LinkedIn">
-          <svg width="14" height="14"><use href="#li-icon"></use></svg>
-        </a>
+        ${social(c.facebookUrl, `${name} Facebook`, 'fb-icon')}
+        ${social(c.linkedInUrl, `${name} LinkedIn`, 'li-icon')}
       </div>
     </div>
   `;

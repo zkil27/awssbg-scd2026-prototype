@@ -1,5 +1,7 @@
 /* ---------- PAGE ROUTING ---------- */
-let nav, hamburgerBtn, mobilePanel;
+const PAGES = ['home', 'about', 'merch'];
+
+let nav;
 
 /**
  * Apply the "scrolled" visual state.
@@ -14,7 +16,7 @@ export function updateNavSolid() {
     nav.classList.toggle('scrolled', needsSolid);
 }
 
-export function showPage(name) {
+export function showPage(name, record = true) {
     //toggle active page container
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
@@ -25,47 +27,48 @@ export function showPage(name) {
     document.documentElement.setAttribute('data-page', name);
 
     //update active nav button indicators
-    document.querySelectorAll('.navbtn, .dock-tab, #mobilePanel [data-page]').forEach(b => {
-        b.classList.toggle('active', b.dataset.page === name);
+    document.querySelectorAll('.navbtn, .dock-tab').forEach(b => {
+        const on = b.dataset.page === name;
+        b.classList.toggle('active', on);
+        if (on) b.setAttribute('aria-current', 'page');
+        else b.removeAttribute('aria-current');
     });
+
+    /* Leave a history entry behind, otherwise the Android back button walks
+       straight out of the site instead of returning to the previous tab. */
+    if (record) {
+        history.pushState({ page: name }, '', name === 'home' ? location.pathname + location.search : '#' + name);
+    }
+
+    /* The merch spotlight is per-visit state; without this the page comes
+       back zoomed into whichever card was open last time. */
+    if (window.clearMerchFocus) window.clearMerchFocus();
 
     //Scroll to top instantly
     window.scrollTo({ top: 0, behavior: 'instant' });
     updateNavSolid();
 
-    //close mobile panel
-    if (mobilePanel && hamburgerBtn) {
-        mobilePanel.classList.remove('open');
-        hamburgerBtn.classList.remove('open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-    }
 }
 
 export function initRouter() {
     //assign variables
     nav = document.getElementById('siteNav');
-    hamburgerBtn = document.getElementById('hamburgerBtn');
-    mobilePanel = document.getElementById('mobilePanel');
 
-    document.documentElement.setAttribute('data-page', 'home');
+    const initial = PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
+    document.documentElement.setAttribute('data-page', initial);
+
+    window.addEventListener('popstate', (e) => {
+        const page = (e.state && e.state.page) || (PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home');
+        if (window.closeSpeakerModal) window.closeSpeakerModal();
+        showPage(page, false);
+    });
 
     window.addEventListener('scroll', updateNavSolid, { passive: true });
     updateNavSolid();
 
-    if (hamburgerBtn && mobilePanel) {
-        hamburgerBtn.addEventListener('click', () => {
-            const isOpen = mobilePanel.classList.toggle('open');
-            hamburgerBtn.classList.toggle('open', isOpen);
-            hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
-            document.documentElement.style.overflow = isOpen ? 'hidden' : '';
-            document.body.style.overflow = isOpen ? 'hidden' : '';
-        });
-    }
 
     // Only listen to actual buttons/links with data-page (NOT <html>)
-    document.querySelectorAll('button[data-page], a[data-page], .navbtn[data-page], #mobilePanel [data-page]').forEach(btn => {
+    document.querySelectorAll('button[data-page], a[data-page]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const page = btn.getAttribute('data-page');
             if (page) {
@@ -74,6 +77,9 @@ export function initRouter() {
             }
         });
     });
+
+    history.replaceState({ page: initial }, '', location.href);
+    if (initial !== 'home') showPage(initial, false);
 
     window.showPage = showPage;
 }

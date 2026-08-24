@@ -4,15 +4,32 @@
  */
 import { sponsors } from '../data/sponsors.js';
 
+function escapeHTML(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+}
+
 function sponsorSlotHTML(s) {
+    const name = escapeHTML(s.name || 'Partner');
     if (s.imgUrl) {
+        /* The fallback is wired up after render — an inline handler breaks on
+           any partner whose name contains an apostrophe. */
         return `
-      <div class="sponsor-slot" title="${s.name}">
-        <img src="${s.imgUrl}" alt="${s.name}" style="max-width:100%; max-height:40px; object-fit:contain;" onerror="this.parentElement.textContent='${s.name}'">
+      <div class="sponsor-slot" title="${name}">
+        <img src="${escapeHTML(s.imgUrl)}" alt="${name}" data-fallback="${name}" style="max-width:100%; max-height:40px; object-fit:contain;">
       </div>
     `;
     }
-    return `<div class="sponsor-slot">${s.name || 'Partner'}</div>`;
+    return `<div class="sponsor-slot">${name}</div>`;
+}
+
+function wireLogoFallbacks(grid) {
+    grid.querySelectorAll('img[data-fallback]').forEach(img => {
+        img.addEventListener('error', () => {
+            img.parentElement.textContent = img.dataset.fallback;
+        }, { once: true });
+    });
 }
 
 export function initSponsors() {
@@ -27,13 +44,16 @@ export function initSponsors() {
     // Only override if data is provided for that tier
     if (platinumGrid && platinumSponsors.length > 0) {
         platinumGrid.innerHTML = platinumSponsors.map(sponsorSlotHTML).join('');
+        wireLogoFallbacks(platinumGrid);
     }
 
     if (goldGrid && goldSponsors.length > 0) {
         goldGrid.innerHTML = goldSponsors.map(sponsorSlotHTML).join('');
+        wireLogoFallbacks(goldGrid);
     }
 
     if (communityGrid && communitySponsors.length > 0) {
         communityGrid.innerHTML = communitySponsors.map(sponsorSlotHTML).join('');
+        wireLogoFallbacks(communityGrid);
     }
 }

@@ -69,7 +69,6 @@ html[data-theme="light"] {
   --marquee-fade: var(--bg);
 
   --modal-overlay: rgba(245, 247, 251, 0.85);
-  --hamburger: #0B1526;
 
   --footer-link: #3A4661;
   --sibling-bg: #F5F7FB;
@@ -126,7 +125,6 @@ html[data-theme="dark"] {
   --marquee-fade: var(--bg);
 
   --modal-overlay: rgba(6, 9, 17, 0.85);
-  --hamburger: #FFFFFF;
 
   --footer-link: #C7D0E4;
   --sibling-bg: #1A2138;
@@ -281,12 +279,10 @@ footer,
 .modal-overlay,
 .proto-badge,
 .amazon-q-bot,
-.amazon-q-wrap,
-.mobile-panel {
+.amazon-q-wrap {
   position: relative;
   z-index: 1;
 }
-.mobile-panel { z-index: 190; }
 .modal-overlay { z-index: 300; }
 .sticky-cta { z-index: 150; }
 .proto-badge { z-index: 120; }

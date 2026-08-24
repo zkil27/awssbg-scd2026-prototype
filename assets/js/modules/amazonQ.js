@@ -39,20 +39,31 @@ export function initAmazonQ() {
 
     if (!aqBot || !aqBackdrop) return;
 
+    aqBot.setAttribute('aria-expanded', String(!aqBackdrop.hidden));
+
     // Show initial bubble prompt
     if (aqBubble) aqBubble.hidden = false;
 
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    function setExpanded(open) {
+        aqBot.setAttribute('aria-expanded', String(open));
+    }
+
     function toggleModal() {
         if (aqBubble) aqBubble.hidden = true;
-        const isHidden = aqBackdrop.hidden;
-        aqBackdrop.hidden = !isHidden;
-        if (aqBackdrop.hidden === false && aqInput) {
+        aqBackdrop.hidden = !aqBackdrop.hidden;
+        setExpanded(!aqBackdrop.hidden);
+        /* Only pull focus on pointer devices — on a phone the keyboard would
+           slide up over the answer the visitor just asked for. */
+        if (!aqBackdrop.hidden && aqInput && canHover) {
             aqInput.focus();
         }
     }
 
     function closeModal() {
         aqBackdrop.hidden = true;
+        setExpanded(false);
     }
 
     // Open/Toggle handlers
@@ -65,10 +76,22 @@ export function initAmazonQ() {
         if (e.key === 'Escape' && !aqBackdrop.hidden) closeModal();
     });
 
+    // Tap outside to dismiss; the launcher and bubble toggle it themselves.
+    document.addEventListener('click', (e) => {
+        if (aqBackdrop.hidden) return;
+        if (e.target.closest('#aqModalBackdrop, #amazonQBot, #amazonQBubbleCta')) return;
+        closeModal();
+    });
+
     function appendMessage(text, isUser = false) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `aq-msg ${isUser ? 'aq-msg--user' : 'aq-msg--system'}`;
-        msgDiv.innerHTML = `<div class="aq-msg-bubble">${text}</div>`;
+        const bubble = document.createElement('div');
+        bubble.className = 'aq-msg-bubble';
+        /* Canned answers carry their own markup; anything typed in is text. */
+        if (isUser) bubble.textContent = text;
+        else bubble.innerHTML = text;
+        msgDiv.appendChild(bubble);
         aqBody.appendChild(msgDiv);
         aqBody.scrollTop = aqBody.scrollHeight;
     }
