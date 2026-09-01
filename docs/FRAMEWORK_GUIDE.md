@@ -14,16 +14,14 @@ awssbg-scd2026-prototype/
 ├── index.html                   # HTML structure & semantic layout
 ├── styles.css                   # Core typography, animations, components & layout
 ├── theme.css                    # Color palette, light/dark mode variables & tokens
-├── awssbg-logo.svg              # SVG brand mark
-├── FRAMEWORK_GUIDE.md           # This developer & team guide
+├── awssbg-logo.svg              # SVG brand mark (README only)
+├── docs/                        # Documentation Hub (this guide lives here)
 └── assets/
-    ├── amazon-aws-logo.png      # AWS brand assets
-    ├── Event-Primer.png         # Design primer graphic
-    ├── images/                  # Media directories
-    │   ├── speakers/            # Speaker headshots
-    │   ├── merch/               # Merch photos & previews
-    │   ├── chapters/            # Chapter logos
-    │   └── sponsors/            # Sponsor logos
+    ├── images/                  # All media assets (flat files + category folders)
+    │   ├── south-summit-logo.svg   # Primary summit brand mark (used site-wide)
+    │   ├── sbg-calabarzon-logo.png  # AWS SBG CALABARZON logo
+    │   ├── event-primer.png        # Design primer graphic
+    │   └── speakers/            # Speaker headshots (.webp)
     └── js/
         ├── main.js              # Central entry point (bootstraps all modules)
         ├── data/                # Pure Data Layer (Content only)
@@ -39,7 +37,7 @@ awssbg-scd2026-prototype/
             ├── merchUI.js       # Merch rail & interactive spotlight zoom
             ├── chaptersUI.js    # University chapter cards grid
             ├── sponsorsUI.js    # Sponsor tier containers
-            └── amazonQ.js       # Interactive Amazon Q floating widget
+            └── computeGrid.js   # Reactive canvas background (cursor grid glow + boot sweep)
 ```
 
 ---

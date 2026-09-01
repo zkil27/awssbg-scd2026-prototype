@@ -1,7 +1,71 @@
-/* =========================================================
-   SCD South Summit 2026 — Component styles
+﻿/* =========================================================
+   SCD South Summit 2026 â€” Component styles
    Depends on theme.css (CSS variables)
    ========================================================= */
+
+/* Reactive compute-grid background canvas.
+   Sits above the <body> painted grid but behind all page content
+   (.page/footer are z-index:1). Non-interactive and decorative — colors are
+   drawn at runtime from the theme.css brand tokens by computeGrid.js. */
+#computeGrid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+/* ---------- Custom themed cursor (grid reticle) ----------
+   Default reticle everywhere; an accent "targeting" variant on interactive
+   elements. Cursor SVGs + hotspots are defined in theme.css and swap with the
+   light/dark theme. Fine-pointer only — touch devices keep the native cursor. */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body {
+    cursor: var(--cursor-default);
+  }
+
+  /* Any element the author marked as clickable gets the accent reticle.
+     `!important` keeps it consistent over the many component-level
+     `cursor: pointer` rules already in this file (cursor is cosmetic). */
+  a,
+  button,
+  label[for],
+  summary,
+  select,
+  [role="button"],
+  [role="link"],
+  [role="tab"],
+  [onclick] {
+    cursor: var(--cursor-pointer) !important;
+  }
+
+  /* Text-entry fields keep the native I-beam for clarity. */
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
+  textarea {
+    cursor: text !important;
+  }
+
+  /* Disabled / "coming soon" controls fall back to the default reticle. */
+  button:disabled,
+  a[aria-disabled="true"],
+  [aria-disabled="true"],
+  .foot-soon,
+  .chapter-social-soon {
+    cursor: var(--cursor-default) !important;
+  }
+}
+
+/* Hide the page scrollbar visually while keeping scroll functional. */
+html {
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* legacy Edge/IE */
+}
+html::-webkit-scrollbar {        /* Chrome, Safari, Edge */
+  width: 0;
+  height: 0;
+  display: none;
+}
 
 .page { display: none; }
 .page.active { display: block; }
@@ -46,32 +110,26 @@ svg.defs {
   text-align: right;
 }
 
-/* Floating brand box animations */
-.brand-box {
-  animation: brandBoxFloat 6s ease-in-out infinite alternate;
-  will-change: transform;
+/* Decorative boxes cycle slowly through the brand palette (no floating).
+   Scoped to .deco-layer so the primer-edge bars keep their own pulse animation. */
+.deco-layer .brand-box {
+  animation: boxColorCycle 24s ease-in-out infinite;
 }
 
-.deco-corners .b1 { animation-delay: 0.5s; }
-.deco-corners .b2 { animation-delay: 1.2s; }
-.deco-corners .b3 { animation-delay: 2.1s; }
-.deco-corners .b4 { animation-delay: 0.8s; }
-.deco-corners .b5 { animation-delay: 1.7s; }
+/* Stagger the color cycle so boxes never change color in lockstep. */
+.deco-layer .brand-box:nth-child(1) { animation-delay: 0s; }
+.deco-layer .brand-box:nth-child(2) { animation-delay: -5s; }
+.deco-layer .brand-box:nth-child(3) { animation-delay: -10s; }
+.deco-layer .brand-box:nth-child(4) { animation-delay: -15s; }
+.deco-layer .brand-box:nth-child(5) { animation-delay: -20s; }
 
-.box-floating {
-  animation: boxFloatBob 4s ease-in-out infinite alternate !important;
-}
-
-@keyframes brandBoxFloat {
-  0% { transform: translateY(0) scale(1); opacity: 0.95; }
-  50% { transform: translateY(-4px) scale(1.02); opacity: 1; }
-  100% { transform: translateY(2px) scale(0.98); opacity: 0.9; }
-}
-
-@keyframes boxFloatBob {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(1.5deg); }
-  100% { transform: translateY(4px) rotate(-1deg); }
+@keyframes boxColorCycle {
+  0%   { background-color: var(--blue, #44b3fe); }
+  20%  { background-color: var(--green, #07e383); }
+  40%  { background-color: var(--pink, #fe57ea); }
+  60%  { background-color: var(--orange, #fc9907); }
+  80%  { background-color: var(--purple, #a759ff); }
+  100% { background-color: var(--blue, #44b3fe); }
 }
 
 /* Stair decorative shapes (legacy, kept for cards) */
@@ -636,7 +694,7 @@ html[data-theme="dark"] .hero-meta {
   justify-content: flex-end;
 }
 
-/* Countdown — desktop: bottom-center, half on hero box / half outside */
+/* Countdown â€” desktop: bottom-center, half on hero box / half outside */
 .hero-main > .clock {
   --clock-pad-y: clamp(10px, 1.7vw, 26px);
   --clock-pad-x: clamp(12px, 2.2vw, 34px);
@@ -832,6 +890,16 @@ section {
 .quote-band {
   background: var(--orange);
   color: #0B1526;
+  position: relative;
+  overflow: hidden;
+}
+
+/* keep the decorative boxes in these two solid-colour bands subtle so they
+   read as texture behind the copy rather than competing with it. The opacity
+   lives on the layer (not the box) because brandBoxFloat animates box opacity
+   and would otherwise override a per-box value. */
+.band-deco {
+  opacity: 0.3;
 }
 
 .quote-inner {
@@ -1149,106 +1217,6 @@ html[data-theme="dark"] .sched-row:hover {
   align-items: center;
 }
 
-/* ===== SPEAKER MODAL ===== */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 300;
-  background: var(--modal-overlay);
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  backdrop-filter: blur(5px);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.modal-overlay.open {
-  display: flex;
-  opacity: 1;
-}
-
-.modal-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 14px;
-  max-width: 540px;
-  width: 100%;
-  max-height: 88vh;
-  overflow-y: auto;
-  position: relative;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-  transform: translateY(20px);
-  transition: transform 0.3s ease;
-}
-
-.modal-overlay.open .modal-card {
-  transform: translateY(0);
-}
-
-.modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--bg-3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  z-index: 2;
-  cursor: pointer;
-  color: var(--text-strong);
-}
-
-.modal-close:hover { background: var(--blue); color: #fff; }
-
-.s-modal-head {
-  padding: 40px 30px 20px;
-  border-bottom: 1px solid var(--line);
-}
-
-.s-modal-head .chip-icon {
-  margin-bottom: 12px;
-}
-
-.s-modal-head h3 {
-  font-family: var(--font-sans);
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text-strong);
-  margin-bottom: 8px;
-}
-
-.s-modal-head .role {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.s-modal-body { padding: 30px; }
-
-.s-modal-body h4 {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  text-transform: uppercase;
-  color: var(--orange);
-  margin-bottom: 12px;
-  letter-spacing: 0.1em;
-}
-
-.s-modal-body p {
-  font-size: 16px;
-  color: var(--muted);
-  margin-bottom: 24px;
-  line-height: 1.65;
-}
-
-.s-modal-foot { padding: 0 30px 30px; }
-
 /* ===== CHAPTER ORGANIZERS ===== */
 .chapter-grid {
   display: grid;
@@ -1357,6 +1325,7 @@ html[data-theme="dark"] .sched-row:hover {
 
 .marquee-track {
   display: flex;
+  align-items: flex-start;
   gap: 24px;
   width: max-content;
   animation: scroll-x 75s linear infinite;
@@ -1414,7 +1383,10 @@ html[data-theme="dark"] .sched-row:hover {
   border: 3px solid #BAE6FD;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+  transition:
+    box-shadow 0.28s ease,
+    border-color 0.3s ease,
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
   user-select: none;
 }
 
@@ -1571,6 +1543,7 @@ html[data-theme="dark"] .sc-info {
   line-height: 1.25;
   margin: 0;
   letter-spacing: -0.01em;
+  transition: font-size var(--sc-dur, 0.42s) var(--sc-ease, cubic-bezier(0.22, 0.61, 0.36, 1));
 }
 
 html[data-theme="dark"] .sc-name {
@@ -1586,6 +1559,7 @@ html[data-theme="dark"] .sc-name {
   display: block;
   letter-spacing: -0.01em;
   line-height: 1.35;
+  transition: font-size var(--sc-dur, 0.42s) var(--sc-ease, cubic-bezier(0.22, 0.61, 0.36, 1));
 }
 
 html[data-theme="dark"] .sc-role {
@@ -1652,29 +1626,7 @@ html[data-theme="dark"] .sc-card-foot {
   border-top-color: rgba(255, 255, 255, 0.08);
 }
 
-.sc-li-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 44px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  color: #0A66C2;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
-}
-
-.sc-li-link:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-}
-
-html[data-theme="dark"] .sc-li-link {
-  color: #44B3FE;
-}
-
-/* Speaker Modal */
+/* ===== SPEAKER MODAL ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1934,10 +1886,33 @@ html[data-theme="dark"] .s-modal-section p strong {
   gap: 8px;
 }
 
+.sc-li-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: #0A66C2;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.sc-li-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+html[data-theme="dark"] .sc-li-link {
+  color: #44B3FE;
+}
+
 .speaker-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: flex-start;
   gap: 24px;
   position: relative;
   z-index: 2;
@@ -2433,7 +2408,7 @@ html[data-theme="dark"] .sponsor-slot.open-slot {
   outline-offset: 3px;
 }
 
-/* Mini standing cards — same portrait template, smaller scale */
+/* Mini standing cards â€” same portrait template, smaller scale */
 .merch-explorer[data-mode="focus"] .merch-card {
   aspect-ratio: .82 / 1;
   width: 100%;
@@ -2613,7 +2588,7 @@ html[data-theme="dark"] .sponsor-slot.open-slot {
   font-size: 12px;
 }
 
-/* Large standing portrait — same template, increased size */
+/* Large standing portrait â€” same template, increased size */
 .merch-spotlight-card {
   position: relative;
   width: min(100%, 420px);
@@ -2719,7 +2694,7 @@ html[data-theme="dark"] .sponsor-slot.open-slot {
 }
 
 @media (max-width: 900px) {
-  /* move left, the Amazon Q button sits bottom right */
+  /* pin the close button to the left so it clears the mobile dock controls */
   .merch-spotlight-close {
     right: auto;
     left: 18px;
@@ -2848,138 +2823,6 @@ footer {
   padding: 6px 10px;
   border-radius: 6px;
   box-shadow: 0 10px 20px -6px rgba(0, 0, 0, .2);
-}
-
-.amazon-q-wrap {
-  position: fixed;
-  bottom: 92px;
-  right: 24px;
-  z-index: 125;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-}
-
-.amazon-q-bubble {
-  position: absolute;
-  bottom: calc(100% + 14px);
-  right: 0;
-  width: 230px;
-  background: var(--orange);
-  color: #0B1526;
-  padding: 14px 16px;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
-  font-family: var(--font-sans);
-  animation: aqBubbleIn .45s cubic-bezier(.22, 1, .36, 1) both;
-}
-
-.amazon-q-bubble[hidden] {
-  display: none !important;
-}
-
-.amazon-q-bubble::after {
-  content: "";
-  position: absolute;
-  right: 22px;
-  bottom: -6px;
-  width: 14px;
-  height: 14px;
-  background: var(--orange);
-  transform: rotate(45deg);
-}
-
-.amazon-q-bubble p {
-  position: relative;
-  z-index: 1;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.45;
-  margin: 0 0 10px;
-}
-
-.amazon-q-bubble b {
-  font-weight: 700;
-}
-
-.amazon-q-bubble-cta {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 11.5px;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-  background: #0B1526;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 14px;
-  cursor: pointer;
-  min-height: 32px;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.amazon-q-bubble-cta:hover {
-  background: #1a2438;
-  transform: translateY(-1px);
-}
-
-@keyframes aqBubbleIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.amazon-q-bot {
-  position: relative;
-  height: 44px;
-  padding: 0 16px 0 6px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #161C24, #232F3E);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(252, 153, 7, 0.25);
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(252, 153, 7, 0.3);
-  font-family: var(--font-sans);
-  text-decoration: none;
-}
-
-.amazon-q-bot:hover {
-  transform: translateY(-2px) scale(1.03);
-  border-color: var(--orange, #FC9907);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5), 0 0 16px rgba(252, 153, 7, 0.4);
-}
-
-.amazon-q-bot .q-badge-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FC9907, #FF57EA);
-  color: #0B1526;
-  font-weight: 900;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(252, 153, 7, 0.4);
-}
-
-.amazon-q-bot .q-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -3141,7 +2984,6 @@ footer {
   .mobile-dock-nav { display: block; }
   body { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
   .proto-badge { bottom: calc(82px + env(safe-area-inset-bottom)); }
-  .amazon-q-wrap { bottom: calc(90px + env(safe-area-inset-bottom)); }
 }
 
 @media (max-width: 520px) {
@@ -3192,373 +3034,7 @@ footer {
   .venue-inline-floors,
   .venue-inline-foot { padding: 20px; }
 
-  .s-modal-head,
-  .s-modal-body,
-  .s-modal-foot { padding: 20px; }
-
   .nav-inner { padding: 14px 16px; }
-}
-
-/* ===== AMAZON Q FLOATING CHAT WIDGET CARD ===== */
-.aq-modal-backdrop {
-  position: fixed !important;
-  top: auto !important;
-  left: auto !important;
-  /* same safe-area offset as the dock, or it overlaps on notched iPhones */
-  bottom: calc(85px + env(safe-area-inset-bottom)) !important;
-  right: 20px !important;
-  width: auto !important;
-  height: auto !important;
-  z-index: 130 !important;
-  background: transparent !important;
-  backdrop-filter: none !important;
-  display: flex !important;
-  align-items: flex-end !important;
-  justify-content: flex-end !important;
-  padding: 0 !important;
-  pointer-events: none !important;
-  animation: aqSlideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) both !important;
-}
-
-.aq-modal-backdrop[hidden] {
-  display: none !important;
-}
-
-@keyframes aqSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Light Mode Widget Surface (Default) */
-.aq-modal-dialog {
-  width: 380px !important;
-  max-width: calc(100vw - 32px) !important;
-  height: 500px !important;
-  max-height: 70vh !important;
-  background: var(--bg-elevated, #FFFFFF) !important;
-  border: 1px solid var(--line-strong, rgba(11, 21, 38, 0.15)) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 16px 48px rgba(11, 21, 38, 0.18) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-  font-family: var(--font-mono) !important;
-  pointer-events: auto !important;
-  transition: background-color 0.25s ease, border-color 0.25s ease !important;
-}
-
-.aq-modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  background: var(--bg-2, #F8FAFC);
-  border-bottom: 1px solid var(--line, rgba(11, 21, 38, 0.1));
-}
-
-.aq-modal-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.aq-badge-icon {
-  width: 32px !important;
-  height: 32px !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  flex: none !important;
-}
-
-.aq-header-icon {
-  width: 24px !important;
-  height: 27px !important;
-  fill: #0B1526 !important;
-  color: #0B1526 !important;
-  transition: fill 0.25s ease !important;
-}
-
-.aq-modal-brand h4 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-strong, #0B1526);
-}
-
-.aq-modal-brand span {
-  font-size: 11px;
-  color: var(--muted, #5B6584);
-  display: block;
-}
-
-.aq-modal-close {
-  background: transparent;
-  border: none;
-  color: var(--muted, #5B6584);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: color 0.2s ease;
-}
-
-.aq-modal-close:hover {
-  color: var(--text-strong, #000000);
-}
-
-.aq-modal-body {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  background: var(--bg, #FFFFFF);
-}
-
-.aq-msg {
-  display: flex;
-  flex-direction: column;
-  max-width: 85%;
-}
-
-.aq-msg--system {
-  align-self: flex-start;
-}
-
-.aq-msg--user {
-  align-self: flex-end;
-}
-
-.aq-msg-bubble {
-  padding: 12px 16px;
-  font-size: 13px;
-  line-height: 1.5;
-  border-radius: 8px;
-}
-
-.aq-msg--system .aq-msg-bubble {
-  background: var(--bg-2, #F1F5F9);
-  color: var(--text, #0B1526);
-  border: 1px solid var(--line, rgba(11, 21, 38, 0.08));
-}
-
-.aq-msg--user .aq-msg-bubble {
-  background: var(--orange, #FC9907);
-  color: #0B1526;
-  font-weight: 600;
-}
-
-.aq-msg-bubble a {
-  color: var(--blue, #44B3FE);
-  text-decoration: underline;
-  font-weight: 600;
-}
-
-.aq-quick-chips {
-  padding: 10px 16px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  background: var(--bg-2, #F8FAFC);
-  border-top: 1px solid var(--line, rgba(11, 21, 38, 0.08));
-}
-
-.aq-chip {
-  background: var(--bg-elevated, #FFFFFF);
-  color: var(--text, #0B1526);
-  border: 1px solid var(--line-strong, rgba(11, 21, 38, 0.14));
-  border-radius: 20px;
-  padding: 6px 12px;
-  font-size: 11px;
-  font-family: var(--font-mono);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.aq-chip:hover {
-  background: var(--orange, #FC9907);
-  color: #0B1526;
-  border-color: var(--orange, #FC9907);
-}
-
-.aq-modal-footer {
-  padding: 12px 16px;
-  display: flex;
-  gap: 8px;
-  background: var(--bg-2, #F8FAFC);
-  border-top: 1px solid var(--line, rgba(11, 21, 38, 0.08));
-}
-
-.aq-input {
-  flex: 1;
-  min-width: 0;
-  background: var(--bg, #FFFFFF);
-  border: 1px solid var(--line-strong, rgba(11, 21, 38, 0.15));
-  color: var(--text-strong, #0B1526);
-  padding: 10px 14px;
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 16px;
-}
-
-.aq-input:focus {
-  outline: none;
-  border-color: var(--orange, #FC9907);
-}
-
-.aq-send-btn {
-  background: var(--orange, #FC9907);
-  color: #0B1526;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  border: none;
-  border-radius: 6px;
-  padding: 0 16px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.aq-send-btn:hover {
-  opacity: 0.9;
-}
-
-/* Amazon Q Circular Trigger Button - Light Mode Default */
-.amazon-q-bot {
-  position: relative !important;
-  width: 56px !important;
-  height: 56px !important;
-  min-width: 56px !important;
-  min-height: 56px !important;
-  border-radius: 50% !important;
-  background: #FFFFFF !important;
-  border: 1.5px solid rgba(11, 21, 38, 0.18) !important;
-  box-shadow: 0 10px 28px rgba(11, 21, 38, 0.14), 0 0 0 1px rgba(11, 21, 38, 0.06) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  padding: 0 !important;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, border-color 0.25s ease !important;
-  flex: none !important;
-}
-
-.amazon-q-bot:hover {
-  transform: translateY(-3px) scale(1.06) !important;
-  border-color: #FC9907 !important;
-  box-shadow: 0 14px 32px rgba(11, 21, 38, 0.18), 0 0 16px rgba(252, 153, 7, 0.35) !important;
-}
-
-.aq-btn-icon {
-  width: 28px !important;
-  height: 31px !important;
-  fill: #0B1526 !important;
-  color: #0B1526 !important;
-  transition: fill 0.25s ease !important;
-}
-
-.amazon-q-bot:hover .aq-btn-icon {
-  fill: #FC9907 !important;
-  color: #FC9907 !important;
-}
-
-/* Dark Mode Overrides for Amazon Q Widget */
-html[data-theme="dark"] .aq-modal-dialog {
-  background: #161C24 !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
-}
-
-html[data-theme="dark"] .aq-modal-header {
-  background: linear-gradient(135deg, #161C24, #232F3E);
-  border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-html[data-theme="dark"] .aq-badge-icon {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-html[data-theme="dark"] .aq-header-icon {
-  fill: #FFFFFF !important;
-  color: #FFFFFF !important;
-}
-
-html[data-theme="dark"] .aq-modal-brand h4 {
-  color: #FFFFFF;
-}
-
-html[data-theme="dark"] .aq-modal-brand span {
-  color: #8B96B3;
-}
-
-html[data-theme="dark"] .aq-modal-close {
-  color: #8B96B3;
-}
-
-html[data-theme="dark"] .aq-modal-close:hover {
-  color: #FFFFFF;
-}
-
-html[data-theme="dark"] .aq-modal-body {
-  background: #161C24;
-}
-
-html[data-theme="dark"] .aq-msg--system .aq-msg-bubble {
-  background: #212B36;
-  color: #E5E7EB;
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-html[data-theme="dark"] .aq-quick-chips {
-  background: rgba(0, 0, 0, 0.2);
-  border-top-color: rgba(255, 255, 255, 0.08);
-}
-
-html[data-theme="dark"] .aq-chip {
-  background: #2D3748;
-  color: #E5E7EB;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-html[data-theme="dark"] .aq-modal-footer {
-  background: #1E2631;
-  border-top-color: rgba(255, 255, 255, 0.1);
-}
-
-html[data-theme="dark"] .aq-input {
-  background: #0E1117;
-  color: #FFFFFF;
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-html[data-theme="dark"] .amazon-q-bot {
-  background: #161C24 !important;
-  border-color: #FC9907 !important;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 16px rgba(252, 153, 7, 0.35) !important;
-}
-
-html[data-theme="dark"] .amazon-q-bot .aq-btn-icon {
-  fill: #FFFFFF !important;
-  color: #FFFFFF !important;
-}
-
-html[data-theme="dark"] .amazon-q-bot:hover .aq-btn-icon {
-  fill: #FC9907 !important;
-  color: #FC9907 !important;
 }
 
 /* ===== CYBER-PILL THEME TOGGLE SWITCH ===== */
@@ -3676,6 +3152,69 @@ html[data-theme="dark"] .theme-toggle-thumb {
   box-shadow: 0 2px 10px rgba(68, 179, 254, 0.55) !important;
 }
 
+/* ===== SCROLL REVEAL ===== */
+/* Entrance motion for elements tagged with data-reveal by modules/scrollReveal.js.
+   Elements start offset + transparent, then rise + fade in when .is-revealed is
+   added. Tokens (distance/duration/easing/stagger) live in theme.css. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity var(--reveal-duration) var(--reveal-ease),
+    transform var(--reveal-duration) var(--reveal-ease);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Cards/list items in a group stagger like the compute-grid boot sweep. The
+   per-item index (--reveal-i) is set in JS and clamped there so long grids
+   don't wait too long. */
+[data-reveal].reveal-card {
+  position: relative;
+  transition-delay: calc(var(--reveal-i, 0) * var(--reveal-stagger));
+}
+
+/* Once revealed, drop will-change so the browser doesn't keep a layer around. */
+[data-reveal].reveal-done {
+  will-change: auto;
+}
+
+/* Card "power-on" accent: a brand-colored edge sweeps in as the card lands,
+   echoing the grid boxes, then fades out once settled. Purely decorative. */
+[data-reveal].reveal-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--reveal-accent, var(--blue));
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  pointer-events: none;
+  border-radius: inherit;
+  transition:
+    opacity var(--reveal-duration) ease,
+    transform var(--reveal-duration) var(--reveal-ease);
+  transition-delay: calc(var(--reveal-i, 0) * var(--reveal-stagger));
+}
+
+[data-reveal].reveal-card.is-revealed::after {
+  opacity: .9;
+  transform: scaleY(1);
+}
+
+/* After settling, fade the accent away so it's just an entrance flourish. */
+[data-reveal].reveal-card.reveal-done::after {
+  opacity: 0;
+  transform: scaleY(1);
+}
+
 /* ===== REDUCED MOTION ===== */
 /* the decorative loops used to run forever and drain the battery */
 @media (prefers-reduced-motion: reduce) {
@@ -3688,9 +3227,145 @@ html[data-theme="dark"] .theme-toggle-thumb {
     scroll-behavior: auto !important;
   }
 
-  /* these two use !important shorthands, so override them directly */
-  .box-floating,
-  .aq-modal-dialog {
+  /* stop the decorative boxes from floating or flashing through colors */
+  .deco-layer .brand-box {
     animation: none !important;
+  }
+
+  /* this uses an !important shorthand, so override it directly */
+  .box-floating {
+    animation: none !important;
+  }
+
+  /* Scroll reveal must never leave content hidden: show everything, no motion.
+     (JS also reveal-alls, but this is the CSS-side safety net.) */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  [data-reveal].reveal-card::after {
+    display: none !important;
+  }
+}
+
+/* ===== BRANDED SPLASH SCREEN ===== */
+#splashScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: var(--bg, #ffffff);
+  /* fade handled by .is-hidden */
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+#splashScreen[hidden] {
+  display: none !important;
+}
+
+#splashScreen.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* the logo + wordmark move together; because the row is centred, the group
+   naturally recenters as the wordmark eases out from behind the chip */
+.splash-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.splash-gear-wrap {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  /* sits above the wordmark so the text appears to slide out from behind it */
+  position: relative;
+  z-index: 2;
+}
+
+.splash-gear {
+  width: 100%;
+  height: 100%;
+  /* the SVG path uses fill: currentColor, so `color` drives the tint */
+  color: var(--blue, #44b3fe);
+  animation: gearColorCycle 6s ease-in-out infinite;
+  will-change: color;
+}
+
+.splash-wordmark {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  font-size: clamp(24px, 5vw, 40px);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: var(--text-strong, #0b1526);
+  /* start tucked behind the chip: no width, faded, nudged left */
+  max-width: 0;
+  margin-left: 0;
+  opacity: 0;
+  transform: translateX(-40px);
+  overflow: hidden;
+  animation: splashWordmarkReveal 2s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards;
+  will-change: max-width, opacity, transform;
+}
+
+@keyframes splashWordmarkReveal {
+  0% {
+    max-width: 0;
+    margin-left: 0;
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  25% {
+    /* still hidden behind the chip for a beat before it emerges */
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    /* enough room for the wordmark; the centred row recenters the whole group */
+    max-width: 60vw;
+    margin-left: 18px;
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gearColorCycle {
+  0%   { color: var(--blue, #44b3fe); }
+  25%  { color: var(--green, #07e383); }
+  50%  { color: var(--pink, #fe57ea); }
+  75%  { color: var(--orange, #fc9907); }
+  100% { color: var(--purple, #a759ff); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* no color flashing; show a static brand-blue chip that still fades out */
+  .splash-gear {
+    animation: none !important;
+    color: var(--blue, #44b3fe);
+  }
+
+  /* no slide-in; just show the finished lockup */
+  .splash-wordmark {
+    animation: none !important;
+    max-width: 60vw;
+    margin-left: 18px;
+    opacity: 1;
+    transform: none;
   }
 }

@@ -1,21 +1,27 @@
 /***
  * Speakers UI Module
- * Renders the Speakers UI, the marquee cards, grid and modal pop-up.
+ * Renders the Speakers UI, the marquee cards and grids, and manages the
+ * modal pop-up shown when a speaker card is clicked.
  */
 
 import { speakers } from '../data/speakers.js';
 
 const colors = ['blue', 'green', 'pink'];
+
+const FALLBACK_AVATAR = 'assets/images/south-summit-logo.svg';
+
 let scrollLockY = 0;
 
 export function openSpeakerModal(speaker) {
     const modal = document.getElementById('speakerModal');
-
     if (!modal) return;
 
-    const name = speaker?.name || "Speaker Name";
-    const role = speaker?.role || "Speaker Role · Company";
-    const status = speaker?.status || (speaker?.sessionTitle?.toLowerCase().includes('keynote') ? 'KEYNOTE' : (speaker?.sessionTitle?.toLowerCase().includes('panel') ? 'PANEL' : 'SPEAKER'));
+    const name = speaker?.name || 'Speaker Name';
+    const role = speaker?.role || 'Speaker Role · Company';
+    const status = speaker?.status
+        || (speaker?.sessionTitle?.toLowerCase().includes('keynote')
+            ? 'KEYNOTE'
+            : (speaker?.sessionTitle?.toLowerCase().includes('panel') ? 'PANEL' : 'SPEAKER'));
 
     const nameEl = document.getElementById('smName');
     if (nameEl) nameEl.textContent = name;
@@ -31,36 +37,42 @@ export function openSpeakerModal(speaker) {
 
     const sessionEl = document.getElementById('smSession');
     if (sessionEl) {
-        sessionEl.textContent = speaker?.sessionTitle ? `${speaker.sessionTitle}` : "Details regarding the presentation and discussion.";
+        sessionEl.textContent = speaker?.sessionTitle
+            ? `${speaker.sessionTitle}`
+            : 'Details regarding the presentation and discussion.';
     }
 
     const bioEl = document.getElementById('smBio');
     if (bioEl) {
-        bioEl.innerHTML = speaker?.abstract || "A brief biography highlighting their journey into tech, their work with Cloud & AI, and community contributions.";
+        bioEl.innerHTML = speaker?.abstract
+            || 'A brief biography highlighting their journey into tech, their work with Cloud & AI, and community contributions.';
     }
 
     const avatarEl = document.getElementById('smAvatar');
     if (avatarEl) {
-        avatarEl.src = speaker?.picUrl || 'assets/South%20Summit%20logo.svg';
+        avatarEl.src = speaker?.picUrl || FALLBACK_AVATAR;
         avatarEl.alt = name;
     }
 
     const linkedInBtn = document.getElementById('smLinkedIn');
     if (linkedInBtn) {
-        linkedInBtn.href = speaker?.linkedInUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
+        linkedInBtn.href = speaker?.linkedInUrl
+            || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
     }
 
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
 
-    //freeze the page behind the modal
+    /* Hold the page still; without this the modal's scroll chains into the
+       body and drags the homepage away underneath it. */
     scrollLockY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollLockY}px`;
     document.body.style.left = '0';
     document.body.style.right = '0';
 
-    //focus once it's actually visible
+    /* Wait for the visibility flip before moving focus; a hidden element
+       refuses it. */
     requestAnimationFrame(() => {
         const closeBtn = modal.querySelector('.modal-close');
         if (closeBtn) closeBtn.focus();
@@ -79,8 +91,10 @@ export function closeSpeakerModal() {
     document.body.style.left = '';
     document.body.style.right = '';
 
-    //a fixed body collapses the height, so re-measure before scrolling back
-    //instant: smooth scrolling animates it and the position drifts
+    /* A fixed body collapses the document height, so the page has to be
+       re-measured before the old offset can be honoured. The jump also has to
+       opt out of the stylesheet's smooth scrolling, or it animates back over
+       half a second and any tap made meanwhile strands the reader part-way. */
     void document.body.offsetHeight;
     window.scrollTo({ top: scrollLockY, behavior: 'instant' });
 }
@@ -91,7 +105,7 @@ function speakerCardHTML(speaker, index, isClone = false) {
     const role = speaker.role || 'Cloud Engineer · AWS Partner';
     const abstract = speaker.abstract || 'A brief intro about what this speaker will cover during their slot at the summit.';
     const status = speaker.status || 'TBA';
-    const avatar = speaker.picUrl || 'assets/South%20Summit%20logo.svg';
+    const avatar = speaker.picUrl || FALLBACK_AVATAR;
     const linkedin = speaker.linkedInUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
 
     //the first few are already on screen, don't lazy load those
@@ -102,7 +116,7 @@ function speakerCardHTML(speaker, index, isClone = false) {
       <div class="sc-img-wrap">
         <img class="sc-portrait" src="${avatar}" alt="${name}" width="260" height="270"
              loading="${eager ? 'eager' : 'lazy'}" decoding="async" ${eager ? 'fetchpriority="high"' : ''}
-             onerror="this.onerror=null;this.src='assets/South%20Summit%20logo.svg';this.classList.add('sc-portrait-fallback')">
+             onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}';this.classList.add('sc-portrait-fallback')">
         <div class="sc-fade-overlay"></div>
         <span class="sc-status-badge ${status.toLowerCase()}">${status}</span>
         <a class="sc-li-overlay-btn" href="${linkedin}" target="_blank" rel="noopener"${isClone ? ' tabindex="-1"' : ''} title="View ${name} on LinkedIn" onclick="event.stopPropagation()">
@@ -178,29 +192,32 @@ export function initSpeakers() {
     }
 
     function handleCardClick(e) {
+        //let the LinkedIn links do their thing without opening the modal
+        if (e.target.closest('a')) return;
+
         const card = e.target.closest('.speaker-card');
         if (!card) return;
+
         const index = Number(card.dataset.speakerIndex);
         if (!Number.isNaN(index) && speakers[index]) {
             openSpeakerModal(speakers[index]);
         }
     }
 
-    if (marqueeTrack) marqueeTrack.addEventListener('click', handleCardClick);
-    if (speakerGrid) speakerGrid.addEventListener('click', handleCardClick);
-    if (keynotesGrid) keynotesGrid.addEventListener('click', handleCardClick);
-    if (panelsGrid) panelsGrid.addEventListener('click', handleCardClick);
-    if (sessionsGrid) sessionsGrid.addEventListener('click', handleCardClick);
+    [marqueeTrack, speakerGrid, keynotesGrid, panelsGrid, sessionsGrid].forEach((container) => {
+        if (container) container.addEventListener('click', handleCardClick);
+    });
 
-    // Handle close and ESC key
+    // Handle close (click on overlay or the close button)
     if (modal) {
-        modal.addEventListener('click', e => {
+        modal.addEventListener('click', (e) => {
             if (e.target === modal || e.target.closest('.modal-close')) {
                 closeSpeakerModal();
             }
         });
     }
 
+    // Dismiss on ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeSpeakerModal();
     });
@@ -208,4 +225,3 @@ export function initSpeakers() {
     window.openSpeakerModal = openSpeakerModal;
     window.closeSpeakerModal = closeSpeakerModal;
 }
-

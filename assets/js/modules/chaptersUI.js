@@ -22,7 +22,7 @@ function chapterCardHTML(c) {
     return `
     <div class="chapter-card">
       <div class="mark">
-        <img class="chip" src="assets/South%20Summit%20logo.svg" alt="${name}">
+        <img class="chip" src="assets/images/south-summit-logo.svg" alt="${name}">
       </div>
       <div>
         <h5>${name}</h5>

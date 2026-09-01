@@ -15,7 +15,7 @@ export const sponsors = [
     id: 'sponsor-1',
     name: 'AWS Student Builder Groups',
     tier: 'platinum',
-    imgUrl: 'assets/sbg-calabarzon-logo.png'
+    imgUrl: 'assets/images/sbg-calabarzon-logo.png'
   },
   {
     id: 'sponsor-2',

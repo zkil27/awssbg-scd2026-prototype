@@ -80,4 +80,4 @@ export function initRouter() {
     if (initial !== 'home') showPage(initial, false);
 
     window.showPage = showPage;
-}
+}

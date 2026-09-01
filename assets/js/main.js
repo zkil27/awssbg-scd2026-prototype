@@ -10,7 +10,8 @@ import { initSpeakers } from './modules/speakersUI.js';
 import { initMerch } from './modules/merchUI.js';
 import { initChapters } from './modules/chaptersUI.js';
 import { initSponsors } from './modules/sponsorsUI.js';
-import { initAmazonQ } from './modules/amazonQ.js';
+import { initComputeGrid } from './modules/computeGrid.js';
+import { initScrollReveal } from './modules/scrollReveal.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
@@ -24,6 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initChapters();
     initSponsors();
 
-    // 3. Initialize interactive widgets
-    initAmazonQ();
+    // 3. Reactive background animation (sits behind all content)
+    initComputeGrid();
+
+    // 4. Scroll-triggered entrance motion — last, so the cards injected by the
+    //    init*UI() calls above already exist to be tagged and observed.
+    initScrollReveal();
 });

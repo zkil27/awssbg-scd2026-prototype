@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>AWS Student Community Day: South Summit 2026</title>
-  <link rel="icon" type="image/svg+xml" href="assets/South%20Summit%20logo.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/images/south-summit-logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
@@ -25,10 +25,30 @@
 
 <body>
 
+  <!-- BRANDED SPLASH SCREEN -->
+  <div id="splashScreen" aria-hidden="true">
+    <div class="splash-lockup">
+      <div class="splash-gear-wrap">
+        <svg class="splash-gear" viewBox="0 0 70 70" focusable="false">
+          <path fill="currentColor" fill-rule="evenodd" d="
+            M 10 0
+            H 20 V 10 H 30 V 0 H 40 V 10 H 50 V 0 H 60 V 10
+            H 70 V 20 H 60 V 30 H 70 V 40 H 60 V 50 H 70 V 60
+            H 60 V 70 H 50 V 60 H 40 V 70 H 30 V 60 H 20 V 70
+            H 10 V 60 H 0 V 50 H 10 V 40 H 0 V 30 H 10 V 20
+            H 0 V 10 H 10 Z
+            M 20 20
+            H 50 V 50 H 20 Z" />
+        </svg>
+      </div>
+      <span class="splash-wordmark">AWS SCD: SS 2026</span>
+    </div>
+  </div>
+
   <header class="nav" id="siteNav">
     <div class="nav-inner">
       <button class="brand" onclick="showPage('home')">
-        <img class="chip" src="assets/South%20Summit%20logo.svg" alt="AWS Student Community Day: South Summit 2026">
+        <img class="chip" src="assets/images/south-summit-logo.svg" alt="AWS Student Community Day: South Summit 2026">
         <div class="brand-text">AWS SCD: SS 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
       </button>
       <nav class="links">
@@ -78,9 +98,6 @@
     </symbol>
     <symbol id="icon-moon" viewBox="0 0 24 24">
       <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-    </symbol>
-    <symbol id="icon-amazon-q" viewBox="0 0 418 463">
-      <path d="M177 8.475C196.6 -2.825 220.8 -2.825 240.4 8.475L385.7 92.3744C405.3 103.674 417.4 124.575 417.4 147.275V315.075C417.4 337.675 405.3 358.675 385.7 369.975L240.4 453.874C220.8 465.174 196.6 465.174 177 453.874L31.7002 369.975C12.1002 358.675 0 337.775 0 315.075V147.275C0 124.675 12.1002 103.674 31.7002 92.3744L177 8.475ZM234.8 69.6752C219.1 60.5752 199.8 60.5752 184 69.6752L80.9004 129.175C65.2004 138.275 55.5 154.975 55.5 173.175V292.175C55.5001 310.275 65.2005 327.075 80.9004 336.175L184 395.675C199.7 404.775 219 404.775 234.8 395.675L337.9 336.175C353.6 327.075 363.3 310.375 363.3 292.175V173.175C363.3 155.075 353.6 138.275 337.9 129.175L234.8 69.6752ZM199.9 97.8744C207.8 93.3748 217.4 93.3747 225.3 97.8744L323.5 154.575C331.4 159.075 336.2 167.475 336.2 176.575V289.975C336.2 290.374 336.186 290.772 336.168 291.168L235.3 232.74V221.975C235.3 219.675 234.1 217.575 232.1 216.475L211 204.275C209 203.175 206.6 203.175 204.7 204.275L183.6 216.475C181.6 217.575 180.4 219.675 180.4 221.975V246.374C180.4 248.674 181.6 250.774 183.6 251.874L204.7 264.075C206.7 265.175 209.1 265.175 211 264.075L221.932 257.753L319.513 314.277L225.3 368.675C217.4 373.175 207.8 373.175 199.9 368.675L101.7 311.975C93.8002 307.475 89 299.075 89 289.975V176.575C89.0001 167.475 93.8003 159.175 101.7 154.575L199.9 97.8744Z" fill="currentColor" />
     </symbol>
   </svg>
 
@@ -154,7 +171,7 @@
             </div>
             <div class="credit-badge">
               <p>HEADER MAIN IMAGE<br>TEMPLATE · WILL ADD LATER</p>
-              <div class="chip-box"><img class="chip" src="assets/South%20Summit%20logo.svg" alt="South Summit Logo"></div>
+              <div class="chip-box"><img class="chip" src="assets/images/south-summit-logo.svg" alt="South Summit Logo"></div>
             </div>
           </div>
         </div>
@@ -219,7 +236,7 @@
             <div class="tier-grid platinum">
               <div class="sponsor-slot active-sponsor">
                 <div class="sponsor-logo-wrap">
-                  <img src="assets/South%20Summit%20logo.svg" alt="AWS Student Community" class="sponsor-logo">
+                  <img src="assets/images/south-summit-logo.svg" alt="AWS Student Community" class="sponsor-logo">
                 </div>
                 <div class="sponsor-info">
                   <strong>AWS Cloud Clubs Philippines</strong>
@@ -479,6 +496,13 @@
 
     <!-- QUOTE -->
     <section class="quote-band">
+      <div class="deco-layer deco-scatter band-deco" aria-hidden="true">
+        <span class="brand-box b1"></span>
+        <span class="brand-box b2"></span>
+        <span class="brand-box b3"></span>
+        <span class="brand-box b4"></span>
+        <span class="brand-box b5"></span>
+      </div>
       <div class="wrap quote-inner">
         <p class="quote-mark">"Cloud × AI: Build. Power. Lead. — three motions, one day, one community of student
           builders."</p>
@@ -488,6 +512,13 @@
 
     <!-- REGISTRATION -->
     <section id="register" class="register-band grid-bg">
+      <div class="deco-layer deco-corners band-deco" aria-hidden="true">
+        <span class="brand-box b1"></span>
+        <span class="brand-box b2"></span>
+        <span class="brand-box b3"></span>
+        <span class="brand-box b4"></span>
+        <span class="brand-box b5"></span>
+      </div>
       <div class="wrap register-inner">
         <div>
           <p class="eyebrow" style="color:#0B1526; opacity:.85; font-weight:700;">Registration</p>
@@ -679,10 +710,10 @@
   </div>
 
   <!-- ============ SPEAKER MODAL ============ -->
-  <div class="modal-overlay" id="speakerModal" role="dialog" aria-modal="true" aria-labelledby="smName" aria-hidden="true" onclick="if(event.target===this) closeSpeakerModal()">
+  <div class="modal-overlay" id="speakerModal" role="dialog" aria-modal="true" aria-labelledby="smName"
+    aria-hidden="true" onclick="if(event.target===this) closeSpeakerModal()">
     <div class="modal-card">
-      <button class="modal-close" onclick="closeSpeakerModal()" aria-label="Close modal">✕</button>
-      
+      <button class="modal-close" onclick="closeSpeakerModal()" aria-label="Close modal">&#10005;</button>
       <!-- SPEAKER HERO HEADER WITH BRAND ELEMENTS -->
       <div class="s-modal-header">
         <div class="s-modal-deco" aria-hidden="true">
@@ -693,7 +724,7 @@
           <span class="brand-box sm-b5"></span>
         </div>
         <div class="s-modal-avatar-frame">
-          <img id="smAvatar" class="s-modal-avatar-img" src="assets/South%20Summit%20logo.svg" alt="Speaker">
+          <img id="smAvatar" class="s-modal-avatar-img" src="assets/images/south-summit-logo.svg" alt="Speaker">
           <div class="s-modal-avatar-fade"></div>
         </div>
         <div class="s-modal-intro">
@@ -702,18 +733,17 @@
           <span class="role" id="smRole">Role · Company</span>
         </div>
       </div>
-
       <div class="s-modal-body">
         <div class="s-modal-section">
           <h4>Session Topic</h4>
-          <p id="smSession">Details regarding the speaker's session, what they will build, and the primary takeaways for students attending the summit.</p>
+          <p id="smSession">Details regarding the speaker's session, what they will build, and the primary takeaways
+            for students attending the summit.</p>
         </div>
-
         <div class="s-modal-section">
           <h4>About the Speaker</h4>
-          <p id="smBio">A brief biography highlighting their journey into tech, their work with Cloud &amp; AI, and why they are passionate about empowering the student community.</p>
+          <p id="smBio">A brief biography highlighting their journey into tech, their work with Cloud &amp; AI, and why
+            they are passionate about empowering the student community.</p>
         </div>
-
         <div class="s-modal-foot">
           <a class="btn btn-primary" id="smLinkedIn" href="#" target="_blank" rel="noopener">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -742,7 +772,7 @@
     <div class="wrap">
       <div class="foot-grid">
         <div class="foot-brand">
-          <div class="brand" style="display:flex; align-items:center; gap:10px;"><img class="chip" src="assets/South%20Summit%20logo.svg"
+          <div class="brand" style="display:flex; align-items:center; gap:10px;"><img class="chip" src="assets/images/south-summit-logo.svg"
               alt="South Summit 2026">
             <div class="brand-text">SCD SOUTH SUMMIT 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
           </div>
@@ -767,59 +797,6 @@
     </div>
   </footer>
 
-
-  <div class="amazon-q-wrap" id="amazonQWrap">
-    <div class="amazon-q-bubble" id="amazonQBubble" role="status" hidden>
-      <p>Try <b>Amazon Q</b> for questions &amp; clarifications about the event.</p>
-      <button type="button" class="amazon-q-bubble-cta" id="amazonQBubbleCta">Ask now</button>
-    </div>
-    <button type="button" class="amazon-q-bot" id="amazonQBot" title="Ask Amazon Q"
-      aria-label="Ask Amazon Q about the event">
-      <svg viewBox="0 0 418 463" class="aq-btn-icon" aria-hidden="true">
-        <use href="#icon-amazon-q"></use>
-      </svg>
-    </button>
-  </div>
-
-  <!-- AMAZON Q INTERACTIVE MODAL -->
-  <div class="aq-modal-backdrop" id="aqModalBackdrop" hidden>
-    <div class="aq-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="aqModalTitle">
-      <div class="aq-modal-header">
-        <div class="aq-modal-brand">
-          <div class="aq-badge-icon">
-            <svg viewBox="0 0 418 463" class="aq-header-icon" aria-hidden="true">
-              <use href="#icon-amazon-q"></use>
-            </svg>
-          </div>
-          <div>
-            <h4 id="aqModalTitle">Amazon Q Concierge</h4>
-            <span>AWS SCD South Summit 2026 Assistant</span>
-          </div>
-        </div>
-        <button type="button" class="aq-modal-close" id="aqModalClose" aria-label="Close Amazon Q Assistant">&times;</button>
-      </div>
-
-      <div class="aq-modal-body" id="aqModalBody">
-        <div class="aq-msg aq-msg--system">
-          <div class="aq-msg-bubble">
-            Hello Builder! 🚀 I'm your <b>Amazon Q Assistant</b> for AWS Student Community Day: South Summit 2026. How can I assist you today?
-          </div>
-        </div>
-      </div>
-
-      <div class="aq-quick-chips" id="aqQuickChips">
-        <button type="button" class="aq-chip" data-question="What is AWS SCD South Summit?">🚀 What is SCD South?</button>
-        <button type="button" class="aq-chip" data-question="When and where is the event?">📍 Date &amp; Venues</button>
-        <button type="button" class="aq-chip" data-question="Is registration free and how do I join?">🎟️ Registration &amp; Tickets</button>
-        <button type="button" class="aq-chip" data-question="How can I become a speaker or sponsor?">🎤 Speakers &amp; Sponsors</button>
-      </div>
-
-      <form class="aq-modal-footer" id="aqForm">
-        <input type="text" id="aqInput" class="aq-input" aria-label="Ask Amazon Q about the event" placeholder="Type a question (e.g., 'venue', 'merch', 'ticket')..." autocomplete="off" autocapitalize="sentences" enterkeyhint="send">
-        <button type="submit" class="aq-send-btn" id="aqSendBtn">Send</button>
-      </form>
-    </div>
-  </div>
 
   <!-- FLOATING MOBILE DOCK BAR -->
   <nav class="mobile-dock-nav" id="mobileDock" aria-label="Mobile Navigation">
@@ -856,6 +833,27 @@
   </nav>
 
   <script type="module" src="assets/js/main.js"></script>
+
+  <script>
+    /* Branded splash intro: show on entry, then fade out to reveal the site.
+       Kept out of the ES module so it always runs, even if a module fails. */
+    (function () {
+      var splash = document.getElementById('splashScreen');
+      if (!splash) return;
+      /* how long the splash stays fully visible before it starts fading.
+         The wordmark reveal settles around 2.9s, so this leaves a beat to breathe. */
+      var SPLASH_MS = 3800;
+      function dismiss() {
+        if (splash.classList.contains('is-hidden')) return;
+        splash.classList.add('is-hidden');
+        var done = function () { splash.hidden = true; };
+        splash.addEventListener('transitionend', done, { once: true });
+        /* transitionend may not fire (reduced-motion) — guarantee removal */
+        setTimeout(done, 700);
+      }
+      setTimeout(dismiss, SPLASH_MS);
+    })();
+  </script>
 
 </body>
 

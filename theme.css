@@ -16,6 +16,11 @@
   /* Grid — shared cell size for line grid + colored boxes */
   --grid-size: 52px;
   --grid-line: 1px;
+  /* Vertical repeat interval for the colored accent cells. Each colored-cell
+     background layer tiles down the page every this-many pixels (a whole
+     multiple of --grid-size, so cells stay grid-aligned), which is what makes
+     the SAME boxes carry from the top all the way to the footer. */
+  --cell-repeat-y: calc(var(--grid-size) * 24);
 
   /* Typography — original event monospace typography */
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
@@ -29,6 +34,26 @@
 
   /* Transitions */
   --theme-ease: background-color .25s ease, color .25s ease, border-color .25s ease;
+
+  /* ---------- Scroll reveal ----------
+     Entrance motion for sections + cards as they scroll into view. Themed to
+     the grid/box aesthetic: elements rise + fade with the brand spring easing,
+     and card grids stagger like the compute-grid boot sweep. See the
+     [data-reveal] rules in styles.css and modules/scrollReveal.js. */
+  --reveal-distance: 22px;                              /* start offset (translateY) */
+  --reveal-duration: .6s;                              /* rise + fade duration */
+  --reveal-ease: cubic-bezier(0.34, 1.56, 0.64, 1);    /* brand spring, matches cards */
+  --reveal-stagger: 70ms;                              /* per-item delay step in a group */
+
+  /* ---------- Custom cursors (grid "reticle") ----------
+     Inline SVG data-URIs so no extra asset file is needed. A 28px targeting
+     reticle: corner brackets + center dot, echoing the compute-grid theme.
+     Per-theme color overrides live in the light/dark blocks below. The final
+     "x y" numbers are the hotspot; keep it centered at 14 14. */
+  --cursor-default:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%2344b3fe"/></svg>') 14 14, crosshair;
+  --cursor-pointer:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%23fc9907" stroke="%23fc9907" stroke-width="1.8"/></svg>') 14 14, pointer;
 }
 
 /* ---------- LIGHT MODE (default) ---------- */
@@ -68,7 +93,8 @@ html[data-theme="light"] {
 
   --marquee-fade: var(--bg);
 
-  --modal-overlay: rgba(245, 247, 251, 0.85);
+  --expanded-accent: #0284C7;
+  --expanded-shadow: rgba(2, 132, 199, 0.22);
 
   --footer-link: #3A4661;
   --sibling-bg: #F5F7FB;
@@ -124,7 +150,8 @@ html[data-theme="dark"] {
 
   --marquee-fade: var(--bg);
 
-  --modal-overlay: rgba(6, 9, 17, 0.85);
+  --expanded-accent: #38BDF8;
+  --expanded-shadow: rgba(0, 0, 0, 0.5);
 
   --footer-link: #C7D0E4;
   --sibling-bg: #1A2138;
@@ -139,6 +166,14 @@ html[data-theme="dark"] {
 
   --proto-bg: #222B45;
   --sticky-bg: #1A2138;
+
+  /* Brighten the reticle stroke so it reads on the dark background; keep the
+     orange accent dot. (SVG re-declared because data-URIs can't reference
+     other CSS vars.) */
+  --cursor-default:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%237fd0ff"/></svg>') 14 14, crosshair;
+  --cursor-pointer:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%23ffb545" stroke="%23ffb545" stroke-width="1.8"/></svg>') 14 14, pointer;
 
   color-scheme: dark;
 }
@@ -159,10 +194,143 @@ html {
 body {
   position: relative;
   background-color: var(--bg);
+  /* Grid lines + colored accent cells are painted on the SAME background stack
+     with the SAME 52px tile and the SAME (0,0) top-left origin, so the colored
+     cells can never drift off the grid at any viewport width. Colored cells
+     render above the grid lines. LEFT cells use whole-cell x-offsets from the
+     origin. RIGHT cells snap their x with round(down, 100% - N*cell, cell),
+     which yields a whole multiple of the cell size (i.e. a real grid line)
+     near the right edge — so they hug the right side AND stay on the grid. */
   background-image:
+    /* ============================================================
+       COLORED ACCENT CELLS — each layer paints ONE grid cell of solid color at
+       its top, then transparent below (the hard stop at --grid-size), so when
+       the layer repeats down the page (repeat-y with a tall --cell-repeat-y
+       tile in background-size) it renders a single box every interval WITH a
+       gap between — instead of a solid stripe. This is the one and only
+       colored-box system: the same boxes now run from the top to the footer.
+       Colors cycle through the brand palette, with several tight clusters.
+       ============================================================ */
+    /* ---- LEFT side ---- */
+    linear-gradient(var(--pink) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--blue) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--green) 0 var(--grid-size), transparent var(--grid-size)),   /* cluster A */
+    linear-gradient(var(--orange) 0 var(--grid-size), transparent var(--grid-size)),  /* cluster A */
+    linear-gradient(var(--purple) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--blue) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--pink) 0 var(--grid-size), transparent var(--grid-size)),    /* cluster B */
+    linear-gradient(var(--green) 0 var(--grid-size), transparent var(--grid-size)),   /* cluster B */
+    linear-gradient(var(--orange) 0 var(--grid-size), transparent var(--grid-size)),  /* cluster B */
+    linear-gradient(var(--purple) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--blue) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--pink) 0 var(--grid-size), transparent var(--grid-size)),    /* cluster C */
+    linear-gradient(var(--green) 0 var(--grid-size), transparent var(--grid-size)),   /* cluster C */
+    linear-gradient(var(--orange) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--purple) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--blue) 0 var(--grid-size), transparent var(--grid-size)),
+    /* ---- RIGHT side ---- */
+    linear-gradient(var(--blue) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--green) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--pink) 0 var(--grid-size), transparent var(--grid-size)),    /* cluster D */
+    linear-gradient(var(--purple) 0 var(--grid-size), transparent var(--grid-size)),  /* cluster D */
+    linear-gradient(var(--orange) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--blue) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--green) 0 var(--grid-size), transparent var(--grid-size)),   /* cluster E */
+    linear-gradient(var(--pink) 0 var(--grid-size), transparent var(--grid-size)),    /* cluster E */
+    linear-gradient(var(--orange) 0 var(--grid-size), transparent var(--grid-size)),  /* cluster E */
+    linear-gradient(var(--purple) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--blue) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--green) 0 var(--grid-size), transparent var(--grid-size)),   /* cluster F */
+    linear-gradient(var(--pink) 0 var(--grid-size), transparent var(--grid-size)),    /* cluster F */
+    linear-gradient(var(--orange) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--purple) 0 var(--grid-size), transparent var(--grid-size)),
+    linear-gradient(var(--green) 0 var(--grid-size), transparent var(--grid-size)),
+    /* ---- grid lines (bottom of the stack) ---- */
     linear-gradient(var(--line) var(--grid-line), transparent var(--grid-line)),
     linear-gradient(90deg, var(--line) var(--grid-line), transparent var(--grid-line));
-  background-size: var(--grid-size) var(--grid-size);
+  background-repeat:
+    /* 16 left cells — repeat DOWN the page so the boxes carry to the footer.
+       Each layer's gradient is a single cell + transparent gap, and the tile
+       height (--cell-repeat-y in background-size) sets the spacing. */
+    repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y,
+    repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y,
+    /* 16 right cells — same vertical repeat */
+    repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y,
+    repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y, repeat-y,
+    /* grid lines */
+    repeat, repeat;
+  background-position:
+    /* ============================================================
+       Everything shares ONE origin: the grid's top-left (0,0).
+       - LEFT cells: x = N * cell from the left  → on the grid by construction.
+       - RIGHT cells: x = round(down, 100% - N*cell, cell). Because % in
+         background-position is measured against (body_width - cell), this
+         resolves against the body's real width (not the viewport, so the
+         scrollbar can't offset it) and round() forces the result to a whole
+         multiple of the cell size → a real vertical grid line, near the right.
+       - Vertical (y) offsets are whole cells from the top.
+       Several cells share adjacent columns/rows to form tight clusters.
+       ============================================================ */
+    /* ---- LEFT side: x = whole cells from the LEFT origin (0,0). Always on
+       the grid because the grid is tiled from the same (0,0). ---- */
+    calc(var(--grid-size) * 1)  calc(var(--grid-size) * 3),
+    calc(var(--grid-size) * 2)  calc(var(--grid-size) * 6),
+    calc(var(--grid-size) * 1)  calc(var(--grid-size) * 9),   /* cluster A */
+    calc(var(--grid-size) * 2)  calc(var(--grid-size) * 9),   /* cluster A (adjacent) */
+    calc(var(--grid-size) * 3)  calc(var(--grid-size) * 13),
+    calc(var(--grid-size) * 1)  calc(var(--grid-size) * 17),
+    calc(var(--grid-size) * 1)  calc(var(--grid-size) * 21),  /* cluster B */
+    calc(var(--grid-size) * 2)  calc(var(--grid-size) * 21),  /* cluster B (adjacent) */
+    calc(var(--grid-size) * 1)  calc(var(--grid-size) * 22),  /* cluster B (below) */
+    calc(var(--grid-size) * 3)  calc(var(--grid-size) * 26),
+    calc(var(--grid-size) * 1)  calc(var(--grid-size) * 31),
+    calc(var(--grid-size) * 2)  calc(var(--grid-size) * 36),  /* cluster C */
+    calc(var(--grid-size) * 3)  calc(var(--grid-size) * 36),  /* cluster C (adjacent) */
+    calc(var(--grid-size) * 1)  calc(var(--grid-size) * 41),
+    calc(var(--grid-size) * 2)  calc(var(--grid-size) * 47),
+    calc(var(--grid-size) * 1)  calc(var(--grid-size) * 53),
+    /* ---- RIGHT side (x snapped to a grid line via round(); see note above) ---- */
+    round(down, calc(100% - var(--grid-size) * 1), var(--grid-size))  calc(var(--grid-size) * 2),
+    round(down, calc(100% - var(--grid-size) * 2), var(--grid-size))  calc(var(--grid-size) * 5),
+    round(down, calc(100% - var(--grid-size) * 1), var(--grid-size))  calc(var(--grid-size) * 8),   /* cluster D */
+    round(down, calc(100% - var(--grid-size) * 2), var(--grid-size))  calc(var(--grid-size) * 8),   /* cluster D (adjacent) */
+    round(down, calc(100% - var(--grid-size) * 3), var(--grid-size))  calc(var(--grid-size) * 12),
+    round(down, calc(100% - var(--grid-size) * 1), var(--grid-size))  calc(var(--grid-size) * 15),
+    round(down, calc(100% - var(--grid-size) * 2), var(--grid-size))  calc(var(--grid-size) * 19),  /* cluster E */
+    round(down, calc(100% - var(--grid-size) * 1), var(--grid-size))  calc(var(--grid-size) * 19),  /* cluster E (adjacent) */
+    round(down, calc(100% - var(--grid-size) * 2), var(--grid-size))  calc(var(--grid-size) * 20),  /* cluster E (below) */
+    round(down, calc(100% - var(--grid-size) * 3), var(--grid-size))  calc(var(--grid-size) * 24),
+    round(down, calc(100% - var(--grid-size) * 1), var(--grid-size))  calc(var(--grid-size) * 29),
+    round(down, calc(100% - var(--grid-size) * 2), var(--grid-size))  calc(var(--grid-size) * 34),  /* cluster F */
+    round(down, calc(100% - var(--grid-size) * 1), var(--grid-size))  calc(var(--grid-size) * 34),  /* cluster F (adjacent) */
+    round(down, calc(100% - var(--grid-size) * 3), var(--grid-size))  calc(var(--grid-size) * 39),
+    round(down, calc(100% - var(--grid-size) * 1), var(--grid-size))  calc(var(--grid-size) * 45),
+    round(down, calc(100% - var(--grid-size) * 2), var(--grid-size))  calc(var(--grid-size) * 51),
+    /* both grid-line layers share ONE origin: the top-left (0,0). This is the
+       single grid that every cell aligns to. */
+    left 0 top 0,
+    left 0 top 0;
+  background-size:
+    /* Each colored cell is one grid tile WIDE and --cell-repeat-y TALL, so the
+       single-cell gradient repeats down the page every --cell-repeat-y with a
+       transparent gap between. The two grid-line layers stay a single cell. */
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--cell-repeat-y), var(--grid-size) var(--cell-repeat-y),
+    var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size);
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 17px;
@@ -276,26 +444,22 @@ button {
 .page,
 footer,
 .sticky-cta,
-.modal-overlay,
-.proto-badge,
-.amazon-q-bot,
-.amazon-q-wrap {
+.proto-badge {
   position: relative;
   z-index: 1;
 }
-.modal-overlay { z-index: 300; }
 .sticky-cta { z-index: 150; }
 .proto-badge { z-index: 120; }
-.amazon-q-bot,
-.amazon-q-wrap { z-index: 125; }
 
 /* ---------- Colorful visual boxes ---------- */
+/* The scattered per-section decorative boxes were replaced by grid-locked
+   colored cells painted directly on the <body> background (see the `body`
+   rule above), so they are always aligned to the grid. The old section-level
+   .deco-layer boxes are hidden to avoid duplicate, misaligned squares.
+   NOTE: .primer-edge boxes (hero top / footer bottom) are intentionally
+   edge-anchored and are kept — this only hides the drifting .deco-layer set. */
 .deco-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
+  display: none;
 }
 
 .brand-box {
@@ -350,29 +514,23 @@ footer,
 .deco-stair-bl .b5 { top: calc(var(--grid-size) * 2); right: var(--grid-size); --box-c: var(--green); }
 
 /* --- Pattern: V cluster (bottom) --- */
-.deco-v .b1 { bottom: calc(var(--grid-size) * 2); left: calc(50% - var(--grid-size) * 1.5); --box-c: var(--purple); }
-.deco-v .b2 { bottom: calc(var(--grid-size) * 2); left: calc(50% + var(--grid-size) * 0.5); --box-c: var(--blue); }
-.deco-v .b3 { bottom: var(--grid-size); left: calc(50% - var(--grid-size) * 0.5); --box-c: var(--pink); }
+.deco-v .b1 { bottom: calc(var(--grid-size) * 2); left: calc(var(--grid-size) * 4); --box-c: var(--purple); }
+.deco-v .b2 { bottom: calc(var(--grid-size) * 2); left: calc(var(--grid-size) * 6); --box-c: var(--blue); }
+.deco-v .b3 { bottom: var(--grid-size); left: calc(var(--grid-size) * 5); --box-c: var(--pink); }
 .deco-v .b4 { top: var(--grid-size); left: var(--grid-size); --box-c: var(--green); }
 .deco-v .b5 { top: calc(var(--grid-size) * 2); left: calc(var(--grid-size) * 2); --box-c: var(--orange); }
 
 /* --- Pattern: edge scatter --- */
 .deco-scatter .b1 { top: calc(var(--grid-size) * 2); right: 0; --box-c: var(--green); }
 .deco-scatter .b2 { top: calc(var(--grid-size) * 3); right: 0; --box-c: var(--blue); }
-.deco-scatter .b3 { top: 50%; right: 0; --box-c: var(--pink); }
+.deco-scatter .b3 { top: calc(var(--grid-size) * 6); right: 0; --box-c: var(--pink); }
 .deco-scatter .b4 { bottom: calc(var(--grid-size) * 3); left: 0; --box-c: var(--orange); }
 .deco-scatter .b5 { bottom: calc(var(--grid-size) * 2); left: 0; --box-c: var(--purple); }
 
-/* Floating purple accent (primer cover) */
+/* Floating purple accent — replaced by the grid-locked colored cells on the
+   <body> background so it always aligns; hidden to avoid a drifting square. */
 .box-floating {
-  position: absolute;
-  width: var(--grid-size);
-  height: var(--grid-size);
-  background: var(--purple);
-  bottom: calc(var(--grid-size) * 3);
-  left: calc(var(--grid-size) * 2);
-  z-index: 1;
-  pointer-events: none;
+  display: none;
 }
 
 /* ---------- Theme toggle (Modern Cyber-Pill Switch) ---------- */
@@ -493,12 +651,6 @@ html[data-theme="dark"] .theme-toggle-thumb {
 .mark .chip {
   width: 28px;
   height: 28px;
-}
-
-.s-modal-head .chip {
-  width: 36px;
-  height: 36px;
-  margin-bottom: 12px;
 }
 
 .aws-mark {
