@@ -46,7 +46,7 @@ const CFG = {
   // Ambient Blocks (Animated background boxes)
   blockOpacity: 1.0,          // High opacity for the persistent boxes
   blockRepeatY: 54,           // Vertical repeat interval (in rows)
-  blockAnimIntervalMs: 2000,  // How often blocks decide to shift/recolor
+  blockAnimIntervalMs: 4500,  // How often blocks decide to shift/recolor
 
   // Per-theme alpha multipliers (kept subtle so content stays dominant)
   alpha: {
@@ -206,11 +206,19 @@ const ambientBlocks = [
   { c: 3, r: 13, color: 1 }, { c: 1, r: 17, color: 0 }, { c: 1, r: 21, color: 4 }, { c: 2, r: 21, color: 3 },
   { c: 1, r: 22, color: 2 }, { c: 3, r: 26, color: 1 }, { c: 1, r: 31, color: 0 }, { c: 2, r: 36, color: 4 },
   { c: 3, r: 36, color: 3 }, { c: 1, r: 41, color: 2 }, { c: 2, r: 47, color: 1 }, { c: 1, r: 53, color: 0 },
+  // Left side extra
+  { c: 2, r: 1, color: 2 }, { c: 4, r: 4, color: 1 }, { c: 1, r: 12, color: 0 }, { c: 4, r: 18, color: 3 },
+  { c: 2, r: 24, color: 4 }, { c: 5, r: 29, color: 2 }, { c: 1, r: 34, color: 1 }, { c: 3, r: 39, color: 0 },
+  { c: 2, r: 44, color: 4 }, { c: 4, r: 49, color: 3 }, { c: 1, r: 7, color: 2 }, { c: 3, r: 19, color: 1 },
   // Right side (negative col = from right edge)
   { c: -1, r: 2, color: 0 }, { c: -2, r: 5, color: 3 }, { c: -1, r: 8, color: 4 }, { c: -2, r: 8, color: 1 },
   { c: -3, r: 12, color: 2 }, { c: -1, r: 15, color: 0 }, { c: -2, r: 19, color: 3 }, { c: -1, r: 19, color: 4 },
   { c: -2, r: 20, color: 2 }, { c: -3, r: 24, color: 1 }, { c: -1, r: 29, color: 0 }, { c: -2, r: 34, color: 3 },
-  { c: -1, r: 34, color: 4 }, { c: -3, r: 39, color: 2 }, { c: -1, r: 45, color: 1 }, { c: -2, r: 51, color: 3 }
+  { c: -1, r: 34, color: 4 }, { c: -3, r: 39, color: 2 }, { c: -1, r: 45, color: 1 }, { c: -2, r: 51, color: 3 },
+  // Right side extra
+  { c: -2, r: 1, color: 1 }, { c: -4, r: 4, color: 2 }, { c: -1, r: 12, color: 4 }, { c: -4, r: 18, color: 0 },
+  { c: -2, r: 24, color: 3 }, { c: -5, r: 29, color: 1 }, { c: -1, r: 34, color: 2 }, { c: -4, r: 39, color: 4 },
+  { c: -2, r: 44, color: 0 }, { c: -4, r: 49, color: 1 }, { c: -1, r: 7, color: 3 }, { c: -3, r: 19, color: 2 }
 ].map(b => ({
   ...b,
   currentC: b.c, currentR: b.r,
@@ -260,9 +268,9 @@ function updateAmbientBlocks(ts, dt) {
       }
     }
 
-    // Smoothly interpolate current to target position
-    b.currentC += (b.targetC - b.currentC) * 4 * dt;
-    b.currentR += (b.targetR - b.currentR) * 4 * dt;
+    // Smoothly interpolate current to target position (faster for a snappier, less laggy feel)
+    b.currentC += (b.targetC - b.currentC) * 14 * dt;
+    b.currentR += (b.targetR - b.currentR) * 14 * dt;
   }
 }
 
@@ -289,8 +297,9 @@ function drawAmbientBlocks() {
       // Culling
       if (actualRow < startVisRow || actualRow > startVisRow + visRows) continue;
 
-      const x = actualCol * gridSize - scrollX;
-      const y = actualRow * gridSize - scrollY;
+      // Snap to full integers to eliminate sub-pixel jitter/blur during movement
+      const x = Math.round(actualCol * gridSize - scrollX);
+      const y = Math.round(actualRow * gridSize - scrollY);
 
       // Wrap-around bounds guard for rendering
       if (x > viewW || x < -gridSize) continue;
@@ -304,24 +313,20 @@ function drawAmbientBlocks() {
 function onPointerMove(e) {
   if (!hasHover) return;
   const now = performance.now();
+  
   if (now - lastPointerSampleTs < CFG.pointerMoveThrottleMs) return;
   lastPointerSampleTs = now;
 
-  // The CSS grid is painted on the (scrolling) <body> from a (0,0) document
-  // origin, but the canvas is position:fixed. Convert the viewport pointer
-  // coords into DOCUMENT space by adding scroll, then floor to the cell the
-  // cursor is actually inside. Drawing subtracts scroll again to place it.
   const docX = e.clientX + (window.scrollX || window.pageXOffset || 0);
   const docY = e.clientY + (window.scrollY || window.pageYOffset || 0);
   const col = Math.floor(docX / gridSize);
   const row = Math.floor(docY / gridSize);
   pointerCell = { col, row };
 
-  // Light a neighborhood of cells, brightest at the core.
   const r = CFG.cursorRadius;
   for (let dc = -r; dc <= r; dc++) {
     for (let dr = -r; dr <= r; dr++) {
-      const dist = Math.max(Math.abs(dc), Math.abs(dr)); // Chebyshev
+      const dist = Math.max(Math.abs(dc), Math.abs(dr));
       const brightness = CFG.cursorCoreBrightness * (1 - dist / (r + 1));
       if (brightness > 0.02) lightCell(col + dc, row + dr, brightness);
     }
@@ -345,8 +350,11 @@ function frame(ts) {
   updateAmbientBlocks(ts, dt);
   updateLitCells(dt);
 
-  drawAmbientBlocks();
+  // Z-index ordering from back to front:
+  // 1. Lit Grid Cells (cursor glow)
   drawLitCells();
+  // 2. Ambient Blocks (on top of everything so the cursor glow goes behind them)
+  drawAmbientBlocks();
 
   rafId = requestAnimationFrame(frame);
 }

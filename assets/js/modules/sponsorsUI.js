@@ -12,21 +12,58 @@ function escapeHTML(value) {
 
 function sponsorSlotHTML(s) {
     const name = escapeHTML(s.name || 'Partner');
-    if (s.imgUrl) {
-        //hooked up after render, an inline onerror breaks on apostrophes
+
+    // Open / prospective slot — the tier still has room. A CTA-flavored slot
+    // (e.g. Platinum "+ Become a Sponsor") reads a little louder than a plain
+    // named placeholder chapter.
+    if (s.open) {
+        if (s.cta) {
+            return `
+      <div class="sponsor-slot open-slot">
+        <div class="slot-inner">
+          <span class="slot-badge">${escapeHTML(s.cta)}</span>
+          <p>${name}</p>
+        </div>
+      </div>`;
+        }
         return `
-      <div class="sponsor-slot" title="${name}">
-        <img src="${escapeHTML(s.imgUrl)}" alt="${name}" data-fallback="${name}" style="max-width:100%; max-height:40px; object-fit:contain;">
-      </div>
-    `;
+      <div class="sponsor-slot open-slot">
+        <div class="slot-inner"><span>${name}</span></div>
+      </div>`;
     }
-    return `<div class="sponsor-slot">${name}</div>`;
+
+    // Confirmed partner with a logo — featured partners get the emphasized
+    // "active" treatment (logo chip + name + role, left-aligned).
+    const roleHTML = s.role ? `<span>${escapeHTML(s.role)}</span>` : '';
+    if (s.imgUrl) {
+        return `
+      <div class="sponsor-slot${s.featured ? ' active-sponsor' : ''}" title="${name}">
+        <div class="sponsor-logo-wrap">
+          <img src="${escapeHTML(s.imgUrl)}" alt="${name}" data-fallback="${name}" class="sponsor-logo">
+        </div>
+        <div class="sponsor-info">
+          <strong>${name}</strong>
+          ${roleHTML}
+        </div>
+      </div>`;
+    }
+
+    // Confirmed partner without a logo — name (+ role) as a simple info block.
+    return `
+      <div class="sponsor-slot${s.featured ? ' active-sponsor' : ''}">
+        <div class="sponsor-info">
+          <strong>${name}</strong>
+          ${roleHTML}
+        </div>
+      </div>`;
 }
 
 function wireLogoFallbacks(grid) {
     grid.querySelectorAll('img[data-fallback]').forEach(img => {
         img.addEventListener('error', () => {
-            img.parentElement.textContent = img.dataset.fallback;
+            // Swap a broken logo for the standard brand mark so the slot keeps
+            // its editorial shape (logo chip + name) instead of collapsing.
+            img.src = 'assets/images/south-summit-logo.svg';
         }, { once: true });
     });
 }

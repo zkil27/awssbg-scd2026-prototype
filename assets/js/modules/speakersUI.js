@@ -200,21 +200,21 @@ export function initSpeakers() {
         const name = speaker.name || `Speaker ${index + 1}`;
         const avatar = speaker.picUrl || FALLBACK_AVATAR;
         return `
-        <div class="speaker-inline-card ${color}" data-speaker-index="${index}" style="cursor: pointer; display: flex; align-items: center; gap: 8px; margin-top: 10px; background: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 30px; width: fit-content; transition: transform 0.2s ease;">
-          <img src="${avatar}" alt="${name}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-          <span style="font-size: 13px; font-weight: 600; white-space: nowrap;">${name}</span>
+        <div class="speaker-inline-card ${color}" data-speaker-index="${index}">
+          <img src="${avatar}" alt="${name}" class="speaker-inline-avatar">
+          <span class="speaker-inline-name">${name}</span>
         </div>
         `;
     }
 
     if (schedKeynotesGrid) {
-        schedKeynotesGrid.innerHTML = '<div style="display: flex; gap: 10px; flex-wrap: wrap;">' + keynotes.map((s) => speakerInlineHTML(s, s.originalIndex)).join('') + '</div>';
+        schedKeynotesGrid.innerHTML = '<div class="speaker-inline-row">' + keynotes.map((s) => speakerInlineHTML(s, s.originalIndex)).join('') + '</div>';
     }
     if (schedPanelsGrid) {
-        schedPanelsGrid.innerHTML = '<div style="display: flex; gap: 10px; flex-wrap: wrap;">' + panels.map((s) => speakerInlineHTML(s, s.originalIndex)).join('') + '</div>';
+        schedPanelsGrid.innerHTML = '<div class="speaker-inline-row">' + panels.map((s) => speakerInlineHTML(s, s.originalIndex)).join('') + '</div>';
     }
     if (schedSessionsGrid) {
-        schedSessionsGrid.innerHTML = '<div style="display: flex; gap: 10px; flex-wrap: wrap;">' + sessions.map((s) => speakerInlineHTML(s, s.originalIndex)).join('') + '</div>';
+        schedSessionsGrid.innerHTML = '<div class="speaker-inline-row">' + sessions.map((s) => speakerInlineHTML(s, s.originalIndex)).join('') + '</div>';
     }
 
     function handleCardClick(e) {

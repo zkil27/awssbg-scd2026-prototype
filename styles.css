@@ -3,6 +3,29 @@
    Depends on theme.css (CSS variables)
    ========================================================= */
 
+/* ---------- Lenis smooth scroll (see modules/smoothScroll.js) ----------
+   Only applied while Lenis is live (the `lenis` class is toggled on <html> by
+   smoothScroll.js). Lenis manages scroll itself, so we neutralize the native
+   CSS smooth-scroll from theme.css and let it drive the height. When Lenis is
+   inactive (reduced-motion / touch) none of this applies and native scroll +
+   `scroll-behavior: smooth` remain. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
 /* Reactive compute-grid background canvas.
    Sits above the <body> painted grid but behind all page content
    (.page/footer are z-index:1). Non-interactive and decorative — colors are
@@ -209,7 +232,7 @@ svg.defs {
   border-color: var(--btn-ghost-border);
   color: var(--text);
   font-weight: 600;
-  backdrop-filter: blur(4px);
+
 }
 
 .btn-ghost:hover {
@@ -243,8 +266,8 @@ header.nav {
   top: 0;
   z-index: 200;
   background: var(--nav-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+
+
   border-bottom: 1px solid var(--line);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
   transition: background .25s ease, border-color .25s ease, backdrop-filter .25s ease, box-shadow .35s ease;
@@ -252,8 +275,8 @@ header.nav {
 
 header.nav.scrolled {
   background: var(--nav-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+
+
   border-bottom: 1px solid var(--line);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08), 0 1px 0 var(--orange);
 }
@@ -395,8 +418,8 @@ nav.links button.active::after {
   justify-content: space-between;
   gap: 6px;
   background: var(--nav-bg, rgba(255, 255, 255, 0.88));
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+
+
   border: 1px solid var(--line, rgba(0, 0, 0, 0.1));
   border-radius: 28px;
   padding: 6px 10px;
@@ -503,47 +526,123 @@ html[data-theme="dark"] .mobile-dock-inner {
   z-index: 0;
 }
 
-.hero-main {
-  --hero-visual-h: auto;
+.editorial-hero {
   position: relative;
   z-index: 2;
   display: flex;
-  align-items: stretch;
-  width: min(100% - 48px, 1180px);
-  margin: 0 auto;
-  margin-bottom: calc(var(--grid-size) * 1.5);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-}
-
-html[data-theme="dark"] .hero-main {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.hero-copy {
-  flex: 1.1 1 0;
-  width: 55%;
-  min-width: 0;
-  background: var(--bg-elevated);
+  flex-direction: column;
+  width: min(100% - 48px, 1280px);
+  margin: 0 auto calc(var(--grid-size) * 2);
+  gap: clamp(24px, 4vw, 48px);
+  /* Readability surface: the ambient brand boxes stay fully vivid, but the
+     editorial copy sits on its own frosted panel so text never lands directly
+     on a raw colored square. Uses the same overlay token as the About/venue
+     cards, so it reads as part of the design system rather than a patch. */
+  background: var(--bg-overlay);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  backdrop-filter: blur(10px) saturate(1.1);
   border: 1px solid var(--line);
-  border-right: none;
-  padding: calc(var(--grid-size) * 1.2) calc(var(--grid-size) * 1.6);
-  position: relative;
-  z-index: 1;
+  border-radius: 20px;
+  padding: clamp(24px, 4vw, 44px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+}
+
+.ed-header {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.ed-eyebrow {
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.ed-rule {
+  width: 100%;
+  height: 1px;
+  background: var(--line-strong);
+  border: none;
+  margin: 0;
+}
+
+.ed-content-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.ed-col {
+  display: flex;
+  flex-direction: column;
+  padding-right: 24px;
+}
+
+.ed-col:not(:last-child) {
+  border-right: 1px solid var(--line);
+}
+
+.ed-meta {
+  grid-column: span 3;
+}
+
+.ed-desc {
+  grid-column: span 5;
+  padding-left: 24px;
+}
+
+.ed-clock {
+  grid-column: span 4;
+  padding-left: 24px;
+  border-right: none !important;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+@media (max-width: 900px) {
+  .ed-content-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .ed-col {
+    grid-column: span 1 !important;
+    padding-right: 0;
+    padding-left: 0 !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 24px;
+  }
+  .ed-col:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .ed-clock {
+    align-items: flex-start;
+  }
 }
 
 .hero-title {
   font-family: var(--font-display, var(--font-sans));
-  font-weight: 800;
-  text-transform: none;
-  font-size: clamp(40px, 5.2vw, 68px);
-  line-height: 1.06;
-  letter-spacing: -0.03em;
-  margin: 10px 0 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(60px, 10vw, 150px);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  margin: 0;
   color: var(--text-strong);
+  text-align: left;
+}
+
+.kinetic-text {
+  display: inline-block;
+  will-change: transform;
+  transform-origin: center center;
 }
 
 .hero-title .accent {
@@ -552,9 +651,8 @@ html[data-theme="dark"] .hero-main {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  padding-bottom: 2px;
+  font-weight: 900;
+  padding-bottom: 4px;
   animation: heroAccentShimmer 6s linear infinite;
 }
 
@@ -564,78 +662,72 @@ html[data-theme="dark"] .hero-main {
   100% { background-position: 0% 50%; }
 }
 
-.hero-sub {
+.ed-meta-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.ed-meta-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted-2);
+  margin-bottom: 6px;
+}
+
+.ed-meta-value {
   font-family: var(--font-sans);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-strong);
+}
+
+.ed-meta-sub {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.ed-subheadline {
+  font-family: var(--font-display, var(--font-sans));
   font-weight: 700;
-  font-size: clamp(15px, 1.7vw, 19px);
-  color: var(--orange);
-  margin-bottom: 14px;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.1;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: var(--text-strong);
+  text-transform: uppercase;
   letter-spacing: -0.01em;
 }
 
-.hero-desc {
-  font-family: var(--font-mono);
-  font-weight: 400;
-  color: var(--muted);
-  max-width: 520px;
-  font-size: 16px;
-  line-height: 1.65;
+.ed-body-lead {
+  font-family: var(--font-sans);
+  font-size: clamp(16px, 1.5vw, 18px);
+  line-height: 1.6;
+  color: var(--text);
   margin-bottom: 32px;
+  max-width: 95%;
 }
 
-.hero-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 26px;
-  padding: 14px 18px;
-  background: rgba(11, 21, 38, 0.03);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
-}
-
-.hero-meta:hover {
-  border-color: rgba(68, 179, 254, 0.35);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
-}
-
-html[data-theme="dark"] .hero-meta {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.hero-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 13.5px;
-  color: var(--muted);
-  transition: transform .2s ease, color .2s ease;
-}
-
-.hero-meta-item:hover {
-  transform: translateX(4px);
+.ed-body-lead::first-letter {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: 3.5em;
+  font-weight: 900;
+  float: left;
+  line-height: 0.8;
+  padding-right: 8px;
   color: var(--text-strong);
 }
 
-.hero-meta-item svg {
-  flex-shrink: 0;
-  transition: transform .25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
 
-.hero-meta-item:hover svg {
-  transform: scale(1.18);
-}
 
-.hero-meta-item strong {
-  color: var(--text-strong);
-}
-
-.hero-actions {
+.hero-actions.ed-actions {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
+  justify-content: flex-start;
   margin-bottom: 0;
 }
 
@@ -646,143 +738,48 @@ html[data-theme="dark"] .hero-meta {
   background: var(--blue);
 }
 
-.hero-graphic-base {
-  flex: 0.9 1 0;
-  width: 45%;
-  min-width: 0;
-  position: relative;
-  z-index: 1;
-  background-color: var(--bg-2);
-  background-image:
-    linear-gradient(var(--line-strong) var(--grid-line), transparent var(--grid-line)),
-    linear-gradient(90deg, var(--line-strong) var(--grid-line), transparent var(--grid-line));
-  background-size: var(--grid-size) var(--grid-size);
-  border: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-start;
-  overflow: hidden;
-  transition: background-color .25s ease, border-color .25s ease;
+/* (Removed .hero-graphic-base box layout) */
+
+.brutal-panel {
+  background: var(--brutal-bg);
+  border: var(--brutal-border);
+  box-shadow: var(--brutal-shadow);
+  border-radius: 0;
 }
 
-.hero-graphic-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 20px;
-  padding: calc(var(--grid-size) * 1.5);
+.editorial-clock {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
   width: 100%;
-  height: 100%;
-  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.hero-graphic-base .aws-mark {
-  align-self: flex-end;
-  transform: scale(1.3);
-  transform-origin: right center;
-  transition: transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+.editorial-clock .seg {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-top: 2px solid var(--line-strong);
+  padding-top: 12px;
+  width: 100%;
 }
 
-.hero-graphic-base:hover .aws-mark {
-  transform: scale(1.36);
-}
-
-.hero-graphic-base .credit-badge {
-  justify-content: flex-end;
-}
-
-/* Countdown â€” desktop: bottom-center, half on hero box / half outside */
-.hero-main > .clock {
-  --clock-pad-y: clamp(10px, 1.7vw, 26px);
-  --clock-pad-x: clamp(12px, 2.2vw, 34px);
-  --clock-gap: clamp(4px, 0.85vw, 12px);
-  --clock-digit-size: clamp(16px, 2.85vw, 44px);
-  --clock-label: clamp(8px, 0.85vw, 12px);
-  --clock-colon: clamp(14px, 2.1vw, 32px);
-  --clock-seg: clamp(30px, 5vw, 78px);
-
-  position: absolute;
-  left: 50%;
-  top: auto;
-  bottom: 0;
-  z-index: 5;
-  width: max-content;
-  max-width: calc(100% - 24px);
-  box-sizing: border-box;
-  transform: translate(-50%, 50%);
-  transform-origin: center center;
-  transition: transform .25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .25s ease;
-}
-
-.hero-main > .clock:hover {
-  transform: translate(-50%, 47%) scale(1.015);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.24);
-}
-
-.clock {
-  display: inline-grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  align-items: center;
-  gap: var(--clock-gap, 12px);
-  width: max-content;
-  max-width: 100%;
-  background: var(--clock-bg);
-  border: 1px solid var(--clock-border);
-  border-radius: clamp(8px, 0.8vw, 12px);
-  padding: var(--clock-pad-y, 26px) var(--clock-pad-x, 34px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.clock .seg {
-  text-align: center;
-  min-width: 0;
-  width: var(--clock-seg, 78px);
-  flex: none;
-  transition: transform .2s ease;
-}
-
-.clock .seg:hover {
-  transform: translateY(-2px);
-}
-
-.clock .seg b {
-  display: block;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: var(--clock-digit-size, 44px);
+.editorial-clock .seg b {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: clamp(40px, 4vw, 56px);
+  font-weight: 900;
   line-height: 1;
-  color: var(--clock-num);
-  transition: color .2s ease;
+  color: var(--text-strong);
 }
 
-.clock .seg:hover b {
-  color: var(--orange);
-}
-
-.clock .seg small {
-  display: block;
-  margin-top: clamp(3px, 0.5vw, 8px);
+.editorial-clock .seg small {
   font-family: var(--font-mono);
-  font-size: var(--clock-label, 12px);
-  letter-spacing: .1em;
-  color: var(--blue);
+  font-size: 14px;
   text-transform: uppercase;
-}
-
-.clock .colon {
-  align-self: center;
-  color: var(--muted-2);
-  font-family: var(--font-mono);
-  font-size: var(--clock-colon, 32px);
-  line-height: 1;
-  padding-bottom: calc(var(--clock-label, 12px) + clamp(2px, 0.35vw, 6px));
-  flex: none;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-top: 6px;
 }
 
 /* ===== SECTION SHELL ===== */
@@ -793,6 +790,96 @@ section {
 
 #speakers {
   padding-top: 40px;
+}
+
+/* ===== SPONSORS ===== */
+.tier {
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.tier-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.tier-badge {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  letter-spacing: 0.1em;
+  background: var(--brutal-bg);
+  border: var(--brutal-border);
+  color: var(--text-strong);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-transform: uppercase;
+}
+
+.tier-badge.gold {
+  color: #FBBF24;
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.tier-badge.community {
+  color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.tier-line {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.tier-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.tier-grid.gold {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.tier-grid.community {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.sponsor-slot {
+  background: var(--brutal-bg);
+  border: var(--brutal-border);
+  border-radius: 0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 140px;
+  box-shadow: var(--brutal-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.sponsor-slot:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+}
+
+.slot-inner span {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.sponsor-slot:hover .slot-inner span {
+  color: var(--text-strong);
 }
 
 .section-light {
@@ -851,8 +938,8 @@ section {
 .about-grid > div,
 .about-grid > ul {
   background: var(--bg-overlay, rgba(255, 255, 255, 0.72));
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+
+
   padding: 32px;
   border-radius: 16px;
   border: 1px solid var(--about-border);
@@ -942,23 +1029,518 @@ section {
   opacity: 0.9;
 }
 
+/* ===== EVENT DETAILS — HORIZONTAL "BLUEPRINT" TRACK =====
+   The #program section becomes a scroll-pinned horizontal pan on desktop.
+   Structure: #program (tall spacer) > .wrap > .blueprint-pin (a 100vh frame) >
+   .blueprint-track (flex row, translated by JS).
+
+   NOTE ON PINNING: `body { overflow-x: clip }` (theme.css) establishes a clip
+   context that breaks native `position: sticky` for viewport-relative pinning,
+   so we DON'T use sticky. Instead blueprintScroll.js manually pins the frame:
+   it's position:absolute at the top before the window, position:fixed while in
+   the pin window, and position:absolute at the bottom after it. The pin-state
+   classes below (.is-before / .is-pinned / .is-after) are toggled by JS.
+   --bp-extra (horizontal travel = trackWidth - viewportWidth) sets the spacer
+   height. All gated behind html.bp-active. */
+
+html.bp-active #program {
+  height: calc(100vh + var(--bp-extra, 0px));
+  padding: 0;
+  position: relative;
+}
+
+html.bp-active #program .wrap {
+  max-width: none;
+  padding: 0;
+  height: 100%;
+}
+
+html.bp-active #program .section-head {
+  /* The intro panel carries the heading in horizontal mode; hide the stacked
+     one so it doesn't scroll away above the pin. */
+  display: none;
+}
+
+.blueprint-pin {
+  /* Fallback (no bp-active): behave like a normal block; JS/CSS below stacks
+     the track vertically so all content reads top-to-bottom. */
+  position: relative;
+}
+
+/* Manual pin: a full-viewport frame the JS parks in place.
+   Solid backdrop covers the vertically-scrolling body grid so the horizontal
+   scene reads as one static stage while the panels pan. Uses theme tokens so
+   it follows light/dark. A faint own-grid keeps the brand texture without the
+   vertical drift. */
+html.bp-active .blueprint-pin {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  left: 0;
+  top: 0;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--line) var(--grid-line), transparent var(--grid-line)),
+    linear-gradient(90deg, var(--line) var(--grid-line), transparent var(--grid-line));
+  background-size: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size);
+  background-position: left 0 top 0, left 0 top 0;
+}
+
+/* Before the pin window: parked at the top of the section. */
+html.bp-active .blueprint-pin.is-before {
+  position: absolute;
+  top: 0;
+}
+
+/* Inside the pin window: fixed to the viewport so it holds while we pan. */
+html.bp-active .blueprint-pin.is-pinned {
+  position: fixed;
+  top: 0;
+}
+
+/* After the pin window: parked at the bottom of the section. */
+html.bp-active .blueprint-pin.is-after {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+}
+
+.blueprint-track {
+  display: flex;
+  gap: clamp(24px, 4vw, 64px);
+}
+
+html.bp-active .blueprint-track {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  /* Align panels to a shared TOP baseline (editorial spread), then offset
+     individually — reads as a designed grid, not floating boxes. */
+  align-items: stretch;
+  gap: clamp(48px, 6vw, 120px);
+  padding: 0 clamp(64px, 10vw, 220px);
+  will-change: transform;
+}
+
+/* ---- Panels: a consistent editorial column ---- */
+.blueprint-panel {
+  flex: 0 0 auto;
+  position: relative;
+}
+
+html.bp-active .blueprint-panel {
+  width: clamp(360px, 34vw, 480px);
+  height: 62vh;
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: clamp(32px, 3vw, 48px) 0;
+  overflow: hidden;
+}
+
+/* Asymmetry: staggered vertical offsets against the shared baseline. */
+html.bp-active .blueprint-panel--wide { width: clamp(420px, 42vw, 620px); }
+html.bp-active .blueprint-panel--intro { width: clamp(400px, 40vw, 560px); }
+html.bp-active .blueprint-panel--offset-up { margin-top: -6vh; }
+html.bp-active .blueprint-panel--offset-down { margin-top: 8vh; }
+
+/* ---- Editorial meta row (index / label) shared by every panel ---- */
+.bp-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+}
+
+.bp-meta-index {
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--purple);
+}
+
+.bp-meta-label {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+
+.bp-meta-count {
+  margin-left: auto;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+/* ---- Intro panel: editorial cover ---- */
+.blueprint-panel--intro { justify-content: space-between; }
+
+.bp-title {
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  color: var(--text-strong);
+  font-size: clamp(56px, 8vw, 120px);
+  margin: clamp(24px, 4vh, 56px) 0 auto;
+}
+
+.bp-lead {
+  font-family: var(--font-sans);
+  color: var(--muted);
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.6;
+  max-width: 34ch;
+}
+
+.bp-cover-figure {
+  display: block;
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--purple);
+  margin-top: 24px;
+}
+
+/* ---- Agenda panels: folio numeral + editorial copy column ---- */
+html.bp-active .blueprint-panel--agenda { justify-content: flex-start; }
+
+.blueprint-panel--agenda .bp-num {
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  color: var(--text-strong);
+  font-size: clamp(88px, 12vw, 168px);
+  margin: 0 0 clamp(16px, 3vh, 40px);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* The oversized numeral gets a hairline accent underline + tint to feel typeset
+   rather than decorative. */
+.blueprint-panel--agenda .bp-num::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin-top: clamp(8px, 1.5vh, 20px);
+  background: var(--purple);
+}
+
+.bp-agenda-body { max-width: 42ch; }
+
+.blueprint-panel--agenda h3 {
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  font-size: clamp(24px, 2.4vw, 38px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+
+.blueprint-panel--agenda p {
+  font-family: var(--font-sans);
+  color: var(--muted);
+  font-size: clamp(14.5px, 1.05vw, 17px);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Offset-down panels: numeral sits after the copy for a mirrored rhythm. */
+html.bp-active .blueprint-panel--offset-down { flex-direction: column-reverse; justify-content: flex-end; }
+html.bp-active .blueprint-panel--offset-down .bp-num { margin: clamp(16px, 3vh, 40px) 0 0; }
+html.bp-active .blueprint-panel--offset-down .bp-num::after { margin: 0 0 clamp(8px, 1.5vh, 20px); }
+
+/* ---- Schedule panel: editorial timeline (no widget scrollbar) ---- */
+html.bp-active .blueprint-panel--schedule {
+  width: clamp(720px, 62vw, 940px);
+  height: 72vh;
+  min-height: 520px;
+  padding: clamp(24px, 2.5vw, 40px) 0;
+  justify-content: flex-start;
+}
+
+.bp-sched-title {
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  font-size: clamp(22px, 2.2vw, 34px);
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  margin: 0 0 16px;
+}
+
+html.bp-active .blueprint-panel--schedule .schedule-container {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+html.bp-active .blueprint-panel--schedule .schedule-container:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Editorial running order as a two-column spread: morning (rows 1-3) on the
+   left, afternoon (rows 4-6) on the right, each a hairline-spine timeline.
+   Splitting the six rows across two columns halves the height so the whole day
+   fits the pinned panel without an inner scrollbar. */
+html.bp-active .blueprint-panel--schedule .schedule {
+  border-top: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, auto);
+  column-gap: clamp(32px, 4vw, 72px);
+  align-content: start;
+}
+
+/* Each row: internal time/what grid, plus a hairline spine (border-left) and a
+   node dot so each column reads as its own timeline. */
+html.bp-active .blueprint-panel--schedule .sched-row {
+  position: relative;
+  margin: 0;
+  padding: clamp(8px, 1.2vh, 14px) 0 clamp(8px, 1.2vh, 14px) clamp(20px, 2vw, 32px);
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+  border-left: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+
+/* Node dot on the spine, aligned to each time marker. */
+html.bp-active .blueprint-panel--schedule .sched-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: clamp(14px, 1.8vh, 20px);
+  width: 7px;
+  height: 7px;
+  background: var(--purple);
+  transform: translateX(-50%);
+}
+
+html.bp-active .blueprint-panel--schedule .sched-row .time {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding-top: 2px;
+}
+
+/* Compact speaker chips so all six rows fit the tall panel without scrolling. */
+html.bp-active .blueprint-panel--schedule .sched-speakers-inline {
+  margin-top: 8px;
+  gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+html.bp-active .blueprint-panel--schedule .speaker-inline-card {
+  padding: 3px 8px 3px 3px;
+  gap: 6px;
+}
+
+html.bp-active .blueprint-panel--schedule .speaker-inline-avatar {
+  width: 20px;
+  height: 20px;
+}
+
+html.bp-active .blueprint-panel--schedule .speaker-inline-name {
+  font-size: 11px;
+}
+
+html.bp-active .blueprint-panel--schedule .sched-row .what b {
+  font-size: 14px;
+}
+
+html.bp-active .blueprint-panel--schedule .sched-row .what span {
+  font-size: 12px;
+}
+
+html.bp-active .blueprint-panel--schedule .sched-row:hover {
+  background: transparent;
+  transform: none;
+}
+
+html.bp-active .blueprint-panel--schedule .sched-row .time {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+/* ---- Horizontal progress bar (bottom of the pinned frame) ---- */
+.blueprint-progress {
+  display: none;
+}
+
+html.bp-active .blueprint-progress {
+  display: block;
+  position: absolute;
+  left: clamp(40px, 8vw, 160px);
+  right: clamp(40px, 8vw, 160px);
+  bottom: clamp(28px, 5vh, 56px);
+  height: 3px;
+  background: var(--line-strong);
+  z-index: 3;
+}
+
+.blueprint-progress-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--purple);
+  transform-origin: left center;
+  transition: background-color .3s ease;
+}
+
+/* ---- Scroll hint ---- */
+.blueprint-hint {
+  display: none;
+}
+
+html.bp-active .blueprint-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  right: clamp(40px, 8vw, 160px);
+  bottom: clamp(44px, 7vh, 84px);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  z-index: 3;
+  transition: opacity .4s ease;
+}
+
+.blueprint-hint .bp-hint-arrow {
+  font-size: 18px;
+  color: var(--purple);
+  animation: bpHintNudge 1.4s ease-in-out infinite;
+}
+
+html.bp-active .blueprint-pin.bp-engaged .blueprint-hint {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes bpHintNudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blueprint-hint .bp-hint-arrow { animation: none; }
+}
+
+/* ---- Vertical fallback (no html.bp-active): touch / reduced-motion / narrow.
+   The track stacks; panels render as plain cards so all content reads
+   top-to-bottom, matching the original agenda + schedule experience. ---- */
+.blueprint-track {
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+html:not(.bp-active) .blueprint-panel--agenda {
+  padding: 28px 32px;
+  background: var(--brutal-bg);
+  border: var(--brutal-border);
+  box-shadow: var(--brutal-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+html:not(.bp-active) .blueprint-panel--agenda:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+/* In the vertical stack the in-body meta row carries the index + label, so the
+   oversized folio numeral is redundant — hide it. */
+html:not(.bp-active) .blueprint-panel--agenda > .bp-num,
+html:not(.bp-active) .bp-cover-figure {
+  display: none;
+}
+
+html:not(.bp-active) .bp-meta {
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+html:not(.bp-active) .blueprint-panel--agenda h3 {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  color: var(--text-strong);
+}
+
+html:not(.bp-active) .blueprint-panel--agenda p {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.55;
+  max-width: 640px;
+  margin: 0;
+}
+
+/* Intro panel in fallback: a compact lead-in above the cards. */
+html:not(.bp-active) .blueprint-panel--intro {
+  padding: 8px 0 16px;
+}
+
+html:not(.bp-active) .blueprint-panel--intro .bp-title {
+  font-size: clamp(34px, 8vw, 56px);
+  margin: 12px 0;
+}
+
+/* Schedule fallback keeps the original card styling from .schedule-container /
+   .sched-row below; just give the section title spacing. */
+html:not(.bp-active) .blueprint-panel--schedule .bp-sched-title {
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  font-size: 22px;
+  margin: 24px 0 16px;
+  color: var(--text-strong);
+}
+
 /* ===== EVENT DETAILS ===== */
 .program-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  gap: 24px;
   position: relative;
   z-index: 2;
-  align-items: start;
+  align-items: stretch;
 }
 
 .program-heading {
   font-family: var(--font-display, var(--font-sans));
-  font-weight: 700;
-  font-size: 24px;
+  font-weight: 900;
+  font-size: 32px;
+  text-transform: uppercase;
   color: var(--text-strong);
   margin-bottom: 24px;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.02em;
 }
 
 .agenda-list {
@@ -966,25 +1548,26 @@ section {
   flex-direction: column;
   gap: 16px;
   margin-bottom: 0;
+  position: sticky;
+  top: calc(var(--header-h) + 40px);
 }
 
 .agenda-item {
   display: grid;
-  grid-template-columns: 56px 1fr;
+  grid-template-columns: 60px 1fr;
   gap: 20px;
-  padding: 24px 26px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, box-shadow 0.25s ease;
+  padding: 32px;
+  background: var(--brutal-bg);
+  border: var(--brutal-border);
+  box-shadow: var(--brutal-shadow);
+  border-radius: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: default;
 }
 
 .agenda-item:hover {
   transform: translateY(-4px) scale(1.01);
-  border-color: rgba(167, 89, 255, 0.5);
-  box-shadow: 0 12px 28px rgba(167, 89, 255, 0.12);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
 }
 
 .agenda-num {
@@ -1025,23 +1608,25 @@ section {
 }
 
 .schedule-container {
-  background: var(--bg-elevated);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 28px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  transition: box-shadow .3s ease;
+  background: var(--brutal-bg);
+  border: var(--brutal-border);
+  border-radius: 0;
+  padding: 40px;
+  box-shadow: var(--brutal-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .schedule-container:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
 }
 
 .schedule-container h3 {
   font-family: var(--font-display, var(--font-sans));
-  font-weight: 700;
-  font-size: 20px;
-  margin-bottom: 18px;
+  font-weight: 900;
+  font-size: 24px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
   color: var(--text-strong);
 }
 
@@ -1098,6 +1683,56 @@ html[data-theme="dark"] .sched-row:hover {
   font-size: 12px;
   color: var(--muted-2);
   margin-top: 14px;
+}
+
+/* Inline speaker chips shown inside schedule rows (rendered by speakersUI.js).
+   Styles moved out of inline attributes so they can stay responsive: the row
+   wraps, and each pill is allowed to shrink + ellipsis so a long name can't
+   push the schedule wider than a narrow phone viewport. */
+.speaker-inline-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+}
+
+.speaker-inline-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 30px;
+  background: rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+  min-width: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+html[data-theme="dark"] .speaker-inline-card {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.speaker-inline-card:hover {
+  transform: translateY(-2px);
+}
+
+.speaker-inline-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+
+.speaker-inline-name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 /* ===== VENUE ===== */
@@ -1644,7 +2279,7 @@ html[data-theme="dark"] .sc-card-foot {
   inset: 0;
   z-index: 999;
   background: rgba(11, 21, 38, 0.7);
-  backdrop-filter: blur(8px);
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1700,7 +2335,7 @@ html[data-theme="dark"] .modal-card {
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(11, 21, 38, 0.6);
   color: #FFFFFF;
-  backdrop-filter: blur(8px);
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1750,7 +2385,10 @@ html[data-theme="dark"] .s-modal-header {
   position: absolute;
   width: var(--grid-size);
   height: var(--grid-size);
-  opacity: 0.85;
+  background: var(--box-c, var(--blue));
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.6;
 }
 
 .s-modal-deco .sm-b1 {
@@ -1956,6 +2594,15 @@ html[data-theme="dark"] .sc-li-link {
     padding-right: 16px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none; /* Firefox */
+    /* The parent .speaker-category-block is a centered flex column, so the
+       nowrap card row must be pinned to full width or it grows to fit all
+       cards and drags the whole document wider than the viewport. Pinning
+       width + min-width:0 lets overflow-x:auto actually scroll. */
+    width: 100%;
+    max-width: 100%;
+    align-self: stretch;
+    min-width: 0;
+    box-sizing: border-box;
   }
   .speaker-grid::-webkit-scrollbar {
     display: none; /* WebKit */
@@ -2071,17 +2718,57 @@ html[data-theme="dark"] .speaker-section-divider {
   margin: 0 auto 40px auto;
 }
 
+/* Editorial tier layout: a left "masthead" aside (label + descriptor + count)
+   set against the sponsor slots on the right, divided by a hairline rule —
+   the same left-label / right-content rhythm used across the rest of the
+   site (hero meta column, agenda). This replaces the old full-width header
+   bar + centered-label boxes that read as empty placeholders. */
 .tier {
   margin-bottom: 0;
   position: relative;
   z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr;
+  gap: 40px;
+  align-items: start;
+  padding: 32px 0;
+  border-top: 1px solid var(--line);
 }
 
-.tier-header {
+.tier:first-child {
+  padding-top: 8px;
+  border-top: none;
+}
+
+.tier-aside {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  position: sticky;
+  top: calc(var(--header-h) + 24px);
+}
+
+.tier-desc {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0;
+  max-width: 30ch;
+}
+
+.tier-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.tier-count b {
+  font-weight: 700;
+  color: var(--text-strong);
 }
 
 .tier-badge {
@@ -2135,12 +2822,12 @@ html[data-theme="dark"] .tier-badge.community {
 
 .tier-grid {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
-.tier-grid.platinum { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-.tier-grid.gold { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-.tier-grid.community { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.tier-grid.platinum { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.tier-grid.gold { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.tier-grid.community { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 
 .sponsor-slot {
   background: var(--card-bg, #FFFFFF);
@@ -2149,7 +2836,8 @@ html[data-theme="dark"] .tier-badge.community {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 20px;
+  padding: 20px 18px;
+  min-height: 92px;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, box-shadow 0.25s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   cursor: pointer;
@@ -2851,215 +3539,122 @@ footer {
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 880px) {
-  .wrap { padding: 0 24px; }
 
-  .hero {
-    flex-direction: column;
-    min-height: auto;
-    padding-top: calc(var(--grid-size) * 0.75);
-    padding-bottom: calc(var(--grid-size) * 1.25);
-    padding-left: max(12px, env(safe-area-inset-left));
-    padding-right: max(12px, env(safe-area-inset-right));
-  }
-
-  .hero-main {
-    /* Visual on top, copy below */
-    --hero-visual-h: clamp(148px, 36vw, 200px);
-    flex-direction: column-reverse;
-    width: min(100%, calc(100vw - 24px));
-    max-width: calc(var(--grid-size) * 20);
-    margin-bottom: calc(var(--grid-size) * 1.6);
-  }
-
-  .hero-copy {
-    width: 100%;
-    border-right: 1px solid var(--line);
-    border-top: none;
-    padding: calc(var(--grid-size) * 1.35) max(16px, calc(var(--grid-size) * 0.75)) calc(var(--grid-size) * 1.1);
-    padding-right: max(16px, calc(var(--grid-size) * 0.75));
-    justify-content: flex-start;
-  }
-
-  .hero-copy .eyebrow {
-    max-width: calc(100% - 11rem);
-    line-height: 1.35;
-  }
-
-  .hero-title {
-    font-size: clamp(34px, 9vw, 48px);
-  }
-
-  .hero-desc {
-    font-size: 13px;
-    margin-bottom: 22px;
-  }
-
-  .hero-actions {
-    gap: 10px;
-    margin-bottom: 22px;
-  }
-
-  .hero-actions .btn {
-    flex: 1 1 auto;
-    justify-content: center;
-    min-width: min(100%, 140px);
-    padding: 12px 16px;
-    font-size: 13px;
-  }
-
-  .hero-meta {
-    flex-direction: column;
-    gap: 10px;
-    font-size: 13px;
-  }
-
-  .hero-graphic-base {
-    width: 100%;
-    flex: 0 0 var(--hero-visual-h);
-    height: var(--hero-visual-h);
-    min-height: var(--hero-visual-h);
-    max-height: var(--hero-visual-h);
-    border-bottom: none;
-  }
-
-  .hero-graphic-content {
-    align-items: flex-end;
-    justify-content: flex-start;
-    padding: calc(var(--grid-size) * 0.7);
-    gap: 12px;
-  }
-
-  .hero-graphic-base .aws-mark {
-    transform: scale(1.05);
-  }
-
-  .credit-badge .chip-box {
-    width: 40px;
-    height: 40px;
-  }
-
-  /* Countdown: bottom-center below the hero box on mobile */
-  .hero-main > .clock {
-    --clock-pad-y: 12px;
-    --clock-pad-x: 16px;
-    --clock-gap: 8px;
-    --clock-digit-size: 22px;
-    --clock-label: 9px;
-    --clock-colon: 18px;
-    --clock-seg: 42px;
-
-    left: 50%;
-    right: auto;
-    top: auto;
-    bottom: 0;
-    transform: translate(-50%, 50%);
-    max-width: calc(100% - 24px);
-    border-radius: 10px;
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
-  }
-
-  .program-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
+/* Tablet / small-laptop: the section container uses grid-size*2 (104px) of
+   side padding at desktop. That has to shrink well before the phone
+   breakpoint or every .wrap section gets crushed into a narrow column. */
+@media (max-width: 1024px) {
+  .wrap { padding: 0 40px; }
 }
 
 @media (max-width: 980px) {
-  .nav-inner {
-    justify-content: space-between;
-    padding: 12px 20px;
-  }
-
-  /* Let the tagline wrap cleanly */
+  .nav-inner { justify-content: space-between; padding: 12px 20px; }
   .brand-text { white-space: normal; }
   .brand-text span { white-space: normal; overflow: visible; text-overflow: clip; }
+  
+  nav.links, .nav-cta-btn { display: none !important; }
+  .nav-cta { display: flex; gap: 8px; }
 
-  nav.links,
-  .nav-cta-btn { display: none; }
-
-  .nav-cta {
-    display: flex;
-    gap: 8px;
+  /* Hide background blocks on mobile to prevent overlapping */
+  .deco-layer, .primer-edge { display: none !important; }
+  
+  .editorial-hero {
+    width: calc(100% - 32px);
+    padding: 28px 22px;
+    margin-bottom: calc(var(--grid-size) * 1.5);
   }
 
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
+  .editorial-clock {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
   }
 
-  .venue-cards {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-  }
+  /* Event Details: stack the agenda + schedule into one column and drop the
+     sticky pin (it only makes sense next to a taller sibling column). */
+  .program-grid { grid-template-columns: 1fr; gap: 20px; }
+  .agenda-list { position: static; top: auto; }
+
+  .about-grid { grid-template-columns: 1fr; gap: 34px; }
+  .venue-cards { grid-template-columns: 1fr; grid-template-rows: auto; }
   .venue-inline-floors { grid-template-columns: 1fr; }
   .chapter-grid { grid-template-columns: repeat(2, 1fr); }
-
-  .tier-grid.platinum,
-  .tier-grid.gold,
-  .tier-grid.community {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
+  /* Sponsor tiers: drop the editorial two-column split; stack the aside
+     masthead above its slots and release the sticky pin. */
+  .tier { grid-template-columns: 1fr; gap: 18px; padding: 24px 0; }
+  .tier-aside { position: static; top: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .tier-desc { flex: 1 1 100%; max-width: 60ch; }
+  .tier-grid.platinum, .tier-grid.gold, .tier-grid.community { grid-template-columns: repeat(2, 1fr); }
   .foot-grid { grid-template-columns: repeat(3, 1fr); gap: 28px 16px; }
   .foot-brand { grid-column: 1 / -1; }
   .register-inner { grid-template-columns: 1fr; }
   .qr-box { justify-self: start; }
+
+  /* Sponsor CTA: stack copy over the button so nothing squeezes/overflows. */
+  .sponsor-cta-banner { flex-direction: column; align-items: flex-start; gap: 18px; padding: 24px; }
+  .sponsor-cta-banner .btn { width: 100%; justify-content: center; }
 
   .mobile-dock-nav { display: block; }
   body { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
   .proto-badge { bottom: calc(82px + env(safe-area-inset-bottom)); }
 }
 
+/* Phone: tighten the container padding and heavy card interiors so content
+   gets real width back on 320–480px screens. */
+@media (max-width: 640px) {
+  .wrap { padding: 0 20px; }
+
+  /* Safety net: long unbroken words (URLs, uppercase headings) must wrap
+     rather than push the layout wider than the viewport. */
+  h1, h2, h3, h4, h5,
+  .section-title, .hero-title, .ed-subheadline,
+  p, .qr-label, .venue-inline-head .addr {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .agenda-item { padding: 24px 20px; }
+  .schedule-container { padding: 24px 20px; }
+  .about-grid > div,
+  .about-grid > ul { padding: 24px 20px; }
+  .sponsor-slot { padding: 20px 16px; }
+
+  .foot-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 16px; }
+}
+
 @media (max-width: 520px) {
-  .hero-title { font-size: clamp(32px, 10vw, 42px); }
-  /* clock drops below the copy here, so the eyebrow gets the full width */
-  .hero-copy .eyebrow { max-width: 100%; }
-  .hero-main {
-    --hero-visual-h: clamp(132px, 38vw, 168px);
-    width: calc(100% - 16px);
-  }
-  .hero-copy {
-    padding: 28px 16px 24px;
-  }
-  .hero-sub { font-size: 13px; }
-  .hero-desc {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .hero-main > .clock {
-    --clock-pad-y: 8px;
-    --clock-pad-x: 12px;
-    --clock-gap: 5px;
-    --clock-digit-size: 16px;
-    --clock-label: 7.5px;
-    --clock-colon: 13px;
-    --clock-seg: 32px;
-    left: 50%;
-    right: auto;
-    top: auto;
-    bottom: 0;
-    transform: translate(-50%, 50%);
-    max-width: calc(100% - 16px);
-  }
+  /* On phones the display copy is the #1 overflow culprit. Scale the hero
+     title down, let the "2026" accent wrap onto its own line, and allow long
+     uppercase headings/leads to break instead of clipping off-screen. */
+  .hero-title { font-size: clamp(40px, 13vw, 60px); overflow-wrap: break-word; }
+  .hero-title .accent { display: inline; }
+  .editorial-hero { gap: 24px; padding: 22px 18px; }
+  .ed-subheadline { font-size: clamp(20px, 6vw, 24px); overflow-wrap: break-word; }
+  .ed-body-lead { max-width: 100%; overflow-wrap: break-word; }
   section { padding: 70px 0; }
-
-  .agenda-item {
-    grid-template-columns: 44px 1fr;
-    gap: 14px;
-  }
-
+  .agenda-item { grid-template-columns: 44px 1fr; gap: 14px; }
   .agenda-num { font-size: 22px; }
   .chapter-grid { grid-template-columns: 1fr; }
   .tier-grid.community { grid-template-columns: repeat(2, 1fr); }
-
-  .venue-inline-head,
-  .venue-inline-floors,
-  .venue-inline-foot { padding: 20px; }
-
+  .venue-inline-head, .venue-inline-floors, .venue-inline-foot { padding: 20px; }
   .nav-inner { padding: 14px 16px; }
+
+  /* Single column footer + no space-between gaps on the tiniest screens. */
+  .foot-grid { grid-template-columns: 1fr; gap: 22px; }
+  .foot-bottom { justify-content: center; text-align: center; }
+
+  /* Sched rows: give the time column just enough and let content wrap.
+     minmax(0, 1fr) lets the content column shrink below its min-content so a
+     long word can't force the grid wider than the phone viewport. */
+  .sched-row { grid-template-columns: 70px minmax(0, 1fr); gap: 12px; padding: 12px 10px; margin: 0 -10px; }
+  .agenda-item { grid-template-columns: 40px minmax(0, 1fr); }
+}
+
+/* Extra-narrow (<=380px): editorial clock is cramped at 2-col, keep 2 but
+   shrink the gap; make hero eyebrow/actions breathe. */
+@media (max-width: 380px) {
+  .wrap { padding: 0 16px; }
+  .editorial-clock { gap: 16px; }
+  .hero-actions.ed-actions .btn { flex: 1 1 auto; justify-content: center; }
 }
 
 /* ===== CYBER-PILL THEME TOGGLE SWITCH ===== */
@@ -3238,6 +3833,19 @@ html[data-theme="dark"] .theme-toggle-thumb {
 [data-reveal].reveal-card.reveal-done::after {
   opacity: 0;
   transform: scaleY(1);
+}
+
+/* Reconcile with the horizontal Blueprint pan: inside the pinned track the pin
+   owns all motion, so neutralize scroll-reveal on any tagged descendants (their
+   translateY would fight the track's translate3d). Only while bp-active — in
+   the vertical fallback the schedule card reveals normally. */
+html.bp-active .blueprint-track [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+html.bp-active .blueprint-track [data-reveal].reveal-card::after {
+  display: none !important;
 }
 
 /* ===== REDUCED MOTION ===== */

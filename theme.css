@@ -59,59 +59,67 @@
 /* ---------- LIGHT MODE (default) ---------- */
 :root,
 html[data-theme="light"] {
-  --bg: #FFFFFF;
-  --bg-2: #F5F7FB;
-  --bg-3: #EEF1F6;
+  --bg: #FAFBFC;
+  --bg-2: #F0F2F6;
+  --bg-3: #E8EAEE;
   --bg-elevated: #FFFFFF;
   --bg-overlay: rgba(255, 255, 255, 0.72);
 
-  --ink: #0B1526;
+  --ink: #0B0F19;
   --cloud: #F5F7FB;
-  --text: #0B1526;
+  --text: #0B0F19;
   --text-strong: #000000;
-  --muted: #3D4868;
-  --muted-2: #677494;
+  --muted: #4B5563;
+  --muted-2: #6B7280;
 
-  --line: rgba(11, 21, 38, 0.06);
-  --line-strong: rgba(11, 21, 38, 0.09);
+  --line: rgba(11, 15, 25, 0.04);
+  --line-strong: rgba(11, 15, 25, 0.08);
 
-  --nav-bg: rgba(255, 255, 255, 0.92);
-  --nav-link: #5B6584;
-  --nav-link-active: #0B1526;
+  --nav-bg: rgba(255, 255, 255, 0.85);
+  --nav-link: #4B5563;
+  --nav-link-active: #0B0F19;
 
-  --btn-ghost-border: rgba(11, 21, 38, 0.18);
-  --btn-ghost-color: #0B1526;
+  --btn-ghost-border: rgba(11, 15, 25, 0.12);
+  --btn-ghost-color: #0B0F19;
   --btn-ghost-hover: var(--blue);
 
-  --btn-primary-bg: var(--orange);
-  --btn-primary-text: #0B1526;
-  --btn-primary-shadow: rgba(252, 153, 7, 0.5);
+  --btn-primary-bg: var(--text-strong);
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-shadow: rgba(0, 0, 0, 0.25);
 
-  --clock-bg: #FFFFFF;
-  --clock-border: var(--blue);
-  --clock-num: #0B1526;
+  --clock-bg: rgba(255, 255, 255, 0.7);
+  --clock-border: rgba(255, 255, 255, 0.4);
+  --clock-num: #0B0F19;
 
   --card-bg: #FFFFFF;
-  --card-bg-alt: #F5F7FB;
-  --card-border: rgba(11, 21, 38, 0.1);
+  --card-bg-alt: #F0F2F6;
+  --card-border: rgba(11, 15, 25, 0.06);
+
+  --brutal-bg: #FFFFFF;
+  --brutal-border: 1px solid rgba(11, 15, 25, 0.1);
+  --brutal-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+
+  --glass-bg: #FFFFFF;
+  --glass-border: rgba(11, 15, 25, 0.06);
+  --glow-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
 
   --marquee-fade: var(--bg);
 
   --expanded-accent: #0284C7;
   --expanded-shadow: rgba(2, 132, 199, 0.22);
 
-  --footer-link: #3A4661;
-  --sibling-bg: #F5F7FB;
+  --footer-link: #4B5563;
+  --sibling-bg: #F0F2F6;
 
   --sponsor-slot-bg: #FFFFFF;
-  --sponsor-slot-border: #C9D3E0;
-  --sponsor-slot-text: #94A2B8;
+  --sponsor-slot-border: #D1D5DB;
+  --sponsor-slot-text: #6B7280;
 
   --teal: #0AA98F;
-  --about-text: #3A4661;
-  --about-border: #E1E7F0;
+  --about-text: #374151;
+  --about-border: #E5E7EB;
 
-  --proto-bg: #EEF1F6;
+  --proto-bg: #E8EAEE;
   --sticky-bg: #FFFFFF;
 
   color-scheme: light;
@@ -120,60 +128,68 @@ html[data-theme="light"] {
 /* ---------- DARK MODE ---------- */
 html[data-theme="dark"] {
   --bg: #12182A;
-  --bg-2: #1A2138;
-  --bg-3: #222B45;
-  --bg-elevated: #1A2138;
-  --bg-overlay: rgba(18, 24, 42, 0.72);
+  --bg-2: #192138;
+  --bg-3: #222C47;
+  --bg-elevated: #192138;
+  --bg-overlay: rgba(18, 24, 42, 0.85);
 
   /* Invert ink/cloud so section-light & about text stay readable */
   --ink: #F5F7FB;
-  --cloud: #1A2138;
-  --text: #F5F7FB;
+  --cloud: #192138;
+  --text: #D1D5DB;
   --text-strong: #FFFFFF;
-  --muted: #CBD5E1;
-  --muted-2: #94A3B8;
+  --muted: #9CA3AF;
+  --muted-2: #6B7280;
 
   --line: rgba(255, 255, 255, 0.06);
   --line-strong: rgba(255, 255, 255, 0.09);
 
-  --nav-bg: rgba(18, 24, 42, 0.92);
-  --nav-link: #A8B0C7;
+  --nav-bg: rgba(18, 24, 42, 0.85);
+  --nav-link: #9CA3AF;
   --nav-link-active: #FFFFFF;
 
-  --btn-ghost-border: rgba(255, 255, 255, 0.14);
+  --btn-ghost-border: rgba(255, 255, 255, 0.1);
   --btn-ghost-color: #FFFFFF;
   --btn-ghost-hover: var(--blue);
 
-  --btn-primary-bg: var(--blue);
-  --btn-primary-text: #0B1526;
-  --btn-primary-shadow: rgba(68, 179, 254, 0.5);
+  --btn-primary-bg: var(--text-strong);
+  --btn-primary-text: #12182A;
+  --btn-primary-shadow: rgba(255, 255, 255, 0.25);
 
-  --clock-bg: #0B101D;
-  --clock-border: var(--blue);
+  --clock-bg: rgba(25, 33, 56, 0.6);
+  --clock-border: rgba(255, 255, 255, 0.08);
   --clock-num: #FFFFFF;
 
-  --card-bg: #1A2138;
-  --card-bg-alt: #222B45;
-  --card-border: rgba(255, 255, 255, 0.08);
+  --card-bg: #192138;
+  --card-bg-alt: #222C47;
+  --card-border: rgba(255, 255, 255, 0.06);
+
+  --brutal-bg: #192138;
+  --brutal-border: 1px solid rgba(255, 255, 255, 0.08);
+  --brutal-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+
+  --glass-bg: #192138;
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glow-shadow: 0 0 30px rgba(68, 179, 254, 0.08);
 
   --marquee-fade: var(--bg);
 
   --expanded-accent: #38BDF8;
   --expanded-shadow: rgba(0, 0, 0, 0.5);
 
-  --footer-link: #C7D0E4;
-  --sibling-bg: #1A2138;
+  --footer-link: #9CA3AF;
+  --sibling-bg: #0E121C;
 
-  --sponsor-slot-bg: #222B45;
-  --sponsor-slot-border: rgba(255, 255, 255, 0.14);
-  --sponsor-slot-text: #A8B0C7;
+  --sponsor-slot-bg: #151A29;
+  --sponsor-slot-border: rgba(255, 255, 255, 0.08);
+  --sponsor-slot-text: #9CA3AF;
 
   --teal: #2BD4AD;
-  --about-text: #C7D0E4;
-  --about-border: rgba(255, 255, 255, 0.1);
+  --about-text: #D1D5DB;
+  --about-border: rgba(255, 255, 255, 0.08);
 
-  --proto-bg: #222B45;
-  --sticky-bg: #1A2138;
+  --proto-bg: #151A29;
+  --sticky-bg: #0E121C;
 
   /* Brighten the reticle stroke so it reads on the dark background; keep the
      orange accent dot. (SVG re-declared because data-URIs can't reference
@@ -357,6 +373,9 @@ footer,
   width: var(--grid-size);
   height: var(--grid-size);
   background: var(--box-c, var(--blue));
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.6;
 }
 
 .brand-box.sm {

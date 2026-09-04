@@ -124,66 +124,46 @@
       </div>
       <span class="box-floating" aria-hidden="true"></span>
 
-      <div class="hero-main">
-        <div class="hero-copy">
-          <p class="eyebrow">AWS Student Community Day</p>
+      <div class="editorial-hero">
+        <div class="ed-header">
+          <p class="eyebrow ed-eyebrow">AWS Student Community Day</p>
           <h1 class="hero-title">South Summit <span class="accent">2026</span></h1>
-          <p class="hero-sub">Cloud × AI: Build. Power. Lead.</p>
-          <p class="hero-desc">A full-day, student-led summit bringing builders, student leaders, and tech advocates
-            from CALABARZON together to explore cloud computing and AI — and to build the confidence to lead with it.
-          </p>
-
-          <div class="hero-meta">
-            <div class="hero-meta-item">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              <span><strong>Oct 7, 2026</strong> · 8:00 AM–5:00 PM</span>
-            </div>
-            <div class="hero-meta-item">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-              <span>Venue — <strong>Laguna</strong></span>
-            </div>
-          </div>
-
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank"
-              rel="noopener">Register Now!</a>
-            <button class="btn btn-ghost" onclick="showPage('merch')">Check Out Merch</button>
-          </div>
         </div>
 
-        <div class="hero-graphic-base" aria-label="Event visual">
-          <div class="hero-graphic-content">
-            <div class="aws-mark">
-              <span class="word">aws</span>
-              <svg viewBox="0 0 32 10" fill="none">
-                <path d="M1 2c7 6 23 6 30 0" stroke-width="1.6" stroke-linecap="round" />
-                <path d="M27 1.5l4 .5-1.5 3.5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
-                  fill="none" />
-              </svg>
+        <hr class="ed-rule">
+
+        <div class="ed-content-grid">
+          <div class="ed-col ed-meta">
+            <div class="ed-meta-block">
+              <span class="ed-meta-label">Date</span>
+              <span class="ed-meta-value">Oct 7, 2026</span>
+              <span class="ed-meta-sub">8:00 AM – 5:00 PM</span>
             </div>
-            <div class="credit-badge">
-              <p>HEADER MAIN IMAGE<br>TEMPLATE · WILL ADD LATER</p>
-              <div class="chip-box"><img class="chip" src="assets/images/south-summit-logo.svg" alt="South Summit Logo"></div>
+            <div class="ed-meta-block" style="margin-top: 24px;">
+              <span class="ed-meta-label">Location</span>
+              <span class="ed-meta-value">Laguna</span>
+              <span class="ed-meta-sub">Main Campus</span>
             </div>
           </div>
-        </div>
+          
+          <div class="ed-col ed-desc">
+            <h3 class="ed-subheadline">Cloud × AI: Build. Power. Lead.</h3>
+            <p class="ed-body-lead">A full-day, student-led summit bringing builders, student leaders, and tech advocates from CALABARZON together to explore cloud computing and AI — and to build the confidence to lead with it.</p>
+            <div class="hero-actions ed-actions">
+              <a class="btn btn-primary" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank" rel="noopener">Register Now!</a>
+              <button class="btn btn-ghost" onclick="showPage('merch')">Check Out Merch</button>
+            </div>
+          </div>
 
-        <div class="clock" id="countdown" aria-label="Countdown to event">
-          <div class="seg"><b id="cd-days">00</b><small>Days</small></div>
-          <div class="colon">:</div>
-          <div class="seg"><b id="cd-hours">00</b><small>Hrs</small></div>
-          <div class="colon">:</div>
-          <div class="seg"><b id="cd-mins">00</b><small>Min</small></div>
-          <div class="colon">:</div>
-          <div class="seg"><b id="cd-secs">00</b><small>Sec</small></div>
+          <div class="ed-col ed-clock" id="countdown" aria-label="Countdown to event">
+            <span class="ed-meta-label" style="display:block; margin-bottom:12px;">T-Minus</span>
+            <div class="editorial-clock">
+              <div class="seg"><b id="cd-days">00</b><small>Days</small></div>
+              <div class="seg"><b id="cd-hours">00</b><small>Hrs</small></div>
+              <div class="seg"><b id="cd-mins">00</b><small>Min</small></div>
+              <div class="seg"><b id="cd-secs">00</b><small>Sec</small></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -209,9 +189,10 @@
         <div class="sponsors-wrapper">
           <!-- PLATINUM TIER -->
           <div class="tier">
-            <div class="tier-header">
+            <div class="tier-aside">
               <span class="tier-badge platinum">PLATINUM PARTNERS</span>
-              <span class="tier-line"></span>
+              <p class="tier-desc">Lead the summit. Headline visibility across the stage, badges, and every touchpoint.</p>
+              <span class="tier-count"><b>1</b> of 2 filled</span>
             </div>
             <div class="tier-grid platinum">
               <div class="sponsor-slot active-sponsor">
@@ -234,9 +215,10 @@
 
           <!-- GOLD TIER -->
           <div class="tier">
-            <div class="tier-header">
+            <div class="tier-aside">
               <span class="tier-badge gold">GOLD PARTNERS</span>
-              <span class="tier-line"></span>
+              <p class="tier-desc">Prominent placement in booths, print, and speaker sessions throughout the day.</p>
+              <span class="tier-count"><b>0</b> of 3 filled</span>
             </div>
             <div class="tier-grid gold">
               <div class="sponsor-slot open-slot">
@@ -259,9 +241,10 @@
 
           <!-- COMMUNITY PARTNERS TIER -->
           <div class="tier">
-            <div class="tier-header">
+            <div class="tier-aside">
               <span class="tier-badge community">COMMUNITY &amp; CHAPTER PARTNERS</span>
-              <span class="tier-line"></span>
+              <p class="tier-desc">Student chapters and community groups co-building the summit across CALABARZON.</p>
+              <span class="tier-count"><b>5</b> chapters</span>
             </div>
             <div class="tier-grid community">
               <div class="sponsor-slot open-slot">
@@ -311,73 +294,122 @@
             build, what powers it, and how you lead with it. The agenda runs throughout the day at the Laguna venue.</p>
         </div>
 
-        <div class="program-grid">
-          <div class="agenda-list">
-            <h3 class="program-heading">Agenda: Build. Power. Lead.</h3>
-            <div class="agenda-item">
-              <div class="agenda-num">01</div>
-              <div>
-                <h3>Build — hands-on with Cloud &amp; AI</h3>
+        <!-- HORIZONTAL PANEL TRACK
+             On desktop/pointer (no reduced-motion) this section pins to the
+             viewport and the .blueprint-track pans sideways as you scroll,
+             driven by Lenis (see modules/blueprintScroll.js). On touch /
+             reduced-motion / narrow screens it degrades to a normal vertical
+             stack via the CSS fallback — all content stays identical. -->
+        <div class="blueprint-pin">
+          <div class="blueprint-track">
+
+            <!-- Panel 0: section intro / editorial cover -->
+            <article class="blueprint-panel blueprint-panel--intro">
+              <header class="bp-meta">
+                <span class="bp-meta-index">00</span>
+                <span class="bp-meta-label">The Agenda</span>
+                <span class="bp-meta-count">Three motions</span>
+              </header>
+              <h3 class="bp-title">Build.<br>Power.<br>Lead.</h3>
+              <p class="bp-lead">Three motions instead of one track — what you build, what powers it,
+                and how you lead with it.</p>
+              <span class="bp-cover-figure" aria-hidden="true">&mdash;</span>
+            </article>
+
+            <!-- Panel 1: Build -->
+            <article class="blueprint-panel blueprint-panel--agenda blueprint-panel--offset-up">
+              <span class="bp-num" aria-hidden="true">01</span>
+              <div class="bp-agenda-body">
+                <header class="bp-meta">
+                  <span class="bp-meta-index">01</span>
+                  <span class="bp-meta-label">Build</span>
+                </header>
+                <h3>Hands-on with Cloud &amp; AI</h3>
                 <p>Beginner-friendly technical talks and demos on AWS cloud fundamentals and applied AI — made for
                   first-timers, not just the already-initiated.</p>
               </div>
-            </div>
-            <div class="agenda-item">
-              <div class="agenda-num">02</div>
-              <div>
-                <h3>Power — community &amp; representation</h3>
+            </article>
+
+            <!-- Panel 2: Power -->
+            <article class="blueprint-panel blueprint-panel--agenda blueprint-panel--offset-down blueprint-panel--align-end">
+              <span class="bp-num" aria-hidden="true">02</span>
+              <div class="bp-agenda-body">
+                <header class="bp-meta">
+                  <span class="bp-meta-index">02</span>
+                  <span class="bp-meta-label">Power</span>
+                </header>
+                <h3>Community &amp; representation</h3>
                 <p>Women in Tech spotlights, student success stories, and career pathway sessions that power a more
                   diverse, self-assured builder community.</p>
               </div>
-            </div>
-            <div class="agenda-item">
-              <div class="agenda-num">03</div>
-              <div>
-                <h3>Lead — from participant to leader</h3>
+            </article>
+
+            <!-- Panel 3: Lead -->
+            <article class="blueprint-panel blueprint-panel--agenda blueprint-panel--offset-up">
+              <span class="bp-num" aria-hidden="true">03</span>
+              <div class="bp-agenda-body">
+                <header class="bp-meta">
+                  <span class="bp-meta-index">03</span>
+                  <span class="bp-meta-label">Lead</span>
+                </header>
+                <h3>From participant to leader</h3>
                 <p>Panels, mentorship touchpoints, and community showcases that help students take the next step —
                   organizing, mentoring, and leading their own chapters.</p>
               </div>
-            </div>
+            </article>
+
+            <!-- Panel 4: Program flow / schedule (wide, final) -->
+            <article class="blueprint-panel blueprint-panel--schedule">
+              <header class="bp-meta">
+                <span class="bp-meta-index">04</span>
+                <span class="bp-meta-label">Program Flow</span>
+                <span class="bp-meta-count">One day</span>
+              </header>
+              <h3 class="bp-sched-title">The running order</h3>
+              <div class="schedule-container">
+                <div class="schedule">
+                  <div class="sched-row">
+                    <div class="time">8:00 AM</div>
+                    <div class="what"><b>Doors open &amp; registration</b><span>Badge pickup, community hub opens</span></div>
+                  </div>
+                  <div class="sched-row">
+                    <div class="time">9:00 AM</div>
+                    <div class="what"><b>Opening &amp; keynote</b><span>Cloud × AI: Build. Power. Lead.</span>
+                      <div id="schedGridKeynotes" class="sched-speakers-inline"></div>
+                    </div>
+                  </div>
+                  <div class="sched-row">
+                    <div class="time">10:30 AM</div>
+                    <div class="what"><b>Technical &amp; career tracks</b><span>Cloud fundamentals, applied AI, career
+                        development</span>
+                      <div id="schedGridSessions" class="sched-speakers-inline"></div>
+                    </div>
+                  </div>
+                  <div class="sched-row">
+                    <div class="time">1:00 PM</div>
+                    <div class="what"><b>Women in Tech &amp; showcase</b><span>Panels and student-led lightning talks</span>
+                      <div id="schedGridPanels" class="sched-speakers-inline"></div>
+                    </div>
+                  </div>
+                  <div class="sched-row">
+                    <div class="time">2:30 PM</div>
+                    <div class="what"><b>Sponsor &amp; community booths</b><span>Networking, photobooth, partner
+                        activities</span></div>
+                  </div>
+                  <div class="sched-row">
+                    <div class="time">4:15 PM</div>
+                    <div class="what"><b>Closing &amp; recognition</b><span>Wrap-up and community group photo</span></div>
+                  </div>
+                </div>
+                <p class="sched-note">* Timing to be confirmed with speakers &amp; sponsors.</p>
+              </div>
+            </article>
+
           </div>
 
-          <div class="schedule-container">
-            <h3>Drafted Program Flow</h3>
-            <div class="schedule">
-              <div class="sched-row">
-                <div class="time">8:00 AM</div>
-                <div class="what"><b>Doors open &amp; registration</b><span>Badge pickup, community hub opens</span></div>
-              </div>
-              <div class="sched-row">
-                <div class="time">9:00 AM</div>
-                <div class="what"><b>Opening &amp; keynote</b><span>Cloud × AI: Build. Power. Lead.</span>
-                  <div id="schedGridKeynotes" class="sched-speakers-inline"></div>
-                </div>
-              </div>
-              <div class="sched-row">
-                <div class="time">10:30 AM</div>
-                <div class="what"><b>Technical &amp; career tracks</b><span>Cloud fundamentals, applied AI, career
-                    development</span>
-                  <div id="schedGridSessions" class="sched-speakers-inline"></div>
-                </div>
-              </div>
-              <div class="sched-row">
-                <div class="time">1:00 PM</div>
-                <div class="what"><b>Women in Tech &amp; showcase</b><span>Panels and student-led lightning talks</span>
-                  <div id="schedGridPanels" class="sched-speakers-inline"></div>
-                </div>
-              </div>
-              <div class="sched-row">
-                <div class="time">2:30 PM</div>
-                <div class="what"><b>Sponsor &amp; community booths</b><span>Networking, photobooth, partner
-                    activities</span></div>
-              </div>
-              <div class="sched-row">
-                <div class="time">4:15 PM</div>
-                <div class="what"><b>Closing &amp; recognition</b><span>Wrap-up and community group photo</span></div>
-              </div>
-            </div>
-            <p class="sched-note">* Timing to be confirmed with speakers &amp; sponsors.</p>
-          </div>
+          <!-- Horizontal progress bar + scroll hint (populated/animated by JS) -->
+          <div class="blueprint-progress" aria-hidden="true"><span class="blueprint-progress-fill"></span></div>
+          <div class="blueprint-hint" aria-hidden="true">Scroll <span class="bp-hint-arrow">&rarr;</span></div>
         </div>
       </div>
     </section>

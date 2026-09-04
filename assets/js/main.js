@@ -5,6 +5,7 @@
 
 import { initTheme } from './modules/theme.js';
 import { initRouter } from './modules/routing.js';
+import { initSmoothScroll } from './modules/smoothScroll.js';
 import { initCountdown } from './modules/countdown.js';
 import { initSpeakers } from './modules/speakersUI.js';
 import { initMerch } from './modules/merchUI.js';
@@ -12,12 +13,18 @@ import { initChapters } from './modules/chaptersUI.js';
 import { initSponsors } from './modules/sponsorsUI.js';
 import { initComputeGrid } from './modules/computeGrid.js';
 import { initScrollReveal } from './modules/scrollReveal.js';
+import { initBlueprintScroll } from './modules/blueprintScroll.js';
 import { initMouseTrail } from './modules/mouseTrail.js';
+import { initKineticTypography } from './modules/kinetic.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
     initTheme();
     initRouter();
+    // Smooth scroll (Lenis) — before content/reveal so its showPage wrap and
+    // scroll source are ready for the blueprint horizontal pan. No-ops on
+    // touch / reduced-motion (native scroll).
+    initSmoothScroll();
     initCountdown();
 
     // 2. Initialize UI views & dynamic content
@@ -33,6 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
     //    init*UI() calls above already exist to be tagged and observed.
     initScrollReveal();
 
-    // 5. Interaction effects
+    // 5. Blueprint horizontal-pan — after content injection (schedule speaker
+    //    chips affect the track width) and after Lenis is set up, since the pan
+    //    reads Lenis's smoothed scroll. No-ops on touch / reduced-motion.
+    initBlueprintScroll();
+
+    // 6. Interaction effects
     initMouseTrail();
+    initKineticTypography();
 });

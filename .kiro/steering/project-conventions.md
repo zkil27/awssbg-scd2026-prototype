@@ -13,6 +13,15 @@ whenever you edit or extend this project.
   (e.g. `assets/js/...`, `assets/images/...`, `./theme.css`). Never introduce
   absolute or root-relative (`/`) asset paths.
 - Do not add a `package.json` build pipeline or a JS framework unless explicitly asked.
+- **Sanctioned exception — Lenis (smooth scroll).** [Lenis](https://github.com/darkroomengineering/lenis)
+  is the single approved third-party dependency. It powers site-wide smooth scrolling and
+  drives the `#program` ("The Blueprint") horizontal-pan section. It is imported as a **CDN
+  ES module** (e.g. `https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.mjs`) from
+  `modules/smoothScroll.js` — this keeps the zero-build, no-`package.json` promise intact.
+  This is a one-off exception and is **not** a precedent for adding other libraries; everything
+  else stays vanilla. Lenis must be **disabled** (never created) when the user prefers reduced
+  motion or is on a touch / non-`(pointer: fine)` device, so those users get native scrolling
+  and a plain vertical layout.
 
 ## File & Naming Conventions
 

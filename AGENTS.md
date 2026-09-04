@@ -5,6 +5,7 @@ This file outlines the core guidelines, UI/UX standards, and coding constraints 
 ## 1. Tech Stack & Architecture
 - **Vanilla Everything**: Stick exclusively to Vanilla HTML, CSS, and JavaScript. Do NOT introduce frameworks or libraries like React, Vue, or TailwindCSS.
 - **Module Pattern**: Use ES Modules for JavaScript (e.g., `assets/js/modules/`). Keep logic encapsulated.
+- **Sanctioned exception — Lenis**: [Lenis](https://github.com/darkroomengineering/lenis) is the ONE approved third-party library, used only for smooth scrolling (whole-page inertia + driving the `#program` horizontal-pan). It is loaded as a CDN ES module (e.g. `https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.mjs`) inside `modules/smoothScroll.js` — no npm/build step is introduced. This exception does NOT open the door to other libraries; keep everything else vanilla. Lenis MUST be disabled (never instantiated) under `prefers-reduced-motion: reduce` and on touch / non-`(pointer: fine)` devices, falling back to native scrolling.
 
 ## 2. UI/UX & Design System
 - **Strict Adherence**: Always adhere to the established custom design system. Do not invent new visual styles or arbitrary dimensions.
