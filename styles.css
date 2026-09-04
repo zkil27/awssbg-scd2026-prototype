@@ -1,4 +1,4 @@
-﻿/* =========================================================
+/* =========================================================
    SCD South Summit 2026 â€” Component styles
    Depends on theme.css (CSS variables)
    ========================================================= */
@@ -194,14 +194,14 @@ svg.defs {
 }
 
 .btn-primary {
-  background: var(--orange);
-  color: #0B1526;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
   font-weight: 700;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px -6px rgba(252, 153, 7, 0.5), 0 0 12px rgba(252, 153, 7, 0.25);
+  box-shadow: 0 10px 24px -6px var(--btn-primary-shadow), 0 0 12px rgba(0, 0, 0, 0.1);
 }
 
 .btn-ghost {
@@ -465,8 +465,8 @@ html[data-theme="dark"] .mobile-dock-inner {
 }
 
 .dock-register-btn {
-  background: var(--orange, #FC9907);
-  color: #0B1526;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 800;
@@ -477,7 +477,7 @@ html[data-theme="dark"] .mobile-dock-inner {
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(252, 153, 7, 0.35);
+  box-shadow: 0 4px 12px var(--btn-primary-shadow);
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
   user-select: none;
 }
@@ -842,10 +842,21 @@ section {
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 56px;
+  gap: 32px;
   align-items: start;
   position: relative;
   z-index: 2;
+}
+
+.about-grid > div,
+.about-grid > ul {
+  background: var(--bg-overlay, rgba(255, 255, 255, 0.72));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid var(--about-border);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
 .about-lead {
@@ -1107,7 +1118,8 @@ html[data-theme="dark"] .sched-row:hover {
 
 .venue-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(auto, 600px);
+  justify-content: center;
   grid-template-rows: auto auto auto auto;
   gap: 0 30px;
   position: relative;
@@ -1932,13 +1944,26 @@ html[data-theme="dark"] .sc-li-link {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .speaker-grid {
     gap: 16px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    justify-content: flex-start;
+    padding-bottom: 24px; /* Space for scrollbar */
+    padding-left: 16px; /* Edge spacing */
+    padding-right: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  .speaker-grid::-webkit-scrollbar {
+    display: none; /* WebKit */
   }
   .speaker-grid .speaker-card {
-    width: 100%;
+    width: 85vw;
     max-width: 320px;
+    scroll-snap-align: center;
   }
 }
 

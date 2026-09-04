@@ -31,7 +31,7 @@ const CFG = {
 
   // Lit cells
   cellInset: 1,               // px inset so lit squares sit inside grid lines
-  cellDecayPerSec: 2.6,       // brightness units lost per second (higher = faster fade)
+  cellDecayPerSec: 0.6,       // brightness units lost per second (higher = faster fade)
   cursorRadius: 0,            // Chebyshev radius (in cells) lit around the cursor (0 = single 1x1 cell)
   cursorCoreBrightness: 0.9,  // brightness at the hovered cell
   maxLitCells: 900,           // safety cap on the lit-cell map
@@ -42,6 +42,11 @@ const CFG = {
   bootSweepBrightness: 0.8,   // brightness of freshly-swept cells
   bootSweepBandCells: 4,      // thickness (in cells) of the moving wavefront
   bootSweepDensity: 0.34,     // fraction of cells in the band that light up (higher = more boxes)
+
+  // Ambient Blocks (Animated background boxes)
+  blockOpacity: 1.0,          // High opacity for the persistent boxes
+  blockRepeatY: 54,           // Vertical repeat interval (in rows)
+  blockAnimIntervalMs: 2000,  // How often blocks decide to shift/recolor
 
   // Per-theme alpha multipliers (kept subtle so content stays dominant)
   alpha: {
@@ -194,6 +199,107 @@ function runBootSweep(elapsed) {
   }
 }
 
+/* ========================== Ambient Blocks ============================== */
+const ambientBlocks = [
+  // Left side
+  { c: 1, r: 3, color: 4 }, { c: 2, r: 6, color: 0 }, { c: 1, r: 9, color: 3 }, { c: 2, r: 9, color: 2 },
+  { c: 3, r: 13, color: 1 }, { c: 1, r: 17, color: 0 }, { c: 1, r: 21, color: 4 }, { c: 2, r: 21, color: 3 },
+  { c: 1, r: 22, color: 2 }, { c: 3, r: 26, color: 1 }, { c: 1, r: 31, color: 0 }, { c: 2, r: 36, color: 4 },
+  { c: 3, r: 36, color: 3 }, { c: 1, r: 41, color: 2 }, { c: 2, r: 47, color: 1 }, { c: 1, r: 53, color: 0 },
+  // Right side (negative col = from right edge)
+  { c: -1, r: 2, color: 0 }, { c: -2, r: 5, color: 3 }, { c: -1, r: 8, color: 4 }, { c: -2, r: 8, color: 1 },
+  { c: -3, r: 12, color: 2 }, { c: -1, r: 15, color: 0 }, { c: -2, r: 19, color: 3 }, { c: -1, r: 19, color: 4 },
+  { c: -2, r: 20, color: 2 }, { c: -3, r: 24, color: 1 }, { c: -1, r: 29, color: 0 }, { c: -2, r: 34, color: 3 },
+  { c: -1, r: 34, color: 4 }, { c: -3, r: 39, color: 2 }, { c: -1, r: 45, color: 1 }, { c: -2, r: 51, color: 3 }
+].map(b => ({
+  ...b,
+  currentC: b.c, currentR: b.r,
+  targetC: b.c, targetR: b.r,
+  lastAnimTs: Math.random() * 2000
+}));
+
+function updateAmbientBlocks(ts, dt) {
+  if (reducedMotion) return;
+  for (const b of ambientBlocks) {
+    if (ts - b.lastAnimTs > CFG.blockAnimIntervalMs) {
+      b.lastAnimTs = ts + Math.random() * 500;
+      // 50% chance to move, 50% chance to recolor
+      if (Math.random() < 0.5) {
+        let tc, tr;
+        
+        if (b.targetC === b.c && b.targetR === b.r) {
+          // Currently at base position: move exactly 1 tile away
+          tc = b.c;
+          tr = b.r;
+          const rand = Math.random();
+          if (rand < 0.25) tc = b.c - 1;
+          else if (rand < 0.5) tc = b.c + 1;
+          else if (rand < 0.75) tr = b.r - 1;
+          else tr = b.r + 1;
+        } else {
+          // Currently away from base: must step back to base (prevents diagonals/2-tile jumps)
+          tc = b.c;
+          tr = b.r;
+        }
+
+        // Ensure we don't overlap with any other block's current target
+        let collision = false;
+        for (const other of ambientBlocks) {
+          if (other !== b && other.targetC === tc && other.targetR === tr) {
+            collision = true;
+            break;
+          }
+        }
+        
+        if (!collision) {
+          b.targetC = tc;
+          b.targetR = tr;
+        }
+      } else {
+        b.color = (b.color + 1 + Math.floor(Math.random() * (colors.length - 1))) % colors.length;
+      }
+    }
+
+    // Smoothly interpolate current to target position
+    b.currentC += (b.targetC - b.currentC) * 4 * dt;
+    b.currentR += (b.targetR - b.currentR) * 4 * dt;
+  }
+}
+
+function drawAmbientBlocks() {
+  const size = gridSize;
+  const scrollX = window.scrollX || window.pageXOffset || 0;
+  const scrollY = window.scrollY || window.pageYOffset || 0;
+  
+  // Base total columns on the body clientWidth (matches CSS 100%)
+  const totalCols = Math.floor(document.body.clientWidth / gridSize);
+  const visRows = Math.ceil(viewH / gridSize) + 2;
+  const startVisRow = Math.floor(scrollY / gridSize) - 1;
+
+  for (const b of ambientBlocks) {
+    ctx.fillStyle = rgba(colors[b.color % colors.length], CFG.blockOpacity);
+    
+    // Resolve right-aligned columns
+    const actualCol = b.currentC < 0 ? totalCols + b.currentC : b.currentC;
+    
+    // Repeat vertically so the pattern covers the whole page
+    for (let rep = -1; rep <= Math.ceil((startVisRow + visRows) / CFG.blockRepeatY) + 1; rep++) {
+      const actualRow = b.currentR + rep * CFG.blockRepeatY;
+      
+      // Culling
+      if (actualRow < startVisRow || actualRow > startVisRow + visRows) continue;
+
+      const x = actualCol * gridSize - scrollX;
+      const y = actualRow * gridSize - scrollY;
+
+      // Wrap-around bounds guard for rendering
+      if (x > viewW || x < -gridSize) continue;
+
+      ctx.fillRect(x, y, size, size);
+    }
+  }
+}
+
 /* ============================== Pointer ================================= */
 function onPointerMove(e) {
   if (!hasHover) return;
@@ -236,7 +342,10 @@ function frame(ts) {
   ctx.clearRect(0, 0, viewW, viewH);
 
   runBootSweep(elapsed);
+  updateAmbientBlocks(ts, dt);
   updateLitCells(dt);
+
+  drawAmbientBlocks();
   drawLitCells();
 
   rafId = requestAnimationFrame(frame);

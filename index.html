@@ -148,7 +148,7 @@
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
-              <span>Twin venues — <strong>Laguna &amp; Batangas</strong></span>
+              <span>Venue — <strong>Laguna</strong></span>
             </div>
           </div>
 
@@ -188,27 +188,7 @@
       </div>
     </section>
 
-    <!-- SPEAKERS -->
-    <section id="speakers">
-      <div class="deco-layer deco-stagger" aria-hidden="true">
-        <span class="brand-box b1"></span>
-        <span class="brand-box b2"></span>
-        <span class="brand-box b3"></span>
-        <span class="brand-box b4"></span>
-        <span class="brand-box b5"></span>
-      </div>
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">Speakers</p>
-          <h2 class="section-title">Builders taking the stage</h2>
-          <p class="section-p">Lineup in progress — cards below are placeholders and will auto-populate once speakers
-            are confirmed. Click a card to view speaker details.</p>
-        </div>
-      </div>
-      <div class="marquee">
-        <div class="marquee-track" id="marqueeTrack"></div>
-      </div>
-    </section>
+    <!-- SPEAKERS REMOVED (Integrated into Program Flow) -->
 
     <!-- SPONSORS -->
     <section id="sponsors" class="section-light grid-bg light">
@@ -328,8 +308,7 @@
           <p class="eyebrow" style="color:var(--purple);">Event Details</p>
           <h2 class="section-title">The Blueprint</h2>
           <p class="section-p">The theme runs through the whole day — three motions instead of one track: what you
-            build, what powers it, and how you lead with it. The same agenda runs in parallel at both the Laguna and
-            Batangas venues.</p>
+            build, what powers it, and how you lead with it. The agenda runs throughout the day at the Laguna venue.</p>
         </div>
 
         <div class="program-grid">
@@ -366,21 +345,25 @@
             <div class="schedule">
               <div class="sched-row">
                 <div class="time">8:00 AM</div>
-                <div class="what"><b>Doors open &amp; registration</b><span>Badge pickup, community hub opens — both
-                    venues</span></div>
+                <div class="what"><b>Doors open &amp; registration</b><span>Badge pickup, community hub opens</span></div>
               </div>
               <div class="sched-row">
                 <div class="time">9:00 AM</div>
-                <div class="what"><b>Opening &amp; keynote</b><span>Cloud × AI: Build. Power. Lead.</span></div>
+                <div class="what"><b>Opening &amp; keynote</b><span>Cloud × AI: Build. Power. Lead.</span>
+                  <div id="schedGridKeynotes" class="sched-speakers-inline"></div>
+                </div>
               </div>
               <div class="sched-row">
                 <div class="time">10:30 AM</div>
                 <div class="what"><b>Technical &amp; career tracks</b><span>Cloud fundamentals, applied AI, career
-                    development</span></div>
+                    development</span>
+                  <div id="schedGridSessions" class="sched-speakers-inline"></div>
+                </div>
               </div>
               <div class="sched-row">
                 <div class="time">1:00 PM</div>
                 <div class="what"><b>Women in Tech &amp; showcase</b><span>Panels and student-led lightning talks</span>
+                  <div id="schedGridPanels" class="sched-speakers-inline"></div>
                 </div>
               </div>
               <div class="sched-row">
@@ -411,11 +394,8 @@
       <div class="wrap">
         <div class="section-head">
           <p class="eyebrow" style="color:var(--green);">Venue</p>
-          <h2 class="section-title">One summit, two campuses</h2>
+          <h2 class="section-title">Where builders gather</h2>
         </div>
-        <div class="sibling-note"><b>Companion event:</b> AWS SCD South Summit 2026 runs as two sibling events on the
-          same day and time — one in Laguna, one in Batangas — each promoting and supporting the other as one
-          CALABARZON-wide community.</div>
 
         <div class="venue-cards">
           <div class="venue-inline-card">
@@ -454,42 +434,6 @@
                 rel="noopener">Open Google Maps</a>
             </div>
           </div>
-
-          <div class="venue-inline-card">
-            <div class="venue-inline-head">
-              <span class="tag">Batangas</span>
-              <h4>Batangas University</h4>
-              <span class="addr">📍 Batangas University, Batangas City</span>
-              <p>Sibling venue running the same program in parallel for the Batangas tech community.</p>
-            </div>
-            <div class="venue-inline-floors">
-              <div>
-                <div class="flabel">Main Stage Floor</div>
-                <div class="fname">Floor TBC</div>
-              </div>
-              <div>
-                <div class="flabel">Main Stage Room</div>
-                <div class="fname">Summit Stage</div>
-              </div>
-              <div>
-                <div class="flabel">Community Hub Floor</div>
-                <div class="fname">Floor TBC</div>
-              </div>
-              <div>
-                <div class="flabel">Community Hub Space</div>
-                <div class="fname">Community Hub</div>
-              </div>
-            </div>
-            <div class="venue-inline-map">
-              <iframe loading="lazy" src="https://www.google.com/maps?q=Batangas+University,+Batangas+City&output=embed" title="Map of Batangas University, Batangas City"
-                allowfullscreen></iframe>
-            </div>
-            <div class="venue-inline-foot">
-              <a class="btn btn-primary btn-sm"
-                href="https://www.google.com/maps/search/?api=1&query=Batangas+University" target="_blank"
-                rel="noopener">Open Google Maps</a>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -523,7 +467,7 @@
         <div>
           <p class="eyebrow" style="color:#0B1526; opacity:.85; font-weight:700;">Registration</p>
           <h3>Claim your summit badge</h3>
-          <p>Registration is 100% free through Luma. Select your preferred companion campus — Laguna or Batangas — during checkout.</p>
+          <p>Registration is 100% free through Luma. Claim your spot below before tickets run out.</p>
           <div class="register-cta-row">
             <a class="btn btn-light" href="https://lu.ma/aws-scd-south-summit-2026" target="_blank" rel="noopener">Register on Luma →</a>
           </div>
@@ -776,7 +720,7 @@
               alt="South Summit 2026">
             <div class="brand-text">SCD SOUTH SUMMIT 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
           </div>
-          <p>Sibling summits by AWS Student Builder Groups across South Luzon (CALABARZON). Cloud × AI: Build. Power.
+          <p>A summit by AWS Student Builder Groups across South Luzon (CALABARZON). Cloud × AI: Build. Power.
             Lead.</p>
         </div>
         <div class="foot-col">
@@ -841,8 +785,8 @@
       var splash = document.getElementById('splashScreen');
       if (!splash) return;
       /* how long the splash stays fully visible before it starts fading.
-         The wordmark reveal settles around 2.9s, so this leaves a beat to breathe. */
-      var SPLASH_MS = 3800;
+         Optimized for a faster reveal */
+      var SPLASH_MS = 1200;
       function dismiss() {
         if (splash.classList.contains('is-hidden')) return;
         splash.classList.add('is-hidden');

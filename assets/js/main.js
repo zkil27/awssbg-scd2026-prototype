@@ -12,6 +12,7 @@ import { initChapters } from './modules/chaptersUI.js';
 import { initSponsors } from './modules/sponsorsUI.js';
 import { initComputeGrid } from './modules/computeGrid.js';
 import { initScrollReveal } from './modules/scrollReveal.js';
+import { initMouseTrail } from './modules/mouseTrail.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
@@ -31,4 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Scroll-triggered entrance motion — last, so the cards injected by the
     //    init*UI() calls above already exist to be tagged and observed.
     initScrollReveal();
+
+    // 5. Interaction effects
+    initMouseTrail();
 });
