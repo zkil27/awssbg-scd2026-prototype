@@ -5,6 +5,7 @@
  */
 
 import { speakers } from '../data/speakers.js';
+import { getLenis } from './smoothScroll.js';
 
 const colors = ['blue', 'green', 'pink'];
 
@@ -99,7 +100,7 @@ export function closeSpeakerModal() {
     window.scrollTo({ top: scrollLockY, behavior: 'instant' });
 }
 
-function speakerCardHTML(speaker, index, isClone = false) {
+function speakerCardHTML(speaker, index, isClone = false, extraClasses = '', isHero = false) {
     const color = colors[index % colors.length];
     const name = speaker.name || `Speaker ${index + 1}`;
     const role = speaker.role || 'Cloud Engineer · AWS Partner';
@@ -107,17 +108,15 @@ function speakerCardHTML(speaker, index, isClone = false) {
     const status = speaker.status || 'TBA';
     const avatar = speaker.picUrl || FALLBACK_AVATAR;
     const linkedin = speaker.linkedInUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
-
-    //the first few are already on screen, don't lazy load those
     const eager = index < 4;
 
     return `
-    <div class="speaker-card ${color}${isClone ? ' marquee-clone' : ''}" data-speaker-index="${index}"${isClone ? ' aria-hidden="true"' : ''}>
+    <div class="speaker-card ${color} ${extraClasses}${isClone ? ' marquee-clone' : ''}" data-speaker-index="${index}"${isClone ? ' aria-hidden="true"' : ''}>
+      ${isHero ? '<span class="sc-hero-badge">★ KEYNOTE HERO</span>' : ''}
       <div class="sc-img-wrap">
         <img class="sc-portrait" src="${avatar}" alt="${name}" width="260" height="270"
              loading="${eager ? 'eager' : 'lazy'}" decoding="async" ${eager ? 'fetchpriority="high"' : ''}
              onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}';this.classList.add('sc-portrait-fallback')">
-        <div class="sc-fade-overlay"></div>
         <span class="sc-status-badge ${status.toLowerCase()}">${status}</span>
         <a class="sc-li-overlay-btn" href="${linkedin}" target="_blank" rel="noopener"${isClone ? ' tabindex="-1"' : ''} title="View ${name} on LinkedIn" onclick="event.stopPropagation()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -142,12 +141,177 @@ function speakerCardHTML(speaker, index, isClone = false) {
   `;
 }
 
+// 1. Architectural Chapter Broadsheet Folio
+function editorialCoverHTML(num, stage, time, count, title, desc, specs, tileClass, id, cat, scatterClasses = '') {
+    return `
+    <article class="asym-spread-cover ${tileClass} ${scatterClasses}" id="${id}" data-category="${cat}">
+      <div class="asc-crosshair top-left">+</div>
+      <div class="asc-crosshair top-right">+</div>
+      <div class="asc-meta-row">
+        <span class="asc-index">// ${num}</span>
+        <span class="asc-label">${stage}</span>
+        <span class="asc-time">${time}</span>
+        <span class="asc-count">${count}</span>
+      </div>
+      <div class="asc-folio-body">
+        <span class="asc-num" aria-hidden="true">${num}</span>
+        <h3 class="asc-title">${title}</h3>
+        <p class="asc-desc">${desc}</p>
+        <div class="asc-specs-strip">
+          ${specs.map(s => `<span class="asc-spec-item">${s}</span>`).join('')}
+        </div>
+      </div>
+      <div class="asc-meta-foot">
+        <span class="asc-tag">AWS SCD: SOUTH SUMMIT 2026</span>
+        <span class="asc-motion-hint">PULL TO EXPLORE &rarr;</span>
+      </div>
+    </article>
+    `;
+}
+
+// 2. Widescreen Hero Feature Spread (620px wide)
+function heroWideCardHTML(speaker, index, kicker, quote, tags, tileClass, scatterClasses = '') {
+    const name = speaker.name || 'Featured Speaker';
+    const role = speaker.role || 'Cloud Leader';
+    const status = speaker.status || 'KEYNOTE';
+    const avatar = speaker.picUrl || FALLBACK_AVATAR;
+    const linkedin = speaker.linkedInUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
+
+    return `
+    <article class="asym-hero-card ${tileClass} ${scatterClasses}" data-speaker-index="${index}">
+      <div class="ahc-crosshair top-left">+</div>
+      <div class="ahc-media">
+        <img class="ahc-img" src="${avatar}" alt="${name}" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}'">
+        <span class="ahc-badge"><span class="ahc-dot"></span>${status}</span>
+        <span class="ahc-tag-pill">CALABARZON 2026</span>
+      </div>
+      <div class="ahc-content">
+        <div class="ahc-top-block">
+          <div class="ahc-kicker">${kicker}</div>
+          <h4 class="ahc-name">${name}</h4>
+          <span class="ahc-role">${role}</span>
+          ${quote ? `<blockquote class="ahc-quote">“${quote}”</blockquote>` : ''}
+          <div class="ahc-tag-row">
+            ${tags.map(t => `<span class="ahc-tag">${t}</span>`).join('')}
+          </div>
+        </div>
+        <div class="ahc-foot">
+          <button type="button" class="ahc-btn-bio">
+            View Full Bio &amp; Abstract &rarr;
+          </button>
+          <a class="ahc-li" href="${linkedin}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="LinkedIn Profile">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </article>
+    `;
+}
+
+// 3. 2-Up Stacked Column (Dual Speaker Mini-Cards)
+function stackedColumnHTML(sTop, iTop, colorTop, sBottom, iBottom, colorBottom, scatterClasses = '') {
+    function miniCard(s, idx, subIndex, colorClass) {
+        const name = s.name || 'Speaker';
+        const role = s.role || 'Builder';
+        const status = s.status || 'SPEAKER';
+        const avatar = s.picUrl || FALLBACK_AVATAR;
+        const topic = s.sessionTitle || 'Summit Session';
+
+        return `
+        <div class="asym-mini-card ${colorClass}" data-speaker-index="${idx}">
+          <div class="amc-crosshair">+</div>
+          <div class="amc-avatar-wrap">
+            <img class="amc-avatar" src="${avatar}" alt="${name}" loading="lazy" decoding="async"
+                 onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}'">
+          </div>
+          <div class="amc-info">
+            <div class="amc-header-row">
+              <span class="amc-subindex">// ${subIndex}</span>
+              <span class="amc-badge">${status}</span>
+            </div>
+            <h5 class="amc-name">${name}</h5>
+            <span class="amc-role">${role}</span>
+            <span class="amc-topic">${topic}</span>
+          </div>
+        </div>
+        `;
+    }
+
+    return `
+    <div class="asym-stack-col ${scatterClasses}">
+      ${miniCard(sTop, iTop, '01.A', colorTop)}
+      ${miniCard(sBottom, iBottom, '01.B', colorBottom)}
+    </div>
+    `;
+}
+
+// 4. Tall Editorial Poster Card (320px wide)
+function posterCardHTML(speaker, index, kicker, tileClass, scatterClasses = '') {
+    const name = speaker.name || 'Speaker';
+    const role = speaker.role || 'Cloud Engineer';
+    const status = speaker.status || 'SPEAKER';
+    const avatar = speaker.picUrl || FALLBACK_AVATAR;
+    const sessionTitle = speaker.sessionTitle || 'Keynote Presentation';
+    const linkedin = speaker.linkedInUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
+
+    return `
+    <article class="asym-poster-card ${tileClass} ${scatterClasses}" data-speaker-index="${index}">
+      <div class="apc-crosshair top-left">+</div>
+      <div class="apc-media">
+        <img class="apc-img" src="${avatar}" alt="${name}" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}'">
+        <span class="apc-badge"><span class="apc-dot"></span>${status}</span>
+        <span class="apc-kicker">${kicker}</span>
+      </div>
+      <div class="apc-content">
+        <h4 class="apc-name">${name}</h4>
+        <span class="apc-role">${role}</span>
+        <div class="apc-topic">
+          <span class="apc-topic-label">SESSION //</span>
+          <span class="apc-topic-title">${sessionTitle}</span>
+        </div>
+        <div class="apc-foot">
+          <button type="button" class="apc-btn">
+            Bio &rarr;
+          </button>
+          <a class="apc-li" href="${linkedin}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="LinkedIn Profile">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </article>
+    `;
+}
+
+// 5. Typographic Manifesto / Quote Interstitial
+function quoteInterstitialHTML(quote, citation, tag, tileClass, scatterClasses = '') {
+    return `
+    <div class="asym-quote-interstitial ${tileClass} ${scatterClasses}">
+      <div class="aqi-crosshair top-left">+</div>
+      <div class="aqi-crosshair bottom-right">+</div>
+      <div class="aqi-tag-bar">
+        <span class="aqi-tag">${tag}</span>
+        <span class="aqi-coords">14.2144° N, 121.1683° E</span>
+      </div>
+      <div class="aqi-glyph" aria-hidden="true">“</div>
+      <blockquote class="aqi-quote">${quote}</blockquote>
+      <div class="aqi-foot">
+        <span class="aqi-cite">${citation}</span>
+        <span class="aqi-mark">AWS SCD SOUTH 2026</span>
+      </div>
+    </div>
+    `;
+}
+
 export function initSpeakers() {
     const marqueeTrack = document.getElementById('marqueeTrack');
     const speakerGrid = document.getElementById('speakerGridStatic');
-    const keynotesGrid = document.getElementById('speakerGridKeynotes');
-    const panelsGrid = document.getElementById('speakerGridPanels');
-    const sessionsGrid = document.getElementById('speakerGridSessions');
+    const aboutCarousel = document.getElementById('aboutSpeakerCarousel');
     const schedKeynotesGrid = document.getElementById('schedGridKeynotes');
     const schedPanelsGrid = document.getElementById('schedGridPanels');
     const schedSessionsGrid = document.getElementById('schedGridSessions');
@@ -181,17 +345,387 @@ export function initSpeakers() {
         speakerGrid.innerHTML = speakers.map((s, i) => speakerCardHTML(s, i)).join('');
     }
 
-    // Render categorized grids on About page
-    if (keynotesGrid) {
-        keynotesGrid.innerHTML = keynotes.map((s) => speakerCardHTML(s, s.originalIndex)).join('');
+    // Render true editorial asymmetric runway on About page with scattered solid-color tiles
+    if (aboutCarousel) {
+        let carouselHTML = '';
+
+        // ==========================================
+        // 01 // KEYNOTES SPREAD
+        // ==========================================
+        if (keynotes.length > 0) {
+            // Chapter Cover: Solid Orange Tile
+            carouselHTML += editorialCoverHTML(
+                '01',
+                'KEYNOTE STAGE',
+                '09:00 - 12:00',
+                `${keynotes.length} LEADERS`,
+                'Visionaries &amp;<br>Cloud Leaders',
+                'Opening keynotes, Women in Tech highlights, and visionary presentations setting the stage for Cloud &amp; AI across CALABARZON.',
+                ['6 KEYNOTES', 'MAIN THEATRE', 'LEADERSHIP & AI'],
+                'bg-tile-orange',
+                'section-keynotes',
+                'keynotes',
+                'scatter-mid h-tall'
+            );
+
+            // 1. Hero Feature Wide: Gaile Espinosa (Country Lead) -> Solid Purple Tile
+            carouselHTML += heroWideCardHTML(
+                keynotes[0],
+                keynotes[0].originalIndex,
+                '01 // OPENING KEYNOTE · 09:00 AM',
+                'Empowering the next generation of builders through technical education, scalable cloud architecture, and community leadership.',
+                ['#CloudAI', '#AWSCloudClubs', '#TutorialsDojo'],
+                'bg-tile-purple',
+                'scatter-high scatter-tilt-left h-mid'
+            );
+
+            // 2. 2-Up Stack: Trisha Pelagio (Blue Tile) + Maxine Sofia Llamas (Pink Tile)
+            if (keynotes.length > 2) {
+                carouselHTML += stackedColumnHTML(
+                    keynotes[1], keynotes[1].originalIndex, 'bg-tile-blue',
+                    keynotes[2], keynotes[2].originalIndex, 'bg-tile-pink',
+                    'scatter-low scatter-tilt-right h-tall'
+                );
+            }
+
+            // 3. Hero Feature Wide: Ace Batacandulo (DevSecOps) -> Solid Green Tile
+            if (keynotes.length > 3) {
+                carouselHTML += heroWideCardHTML(
+                    keynotes[3],
+                    keynotes[3].originalIndex,
+                    '02 // DEVSECOPS & CLOUD · 09:45 AM',
+                    'Demystifying DevSecOps and embedding enterprise security into the core of student cloud architectures.',
+                    ['#DevSecOps', '#AWSBuilder', '#CloudSecurity'],
+                    'bg-tile-green',
+                    'scatter-down scatter-tilt-mild-left h-mid scatter-space-wide'
+                );
+            }
+
+            // 4. Staggered Asymmetric Duo: Kimi (Pink Tile, top) + Kate (Blue Tile, bottom)
+            if (keynotes.length > 4) {
+                carouselHTML += posterCardHTML(keynotes[4], keynotes[4].originalIndex, 'WOMEN IN TECH // 01', 'bg-tile-pink', 'scatter-high scatter-tilt-left h-short');
+            }
+            if (keynotes.length > 5) {
+                carouselHTML += posterCardHTML(keynotes[5], keynotes[5].originalIndex, 'WOMEN IN TECH // 02', 'bg-tile-blue', 'scatter-low scatter-tilt-mild-right h-compact');
+            }
+        }
+
+        // ==========================================
+        // 02 // PANELS SPREAD
+        // ==========================================
+        if (panels.length > 0) {
+            // Chapter Cover: Solid Purple Tile
+            carouselHTML += editorialCoverHTML(
+                '02',
+                'INDUSTRY STAGE',
+                '13:00 - 15:30',
+                `${panels.length} PANELISTS`,
+                'Industry Founders<br>&amp; Operators',
+                'Unfiltered debates, enterprise startup trajectories, and unscripted career lessons from cloud pioneers and engineering leaders across the Philippines.',
+                ['7 PANELISTS', 'DEBATE FORUM', 'FOUNDER STORIES'],
+                'bg-tile-purple',
+                'section-panels',
+                'panels',
+                'scatter-mid h-tall scatter-space-wide'
+            );
+
+            // 1. Hero Feature Wide: Jon Bonso (Tutorials Dojo) -> Solid Orange Tile
+            carouselHTML += heroWideCardHTML(
+                panels[2],
+                panels[2].originalIndex,
+                'PANEL HEADLINER · FOUNDER STORY',
+                'From newsrooms and telecommunications to educating thousands of engineers globally — bridging the gap between student ambition and cloud mastery.',
+                ['#TutorialsDojo', '#FounderJourney', '#CloudCareers'],
+                'bg-tile-orange',
+                'scatter-low scatter-tilt-right h-mid'
+            );
+
+            // 2. 2-Up Stack: Indaleen Quinsayas (Green Tile) + Mc Joben Reyes (Blue Tile)
+            carouselHTML += stackedColumnHTML(
+                panels[0], panels[0].originalIndex, 'bg-tile-green',
+                panels[1], panels[1].originalIndex, 'bg-tile-blue',
+                'scatter-high scatter-tilt-mild-left h-tall'
+            );
+
+            // 3. Typographic Manifesto Interstitial -> Solid Pink Tile
+            carouselHTML += quoteInterstitialHTML(
+                'The tech industry is not just looking for users of tools. It is looking for engineers with the audacity to build what did not exist yesterday.',
+                'AWS SCD: South Summit 2026 Panel Manifesto',
+                'PANEL THEME // VOICES',
+                'bg-tile-pink',
+                'scatter-up scatter-tilt-left h-short scatter-space-wide'
+            );
+
+            // 4. Staggered Pair: Sonny Carlos (Blue Tile) + Raphael Quisumbing (Green Tile)
+            if (panels.length > 3) {
+                carouselHTML += posterCardHTML(panels[3], panels[3].originalIndex, 'PANEL SPEAKER // 03', 'bg-tile-blue', 'scatter-high scatter-tilt-right h-short');
+            }
+            if (panels.length > 4) {
+                carouselHTML += posterCardHTML(panels[4], panels[4].originalIndex, 'PANEL SPEAKER // 04', 'bg-tile-green', 'scatter-low scatter-tilt-mild-left h-mid');
+            }
+
+            // 5. Hero Poster: David Marquez -> Solid Purple Tile
+            if (panels.length > 5) {
+                carouselHTML += posterCardHTML(panels[5], panels[5].originalIndex, 'TECH ENTREPRENEUR', 'bg-tile-purple', 'scatter-down scatter-tilt-mild-right h-tall');
+            }
+        }
+
+        // ==========================================
+        // 03 // SESSIONS SPREAD
+        // ==========================================
+        if (sessions.length > 0) {
+            // Chapter Cover: Solid Green Tile
+            carouselHTML += editorialCoverHTML(
+                '03',
+                'BUILDER STAGE',
+                '15:30 - 18:00',
+                `${sessions.length} BUILDERS`,
+                'Builders &amp;<br>Student Stories',
+                'Deep-dive technical architectures, real-world data pipelines, and authentic student builder journeys across Laguna, Batangas, Cavite, and Rizal.',
+                ['4 SESSIONS', 'TECHNICAL DEMOS', 'STUDENT STORIES'],
+                'bg-tile-green',
+                'section-sessions',
+                'sessions',
+                'scatter-mid h-tall scatter-space-wide'
+            );
+
+            // 1. Hero Feature Wide: Isaeus (Asi) Guiang -> Solid Blue Tile
+            carouselHTML += heroWideCardHTML(
+                sessions[0],
+                sessions[0].originalIndex,
+                'STUDENT SUCCESS STORY · 15:30 PM',
+                'From leading AWS Cloud Club Philippines to architecting enterprise cloud solutions — the tactical blueprint for accelerating your student tech career.',
+                ['#BuildClubManila', '#Appficiency', '#StudentToPro'],
+                'bg-tile-blue',
+                'scatter-high scatter-tilt-mild-left h-mid'
+            );
+
+            // 2. Staggered Trio: John Danmel (Orange Tile) + Darla David (Purple Tile) + Samuel Jedidiah Uy (Pink Tile)
+            if (sessions.length > 1) {
+                carouselHTML += posterCardHTML(sessions[1], sessions[1].originalIndex, 'DEVCON LAGUNA // 01', 'bg-tile-orange', 'scatter-low scatter-tilt-right h-short');
+            }
+            if (sessions.length > 2) {
+                carouselHTML += posterCardHTML(sessions[2], sessions[2].originalIndex, 'DATA & AI // 02', 'bg-tile-purple', 'scatter-high scatter-tilt-left h-mid');
+            }
+            if (sessions.length > 3) {
+                carouselHTML += posterCardHTML(sessions[3], sessions[3].originalIndex, 'APPLIED LLMS // 03', 'bg-tile-pink', 'scatter-low scatter-tilt-mild-right h-tall');
+            }
+        }
+
+        aboutCarousel.innerHTML = carouselHTML;
     }
 
-    if (panelsGrid) {
-        panelsGrid.innerHTML = panels.map((s) => speakerCardHTML(s, s.originalIndex)).join('');
+    // Pinned Horizontal Runway Scroll Controller
+    const carouselSection = document.getElementById('about-speakers-carousel');
+    const carouselPin = document.getElementById('aboutCarouselPin');
+    const progressFill = document.getElementById('aboutProgressFill');
+    const activeLabel = document.getElementById('aboutActiveCategoryLabel');
+    const pillKeynotes = document.getElementById('pillKeynotes');
+    const pillPanels = document.getElementById('pillPanels');
+    const pillSessions = document.getElementById('pillSessions');
+
+    function documentOffsetTop(el) {
+        let top = 0;
+        let node = el;
+        while (node) {
+            top += node.offsetTop;
+            node = node.offsetParent;
+        }
+        return top;
     }
 
-    if (sessionsGrid) {
-        sessionsGrid.innerHTML = sessions.map((s) => speakerCardHTML(s, s.originalIndex)).join('');
+    if (carouselSection && carouselPin && aboutCarousel) {
+        let sectionTop = 0;
+        let range = 0;
+        let trackWidth = 0;
+        let viewportWidth = 0;
+        let keynotesOffset = 0;
+        let panelsOffset = 0;
+        let sessionsOffset = 0;
+
+        function measure() {
+            if (!carouselSection || !carouselPin || !aboutCarousel) return;
+            viewportWidth = window.innerWidth;
+            trackWidth = aboutCarousel.scrollWidth;
+            range = Math.max(0, trackWidth - viewportWidth + 80);
+
+            // Set spacer height on desktop
+            if (viewportWidth >= 1024) {
+                carouselSection.style.height = `${window.innerHeight + range}px`;
+            } else {
+                carouselSection.style.height = 'auto';
+            }
+            sectionTop = documentOffsetTop(carouselSection);
+
+            const keynotesEl = document.getElementById('section-keynotes');
+            const panelsEl = document.getElementById('section-panels');
+            const sessionsEl = document.getElementById('section-sessions');
+
+            if (keynotesEl) keynotesOffset = keynotesEl.offsetLeft;
+            if (panelsEl) panelsOffset = panelsEl.offsetLeft;
+            if (sessionsEl) sessionsOffset = sessionsEl.offsetLeft;
+        }
+
+        function render(scroll) {
+            if (window.innerWidth < 1024) {
+                carouselPin.classList.remove('is-before', 'is-pinned', 'is-after');
+                aboutCarousel.style.transform = '';
+                // Reset card properties on mobile
+                const children = aboutCarousel.children;
+                for (let i = 0; i < children.length; i++) {
+                    children[i].style.removeProperty('--card-scale');
+                    children[i].style.removeProperty('--card-rotate-y');
+                    children[i].style.removeProperty('--card-ty');
+                    children[i].style.removeProperty('--card-opacity');
+                }
+
+                // Vertical category tracking on mobile
+                const keynotesEl = document.getElementById('section-keynotes');
+                const panelsEl = document.getElementById('section-panels');
+                const sessionsEl = document.getElementById('section-sessions');
+                const currentY = scroll + 220;
+
+                let mobileCat = 'keynotes';
+                if (sessionsEl && currentY >= documentOffsetTop(sessionsEl)) {
+                    mobileCat = 'sessions';
+                } else if (panelsEl && currentY >= documentOffsetTop(panelsEl)) {
+                    mobileCat = 'panels';
+                }
+
+                if (pillKeynotes && pillPanels && pillSessions) {
+                    pillKeynotes.classList.toggle('active', mobileCat === 'keynotes');
+                    pillPanels.classList.toggle('active', mobileCat === 'panels');
+                    pillSessions.classList.toggle('active', mobileCat === 'sessions');
+                }
+                return;
+            }
+
+            // Pin state management
+            if (scroll < sectionTop) {
+                carouselPin.classList.remove('is-pinned', 'is-after');
+                carouselPin.classList.add('is-before');
+            } else if (scroll >= sectionTop + range) {
+                carouselPin.classList.remove('is-before', 'is-pinned');
+                carouselPin.classList.add('is-after');
+            } else {
+                carouselPin.classList.remove('is-before', 'is-after');
+                carouselPin.classList.add('is-pinned');
+            }
+
+            // Calculate translation progress
+            const progress = range > 0 ? Math.max(0, Math.min(1, (scroll - sectionTop) / range)) : 0;
+            const tx = -progress * range;
+            aboutCarousel.style.transform = `translate3d(${tx}px, 0, 0)`;
+
+            // DYNAMIC IN / OUT ANIMATION: Compute 3D perspective and opacity per card
+            const children = aboutCarousel.children;
+            const vCenter = viewportWidth / 2;
+
+            for (let i = 0; i < children.length; i++) {
+                const card = children[i];
+                const cardCenter = card.offsetLeft + tx + (card.offsetWidth / 2);
+                const dist = cardCenter - vCenter;
+                const norm = dist / (viewportWidth * 0.55);
+                const clampedNorm = Math.max(-1.5, Math.min(1.5, norm));
+                const absNorm = Math.min(1.2, Math.abs(clampedNorm));
+
+                // Scale: 1.0 at center, down to 0.95 at edge
+                const scale = (1 - (absNorm * 0.05)).toFixed(3);
+                // 3D rotation: enters tilted (-5deg), exits tilted (+5deg)
+                const rotY = (Math.max(-6, Math.min(6, clampedNorm * 5))).toFixed(1);
+                // Subtle vertical parallax
+                const ty = (absNorm * 10).toFixed(1);
+
+                card.style.setProperty('--card-scale', scale);
+                card.style.setProperty('--card-rotate-y', `${rotY}deg`);
+                card.style.setProperty('--card-ty', `${ty}px`);
+                card.style.removeProperty('--card-opacity');
+            }
+
+            if (progressFill) {
+                progressFill.style.width = `${(progress * 100).toFixed(1)}%`;
+            }
+
+            // Category tracking based on horizontal translation
+            const currentX = -tx + (viewportWidth * 0.35);
+            let activeCat = 'keynotes';
+            if (sessionsOffset > 0 && currentX >= sessionsOffset) {
+                activeCat = 'sessions';
+            } else if (panelsOffset > 0 && currentX >= panelsOffset) {
+                activeCat = 'panels';
+            }
+
+            if (pillKeynotes && pillPanels && pillSessions) {
+                pillKeynotes.classList.toggle('active', activeCat === 'keynotes');
+                pillPanels.classList.toggle('active', activeCat === 'panels');
+                pillSessions.classList.toggle('active', activeCat === 'sessions');
+            }
+
+            if (activeLabel) {
+                if (activeCat === 'keynotes') activeLabel.textContent = '01 // KEYNOTE LEADERS';
+                else if (activeCat === 'panels') activeLabel.textContent = '02 // INDUSTRY PANELISTS';
+                else activeLabel.textContent = '03 // TECHNICAL SESSIONS';
+            }
+        }
+
+        function getScroll() {
+            const lenis = getLenis();
+            return (lenis && typeof lenis.scroll === 'number') ? lenis.scroll : window.scrollY;
+        }
+
+        let rafId = 0;
+        function tick() {
+            render(getScroll());
+            rafId = requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(() => {
+            measure();
+            rafId = requestAnimationFrame(tick);
+        });
+
+        window.addEventListener('resize', () => {
+            measure();
+        });
+
+        // Pill click smooth navigation (handles mobile vertical scroll vs desktop horizontal pan)
+        function scrollToCategory(targetId, catOffset) {
+            if (window.innerWidth < 1024) {
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    const navH = 65;
+                    const hudH = 55;
+                    const top = documentOffsetTop(targetEl) - navH - hudH;
+                    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                }
+                return;
+            }
+            measure();
+            const targetScroll = sectionTop + Math.max(0, Math.min(range, catOffset - 100));
+            const lenis = getLenis();
+            if (lenis && typeof lenis.scrollTo === 'function') {
+                lenis.scrollTo(targetScroll);
+            } else {
+                window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+            }
+        }
+
+        if (pillKeynotes) pillKeynotes.addEventListener('click', () => scrollToCategory('section-keynotes', keynotesOffset));
+        if (pillPanels) pillPanels.addEventListener('click', () => scrollToCategory('section-panels', panelsOffset));
+        if (pillSessions) pillSessions.addEventListener('click', () => scrollToCategory('section-sessions', sessionsOffset));
+
+        // Wrap showPage to re-measure when switching to About page
+        const origShowPage = window.showPage;
+        if (typeof origShowPage === 'function' && !window.__speakersShowPageWrapped) {
+            window.showPage = function (...args) {
+                const res = origShowPage.apply(this, args);
+                requestAnimationFrame(() => {
+                    measure();
+                });
+                return res;
+            };
+            window.__speakersShowPageWrapped = true;
+        }
     }
 
     // Render tiny inline cards for schedule on Home page
@@ -221,7 +755,7 @@ export function initSpeakers() {
         //let the LinkedIn links do their thing without opening the modal
         if (e.target.closest('a')) return;
 
-        const card = e.target.closest('.speaker-card, .speaker-inline-card');
+        const card = e.target.closest('.speaker-card, .asym-hero-card, .asym-mini-card, .asym-poster-card, .speaker-inline-card');
         if (!card) return;
 
         const index = Number(card.dataset.speakerIndex);
@@ -230,7 +764,7 @@ export function initSpeakers() {
         }
     }
 
-    [marqueeTrack, speakerGrid, keynotesGrid, panelsGrid, sessionsGrid, schedKeynotesGrid, schedPanelsGrid, schedSessionsGrid].forEach((container) => {
+    [marqueeTrack, speakerGrid, aboutCarousel, schedKeynotesGrid, schedPanelsGrid, schedSessionsGrid].forEach((container) => {
         if (container) container.addEventListener('click', handleCardClick);
     });
 
@@ -250,4 +784,6 @@ export function initSpeakers() {
 
     window.openSpeakerModal = openSpeakerModal;
     window.closeSpeakerModal = closeSpeakerModal;
+    window.speakers = speakers;
 }
+

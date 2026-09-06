@@ -541,6 +541,16 @@
   <!-- ================================================================= -->
   <div class="page" id="page-about">
 
+    <!-- Grid colored boxes background -->
+    <div class="about-bg-boxes" aria-hidden="true">
+      <span class="brand-box box-left-1 bb-blue"></span>
+      <span class="brand-box box-left-2 bb-pink"></span>
+      <span class="brand-box box-left-3 bb-purple"></span>
+      <span class="brand-box box-right-1 bb-green"></span>
+      <span class="brand-box box-right-2 bb-orange"></span>
+      <span class="brand-box box-right-3 bb-blue"></span>
+    </div>
+
     <section class="section-light grid-bg light page-intro">
       <div class="deco-layer deco-corners" aria-hidden="true">
         <span class="brand-box b1"></span>
@@ -590,46 +600,51 @@
       <span class="brand-box pe-purple"></span>
     </div>
 
-    <!-- SPEAKERS LINEUP BY CATEGORY -->
-    <section id="about-speakers" class="speakers-classified-section">
-      <div class="wrap">
+    <!-- SPEAKERS LINEUP ASYMMETRIC HORIZONTAL STAGE -->
+    <section id="about-speakers-carousel" class="about-speakers-carousel-section">
+      <div class="about-carousel-pin is-before" id="aboutCarouselPin">
 
-        <!-- KEYNOTE SPEAKERS -->
-        <div class="speaker-category-block">
-          <div class="section-head">
-            <p class="eyebrow" style="color:var(--orange);">Keynote Speakers</p>
-            <h2 class="section-title">Visionaries &amp; Cloud Leaders</h2>
-            <p class="section-p">Opening keynotes, Women in Tech highlights, and visionary presentations setting the stage for Cloud × AI.</p>
+        <!-- Persistent Pinned HUD / Header -->
+        <header class="about-carousel-hud">
+          <div class="ac-hud-left">
+            <span class="ac-hud-eyebrow">02 // LINEUP RUNWAY</span>
+            <h2 class="ac-hud-title">The Complete Lineup</h2>
           </div>
-          <div class="speaker-grid" id="speakerGridKeynotes"></div>
+          <div class="ac-hud-center">
+            <nav class="ac-category-pills" aria-label="Speaker categories">
+              <button type="button" class="ac-pill active" data-target="keynotes" id="pillKeynotes">
+                <span class="pill-dot orange"></span>Keynotes
+              </button>
+              <button type="button" class="ac-pill" data-target="panels" id="pillPanels">
+                <span class="pill-dot purple"></span>Panels
+              </button>
+              <button type="button" class="ac-pill" data-target="sessions" id="pillSessions">
+                <span class="pill-dot teal"></span>Sessions
+              </button>
+            </nav>
+          </div>
+          <div class="ac-hud-right">
+            <span class="ac-hint">Scroll down to pan <span class="ac-arrow">&rarr;</span></span>
+          </div>
+        </header>
+
+        <!-- Viewport & Asymmetric Runway Track -->
+        <div class="about-carousel-viewport" id="aboutCarouselViewport">
+          <div class="about-carousel-track" id="aboutSpeakerCarousel">
+            <!-- Asymmetric spreads and speaker cards rendered by JS -->
+          </div>
         </div>
 
-        <!-- SECTION SUB-DIVIDER -->
-        <div class="speaker-section-divider"></div>
-
-        <!-- PANEL DISCUSSION SPEAKERS -->
-        <div class="speaker-category-block">
-          <div class="section-head">
-            <p class="eyebrow" style="color:var(--purple);">Panel Discussion</p>
-            <h2 class="section-title">Industry Panelists &amp; Founders</h2>
-            <p class="section-p">Founders, platform managers, and senior executives debating career pathways and the future of tech.</p>
+        <!-- Persistent Progress Tracker Footer -->
+        <footer class="about-carousel-footer">
+          <div class="about-progress-line">
+            <span class="about-progress-fill" id="aboutProgressFill"></span>
           </div>
-          <div class="speaker-grid" id="speakerGridPanels"></div>
-        </div>
-
-        <!-- SECTION SUB-DIVIDER -->
-        <div class="speaker-section-divider"></div>
-
-        <!-- SESSIONS & SUCCESS STORIES -->
-        <div class="speaker-category-block">
-          <div class="section-head">
-            <p class="eyebrow" style="color:var(--teal);">Technical Sessions &amp; Stories</p>
-            <h2 class="section-title">Builders &amp; Student Success</h2>
-            <p class="section-p">Hands-on technical talks and inspiring journeys from student builder leaders.</p>
+          <div class="about-progress-info">
+            <span class="about-active-label" id="aboutActiveCategoryLabel">01 // KEYNOTE SPEAKERS</span>
+            <span class="about-counter-label">18 SESSIONS &amp; VOICES</span>
           </div>
-          <div class="speaker-grid" id="speakerGridSessions"></div>
-        </div>
-
+        </footer>
       </div>
     </section>
 
