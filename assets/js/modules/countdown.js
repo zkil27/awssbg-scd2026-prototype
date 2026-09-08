@@ -3,9 +3,9 @@
  * Calculates and renders the time remaining til the summit start.
  */
 
-//Event data is October 7, 2026 at 8:00 AM (Philippine Time)
+//Event date is October 7, 2026 at 10:00 AM (Philippine Time) — per official Luma registration
 //CHANGE THIS IN CASE OF TIME CHANGE VVVVV
-const target = new Date('2026-10-07T08:00:00+08:00').getTime();
+const target = new Date('2026-10-07T10:00:00+08:00').getTime();
 
 export function initCountdown() {
     const daysEl = document.getElementById('cd-days');

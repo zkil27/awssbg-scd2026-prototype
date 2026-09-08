@@ -69,27 +69,27 @@ function wireLogoFallbacks(grid) {
 }
 
 export function initSponsors() {
-    const platinumGrid = document.querySelector('.tier-grid.platinum');
-    const goldGrid = document.querySelector('.tier-grid.gold');
-    const communityGrid = document.querySelector('.tier-grid.community');
+    const quantumGrid = document.querySelector('.tier-grid.quantum, .tier-grid.platinum');
+    const clusterGrid = document.querySelector('.tier-grid.cluster, .tier-grid.gold');
+    const coreGrid = document.querySelector('.tier-grid.core, .tier-grid.community');
 
-    const platinumSponsors = sponsors.filter(s => s.tier === 'platinum');
-    const goldSponsors = sponsors.filter(s => s.tier === 'gold');
-    const communitySponsors = sponsors.filter(s => s.tier === 'community' || s.tier === 'partner');
+    const quantumSponsors = sponsors.filter(s => s.tier === 'quantum' || s.tier === 'platinum');
+    const clusterSponsors = sponsors.filter(s => s.tier === 'cluster' || s.tier === 'gold');
+    const coreSponsors = sponsors.filter(s => s.tier === 'core' || s.tier === 'community' || s.tier === 'partner');
 
     // Only override if data is provided for that tier
-    if (platinumGrid && platinumSponsors.length > 0) {
-        platinumGrid.innerHTML = platinumSponsors.map(sponsorSlotHTML).join('');
-        wireLogoFallbacks(platinumGrid);
+    if (quantumGrid && quantumSponsors.length > 0) {
+        quantumGrid.innerHTML = quantumSponsors.map(sponsorSlotHTML).join('');
+        wireLogoFallbacks(quantumGrid);
     }
 
-    if (goldGrid && goldSponsors.length > 0) {
-        goldGrid.innerHTML = goldSponsors.map(sponsorSlotHTML).join('');
-        wireLogoFallbacks(goldGrid);
+    if (clusterGrid && clusterSponsors.length > 0) {
+        clusterGrid.innerHTML = clusterSponsors.map(sponsorSlotHTML).join('');
+        wireLogoFallbacks(clusterGrid);
     }
 
-    if (communityGrid && communitySponsors.length > 0) {
-        communityGrid.innerHTML = communitySponsors.map(sponsorSlotHTML).join('');
-        wireLogoFallbacks(communityGrid);
+    if (coreGrid && coreSponsors.length > 0) {
+        coreGrid.innerHTML = coreSponsors.map(sponsorSlotHTML).join('');
+        wireLogoFallbacks(coreGrid);
     }
 }

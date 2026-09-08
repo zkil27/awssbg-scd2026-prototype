@@ -122,6 +122,12 @@ html[data-theme="light"] {
   --proto-bg: #E8EAEE;
   --sticky-bg: #FFFFFF;
 
+  /* Ambient corner gradient glows (event primer poster) */
+  --ambient-tl: rgba(68, 179, 254, 0.28);
+  --ambient-tr: rgba(254, 87, 234, 0.24);
+  --ambient-br: rgba(7, 227, 131, 0.26);
+  --ambient-bl: rgba(68, 179, 254, 0.16);
+
   color-scheme: light;
 }
 
@@ -199,6 +205,12 @@ html[data-theme="dark"] {
   --cursor-pointer:
     url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%23ffb545" stroke="%23ffb545" stroke-width="1.8"/></svg>') 14 14, pointer;
 
+  /* Ambient corner gradient glows (event primer poster - dark mode) */
+  --ambient-tl: rgba(68, 179, 254, 0.18);
+  --ambient-tr: rgba(254, 87, 234, 0.16);
+  --ambient-br: rgba(7, 227, 131, 0.18);
+  --ambient-bl: rgba(68, 179, 254, 0.12);
+
   color-scheme: dark;
 }
 
@@ -218,31 +230,43 @@ html {
 body {
   position: relative;
   background-color: var(--bg);
-  /* Grid lines + colored accent cells are painted on the SAME background stack
-     with the SAME 52px tile and the SAME (0,0) top-left origin, so the colored
-     cells can never drift off the grid at any viewport width. Colored cells
-     render above the grid lines. LEFT cells use whole-cell x-offsets from the
-     origin. RIGHT cells snap their x with round(down, 100% - N*cell, cell),
-     which yields a whole multiple of the cell size (i.e. a real grid line)
-     near the right edge — so they hug the right side AND stay on the grid. */
+  /* Grid lines + ambient corner gradients are painted in the body background stack.
+     Grid lines sit above the ambient glows, so the 1px grid pattern cleanly
+     overlays the soft color gradients. Ambient corner gradients are fixed to
+     the viewport so they frame the entire website across all pages and scrolls,
+     matching the event primer poster aesthetic. */
   background-image:
-    /* ---- grid lines (bottom of the stack) ---- */
+    /* ---- grid lines (top of stack) ---- */
     linear-gradient(var(--line) var(--grid-line), transparent var(--grid-line)),
-    linear-gradient(90deg, var(--line) var(--grid-line), transparent var(--grid-line));
+    linear-gradient(90deg, var(--line) var(--grid-line), transparent var(--grid-line)),
+    /* ---- ambient corner glows (poster gradient aura) ---- */
+    radial-gradient(ellipse 65% 55% at 0% 0%, var(--ambient-tl) 0%, rgba(68, 179, 254, 0.06) 40%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 0%, var(--ambient-tr) 0%, rgba(254, 87, 234, 0.05) 40%, transparent 70%),
+    radial-gradient(ellipse 60% 55% at 100% 100%, var(--ambient-br) 0%, rgba(7, 227, 131, 0.06) 40%, transparent 75%),
+    radial-gradient(ellipse 55% 45% at 0% 100%, var(--ambient-bl) 0%, rgba(68, 179, 254, 0.04) 40%, transparent 70%);
   background-repeat:
-    /* grid lines */
-    repeat, repeat;
+    repeat, repeat,
+    no-repeat, no-repeat, no-repeat, no-repeat;
   background-position:
     left 0 top 0,
-    left 0 top 0;
+    left 0 top 0,
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%;
   background-size:
-    var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size);
+    var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size),
+    100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-attachment:
+    scroll, scroll,
+    fixed, fixed, fixed, fixed;
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 17px;
   line-height: 1.6;
   overflow-x: clip;
-  padding-bottom: calc(var(--grid-size) * 1.25);
+  padding-bottom: 0;
+  margin-bottom: 0;
   transition: var(--theme-ease);
 }
 
@@ -317,35 +341,6 @@ button {
   display: block;
 }
 
-.primer-edge--bottom .pe-blue {
-  bottom: 0;
-  left: 0;
-  --box-c: var(--blue);
-}
-
-.primer-edge--bottom .pe-green {
-  bottom: 0;
-  left: var(--grid-size);
-  --box-c: var(--green);
-}
-
-.primer-edge--bottom .pe-purple {
-  bottom: 0;
-  left: calc(var(--grid-size) * 2);
-  --box-c: var(--purple);
-}
-
-.primer-edge--bottom .pe-orange {
-  bottom: var(--grid-size);
-  right: var(--grid-size);
-  --box-c: var(--orange);
-}
-
-.primer-edge--bottom .pe-purple-end {
-  bottom: 0;
-  right: 0;
-  --box-c: var(--purple);
-}
 
 .page,
 footer,

@@ -12,10 +12,35 @@ const colors = ['blue', 'green', 'pink'];
 const FALLBACK_AVATAR = 'assets/images/south-summit-logo.svg';
 
 let scrollLockY = 0;
+let isModalOpen = false;
 
-export function openSpeakerModal(speaker) {
+export function openSpeakerModal(speaker, tileTheme = '') {
     const modal = document.getElementById('speakerModal');
     if (!modal) return;
+
+    // Apply on-theme styling matching the clicked card
+    const modalCard = modal.querySelector('.modal-card');
+    if (modalCard) {
+        modalCard.classList.remove(
+            'theme-orange', 'theme-purple', 'theme-green', 'theme-blue', 'theme-pink'
+        );
+
+        let finalTheme = 'theme-orange';
+        if (tileTheme) {
+            const clean = tileTheme.replace('bg-tile-', '').replace('theme-', '');
+            finalTheme = `theme-${clean}`;
+        } else if (speaker?.tileTheme) {
+            const clean = speaker.tileTheme.replace('bg-tile-', '').replace('theme-', '');
+            finalTheme = `theme-${clean}`;
+        } else if (speaker?.status === 'KEYNOTE' || (speaker?.sessionTitle && speaker.sessionTitle.toLowerCase().includes('keynote'))) {
+            finalTheme = 'theme-orange';
+        } else if (speaker?.status === 'PANEL' || (speaker?.sessionTitle && speaker.sessionTitle.toLowerCase().includes('panel'))) {
+            finalTheme = 'theme-purple';
+        } else {
+            finalTheme = 'theme-green';
+        }
+        modalCard.classList.add(finalTheme);
+    }
 
     const name = speaker?.name || 'Speaker Name';
     const role = speaker?.role || 'Speaker Role · Company';
@@ -61,19 +86,18 @@ export function openSpeakerModal(speaker) {
             || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
     }
 
+    isModalOpen = true;
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
 
-    /* Hold the page still; without this the modal's scroll chains into the
-       body and drags the homepage away underneath it. */
-    scrollLockY = window.scrollY;
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollLockY}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
+    /* Freeze background scrolling without altering document flow or breaking the pinned stage */
+    const lenis = getLenis();
+    if (lenis && typeof lenis.stop === 'function') {
+        lenis.stop();
+    }
+    document.documentElement.classList.add('modal-scroll-lock');
 
-    /* Wait for the visibility flip before moving focus; a hidden element
-       refuses it. */
+    /* Wait for the visibility flip before moving focus */
     requestAnimationFrame(() => {
         const closeBtn = modal.querySelector('.modal-close');
         if (closeBtn) closeBtn.focus();
@@ -84,20 +108,20 @@ export function closeSpeakerModal() {
     const modal = document.getElementById('speakerModal');
     if (!modal || !modal.classList.contains('open')) return;
 
+    isModalOpen = false;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
 
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
+    const scheduleModal = document.getElementById('programFlowModal');
+    const isScheduleOpen = scheduleModal && scheduleModal.classList.contains('open');
 
-    /* A fixed body collapses the document height, so the page has to be
-       re-measured before the old offset can be honoured. The jump also has to
-       opt out of the stylesheet's smooth scrolling, or it animates back over
-       half a second and any tap made meanwhile strands the reader part-way. */
-    void document.body.offsetHeight;
-    window.scrollTo({ top: scrollLockY, behavior: 'instant' });
+    if (!isScheduleOpen) {
+        document.documentElement.classList.remove('modal-scroll-lock');
+        const lenis = getLenis();
+        if (lenis && typeof lenis.start === 'function') {
+            lenis.start();
+        }
+    }
 }
 
 function speakerCardHTML(speaker, index, isClone = false, extraClasses = '', isHero = false) {
@@ -145,6 +169,7 @@ function speakerCardHTML(speaker, index, isClone = false, extraClasses = '', isH
 function editorialCoverHTML(num, stage, time, count, title, desc, specs, tileClass, id, cat, scatterClasses = '') {
     return `
     <article class="asym-spread-cover ${tileClass} ${scatterClasses}" id="${id}" data-category="${cat}">
+      <div class="card-hover-cover" aria-hidden="true"></div>
       <div class="asc-crosshair top-left">+</div>
       <div class="asc-crosshair top-right">+</div>
       <div class="asc-meta-row">
@@ -164,6 +189,50 @@ function editorialCoverHTML(num, stage, time, count, title, desc, specs, tileCla
       <div class="asc-meta-foot">
         <span class="asc-tag">AWS SCD: SOUTH SUMMIT 2026</span>
         <span class="asc-motion-hint">PULL TO EXPLORE &rarr;</span>
+      </div>
+    </article>
+    `;
+}
+
+// 2. Unified Speaker Card: identical 8-col x 10-row dimensions (416px x 520px) for equal impact
+function speakerCardRunwayHTML(speaker, index, kicker, quote, tileClass, scatterClasses = '') {
+    const name = speaker.name || 'Speaker';
+    const role = speaker.role || 'Cloud Leader';
+    const status = speaker.status || 'SPEAKER';
+    const avatar = speaker.picUrl || FALLBACK_AVATAR;
+    const sessionTitle = speaker.sessionTitle || 'Summit Presentation';
+    const linkedin = speaker.linkedInUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
+
+    return `
+    <article class="asym-speaker-card ${tileClass} ${scatterClasses}" data-speaker-index="${index}">
+      <div class="card-hover-cover" aria-hidden="true"></div>
+      <div class="spk-crosshair top-left">+</div>
+      <div class="spk-crosshair top-right">+</div>
+      
+      <div class="spk-media">
+        <img class="spk-img" src="${avatar}" alt="${name}" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}'">
+        <span class="spk-badge"><span class="spk-dot"></span>${status}</span>
+        <span class="spk-tag-pill">${kicker}</span>
+      </div>
+
+      <div class="spk-content">
+        <div class="spk-top-block">
+          <h4 class="spk-name">${name}</h4>
+          <span class="spk-role">${role}</span>
+          ${quote ? `<blockquote class="spk-quote">“${quote}”</blockquote>` : `<div class="spk-topic"><span class="spk-topic-label">SESSION //</span><span class="spk-topic-title">${sessionTitle}</span></div>`}
+        </div>
+
+        <div class="spk-foot">
+          <button type="button" class="spk-btn-bio">
+            Bio &amp; Abstract &rarr;
+          </button>
+          <a class="spk-li" href="${linkedin}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="LinkedIn Profile" aria-label="LinkedIn Profile">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
+            </svg>
+          </a>
+        </div>
       </div>
     </article>
     `;
@@ -198,9 +267,9 @@ function heroWideCardHTML(speaker, index, kicker, quote, tags, tileClass, scatte
         </div>
         <div class="ahc-foot">
           <button type="button" class="ahc-btn-bio">
-            View Full Bio &amp; Abstract &rarr;
+            Bio &amp; Abstract &rarr;
           </button>
-          <a class="ahc-li" href="${linkedin}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="LinkedIn Profile">
+          <a class="ahc-li" href="${linkedin}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="LinkedIn Profile" aria-label="LinkedIn Profile">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
             </svg>
@@ -277,7 +346,7 @@ function posterCardHTML(speaker, index, kicker, tileClass, scatterClasses = '') 
           <button type="button" class="apc-btn">
             Bio &rarr;
           </button>
-          <a class="apc-li" href="${linkedin}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="LinkedIn Profile">
+          <a class="apc-li" href="${linkedin}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="LinkedIn Profile" aria-label="LinkedIn Profile">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
             </svg>
@@ -345,12 +414,12 @@ export function initSpeakers() {
         speakerGrid.innerHTML = speakers.map((s, i) => speakerCardHTML(s, i)).join('');
     }
 
-    // Render true editorial asymmetric runway on About page with scattered solid-color tiles
+    // Render true editorial runway on About page: every speaker has an identical size card for equal impact
     if (aboutCarousel) {
         let carouselHTML = '';
 
         // ==========================================
-        // 01 // KEYNOTES SPREAD
+        // 01 // KEYNOTES SPREAD (6 LEADERS)
         // ==========================================
         if (keynotes.length > 0) {
             // Chapter Cover: Solid Orange Tile
@@ -365,56 +434,85 @@ export function initSpeakers() {
                 'bg-tile-orange',
                 'section-keynotes',
                 'keynotes',
-                'scatter-mid h-tall'
+                'scatter-mid'
             );
 
-            // 1. Hero Feature Wide: Gaile Espinosa (Country Lead) -> Solid Purple Tile
-            carouselHTML += heroWideCardHTML(
+            // 1. Gaile Espinosa
+            carouselHTML += speakerCardRunwayHTML(
                 keynotes[0],
                 keynotes[0].originalIndex,
-                '01 // OPENING KEYNOTE · 09:00 AM',
+                'KEYNOTE // 01 · 09:00 AM',
                 'Empowering the next generation of builders through technical education, scalable cloud architecture, and community leadership.',
-                ['#CloudAI', '#AWSCloudClubs', '#TutorialsDojo'],
                 'bg-tile-purple',
-                'scatter-high scatter-tilt-left h-mid'
+                'scatter-high'
             );
 
-            // 2. 2-Up Stack: Trisha Pelagio (Blue Tile) + Maxine Sofia Llamas (Pink Tile)
-            if (keynotes.length > 2) {
-                carouselHTML += stackedColumnHTML(
-                    keynotes[1], keynotes[1].originalIndex, 'bg-tile-blue',
-                    keynotes[2], keynotes[2].originalIndex, 'bg-tile-pink',
-                    'scatter-low scatter-tilt-right h-tall'
+            // 2. Trisha Pelagio
+            if (keynotes.length > 1) {
+                carouselHTML += speakerCardRunwayHTML(
+                    keynotes[1],
+                    keynotes[1].originalIndex,
+                    'KEYNOTE // 02 · 09:45 AM',
+                    'Demystifying cloud architecture and leading hands-on student communities to build at scale.',
+                    'bg-tile-blue',
+                    'scatter-low'
                 );
             }
 
-            // 3. Hero Feature Wide: Ace Batacandulo (DevSecOps) -> Solid Green Tile
+            // 3. Maxine Sofia Llamas
+            if (keynotes.length > 2) {
+                carouselHTML += speakerCardRunwayHTML(
+                    keynotes[2],
+                    keynotes[2].originalIndex,
+                    'KEYNOTE // 03 · 10:30 AM',
+                    'Pioneering student innovation and architecting cloud solutions across higher education.',
+                    'bg-tile-pink',
+                    'scatter-mid'
+                );
+            }
+
+            // 4. Ace Batacandulo
             if (keynotes.length > 3) {
-                carouselHTML += heroWideCardHTML(
+                carouselHTML += speakerCardRunwayHTML(
                     keynotes[3],
                     keynotes[3].originalIndex,
-                    '02 // DEVSECOPS & CLOUD · 09:45 AM',
+                    'KEYNOTE // 04 · 11:15 AM',
                     'Demystifying DevSecOps and embedding enterprise security into the core of student cloud architectures.',
-                    ['#DevSecOps', '#AWSBuilder', '#CloudSecurity'],
                     'bg-tile-green',
-                    'scatter-down scatter-tilt-mild-left h-mid scatter-space-wide'
+                    'scatter-high'
                 );
             }
 
-            // 4. Staggered Asymmetric Duo: Kimi (Pink Tile, top) + Kate (Blue Tile, bottom)
+            // 5. Kimi Valenzuela
             if (keynotes.length > 4) {
-                carouselHTML += posterCardHTML(keynotes[4], keynotes[4].originalIndex, 'WOMEN IN TECH // 01', 'bg-tile-pink', 'scatter-high scatter-tilt-left h-short');
+                carouselHTML += speakerCardRunwayHTML(
+                    keynotes[4],
+                    keynotes[4].originalIndex,
+                    'WOMEN IN TECH // 01',
+                    'Inspiring future female founders and builders to master cloud computing and lead engineering teams.',
+                    'bg-tile-orange',
+                    'scatter-low'
+                );
             }
+
+            // 6. Kate Balgos
             if (keynotes.length > 5) {
-                carouselHTML += posterCardHTML(keynotes[5], keynotes[5].originalIndex, 'WOMEN IN TECH // 02', 'bg-tile-blue', 'scatter-low scatter-tilt-mild-right h-compact');
+                carouselHTML += speakerCardRunwayHTML(
+                    keynotes[5],
+                    keynotes[5].originalIndex,
+                    'WOMEN IN TECH // 02',
+                    'Architecting resilient cloud native solutions and championing student community growth.',
+                    'bg-tile-purple',
+                    'scatter-mid'
+                );
             }
         }
 
         // ==========================================
-        // 02 // PANELS SPREAD
+        // 02 // PANELS SPREAD (6 PANELISTS)
         // ==========================================
         if (panels.length > 0) {
-            // Chapter Cover: Solid Purple Tile
+            // Chapter Cover: Solid Green Tile
             carouselHTML += editorialCoverHTML(
                 '02',
                 'INDUSTRY STAGE',
@@ -422,59 +520,89 @@ export function initSpeakers() {
                 `${panels.length} PANELISTS`,
                 'Industry Founders<br>&amp; Operators',
                 'Unfiltered debates, enterprise startup trajectories, and unscripted career lessons from cloud pioneers and engineering leaders across the Philippines.',
-                ['7 PANELISTS', 'DEBATE FORUM', 'FOUNDER STORIES'],
-                'bg-tile-purple',
+                ['6 PANELISTS', 'DEBATE FORUM', 'FOUNDER STORIES'],
+                'bg-tile-green',
                 'section-panels',
                 'panels',
-                'scatter-mid h-tall scatter-space-wide'
+                'scatter-mid'
             );
 
-            // 1. Hero Feature Wide: Jon Bonso (Tutorials Dojo) -> Solid Orange Tile
-            carouselHTML += heroWideCardHTML(
-                panels[2],
-                panels[2].originalIndex,
-                'PANEL HEADLINER · FOUNDER STORY',
-                'From newsrooms and telecommunications to educating thousands of engineers globally — bridging the gap between student ambition and cloud mastery.',
-                ['#TutorialsDojo', '#FounderJourney', '#CloudCareers'],
-                'bg-tile-orange',
-                'scatter-low scatter-tilt-right h-mid'
+            // 1. Indaleen Quinsayas
+            carouselHTML += speakerCardRunwayHTML(
+                panels[0],
+                panels[0].originalIndex,
+                'PANEL // 01 · FOUNDER',
+                'Scaling enterprise engineering and fostering authentic tech community connections.',
+                'bg-tile-blue',
+                'scatter-high'
             );
 
-            // 2. 2-Up Stack: Indaleen Quinsayas (Green Tile) + Mc Joben Reyes (Blue Tile)
-            carouselHTML += stackedColumnHTML(
-                panels[0], panels[0].originalIndex, 'bg-tile-green',
-                panels[1], panels[1].originalIndex, 'bg-tile-blue',
-                'scatter-high scatter-tilt-mild-left h-tall'
-            );
+            // 2. Mc Joben Reyes
+            if (panels.length > 1) {
+                carouselHTML += speakerCardRunwayHTML(
+                    panels[1],
+                    panels[1].originalIndex,
+                    'PANEL // 02 · LEADER',
+                    'Bridging academic innovation with enterprise cloud infrastructure and engineering leadership.',
+                    'bg-tile-pink',
+                    'scatter-low'
+                );
+            }
 
-            // 3. Typographic Manifesto Interstitial -> Solid Pink Tile
-            carouselHTML += quoteInterstitialHTML(
-                'The tech industry is not just looking for users of tools. It is looking for engineers with the audacity to build what did not exist yesterday.',
-                'AWS SCD: South Summit 2026 Panel Manifesto',
-                'PANEL THEME // VOICES',
-                'bg-tile-pink',
-                'scatter-up scatter-tilt-left h-short scatter-space-wide'
-            );
+            // 3. Jon Bonso
+            if (panels.length > 2) {
+                carouselHTML += speakerCardRunwayHTML(
+                    panels[2],
+                    panels[2].originalIndex,
+                    'PANEL // 03 · HEADLINER',
+                    'From newsrooms and telecommunications to educating thousands of engineers globally — bridging the gap between student ambition and cloud mastery.',
+                    'bg-tile-orange',
+                    'scatter-mid'
+                );
+            }
 
-            // 4. Staggered Pair: Sonny Carlos (Blue Tile) + Raphael Quisumbing (Green Tile)
+            // 4. Sonny Carlos
             if (panels.length > 3) {
-                carouselHTML += posterCardHTML(panels[3], panels[3].originalIndex, 'PANEL SPEAKER // 03', 'bg-tile-blue', 'scatter-high scatter-tilt-right h-short');
-            }
-            if (panels.length > 4) {
-                carouselHTML += posterCardHTML(panels[4], panels[4].originalIndex, 'PANEL SPEAKER // 04', 'bg-tile-green', 'scatter-low scatter-tilt-mild-left h-mid');
+                carouselHTML += speakerCardRunwayHTML(
+                    panels[3],
+                    panels[3].originalIndex,
+                    'PANEL // 04 · OPERATOR',
+                    'Unfiltered debate on startup resilience, enterprise infrastructure, and tech leadership in the Philippines.',
+                    'bg-tile-purple',
+                    'scatter-high'
+                );
             }
 
-            // 5. Hero Poster: David Marquez -> Solid Purple Tile
+            // 5. Raphael Quisumbing
+            if (panels.length > 4) {
+                carouselHTML += speakerCardRunwayHTML(
+                    panels[4],
+                    panels[4].originalIndex,
+                    'PANEL // 05 · BUILDER',
+                    'Engineering at scale and navigating the shifting landscape of enterprise cloud architectures.',
+                    'bg-tile-green',
+                    'scatter-low'
+                );
+            }
+
+            // 6. David Marquez
             if (panels.length > 5) {
-                carouselHTML += posterCardHTML(panels[5], panels[5].originalIndex, 'TECH ENTREPRENEUR', 'bg-tile-purple', 'scatter-down scatter-tilt-mild-right h-tall');
+                carouselHTML += speakerCardRunwayHTML(
+                    panels[5],
+                    panels[5].originalIndex,
+                    'PANEL // 06 · ENTREPRENEUR',
+                    'Tactical lessons from launching, growing, and scaling software companies in the Philippines.',
+                    'bg-tile-blue',
+                    'scatter-mid'
+                );
             }
         }
 
         // ==========================================
-        // 03 // SESSIONS SPREAD
+        // 03 // SESSIONS SPREAD (4 BUILDERS)
         // ==========================================
         if (sessions.length > 0) {
-            // Chapter Cover: Solid Green Tile
+            // Chapter Cover: Solid Purple Tile
             carouselHTML += editorialCoverHTML(
                 '03',
                 'BUILDER STAGE',
@@ -483,32 +611,56 @@ export function initSpeakers() {
                 'Builders &amp;<br>Student Stories',
                 'Deep-dive technical architectures, real-world data pipelines, and authentic student builder journeys across Laguna, Batangas, Cavite, and Rizal.',
                 ['4 SESSIONS', 'TECHNICAL DEMOS', 'STUDENT STORIES'],
-                'bg-tile-green',
+                'bg-tile-purple',
                 'section-sessions',
                 'sessions',
-                'scatter-mid h-tall scatter-space-wide'
+                'scatter-mid'
             );
 
-            // 1. Hero Feature Wide: Isaeus (Asi) Guiang -> Solid Blue Tile
-            carouselHTML += heroWideCardHTML(
+            // 1. Isaeus (Asi) Guiang
+            carouselHTML += speakerCardRunwayHTML(
                 sessions[0],
                 sessions[0].originalIndex,
-                'STUDENT SUCCESS STORY · 15:30 PM',
+                'SESSION // 01 · CLOUD PRO',
                 'From leading AWS Cloud Club Philippines to architecting enterprise cloud solutions — the tactical blueprint for accelerating your student tech career.',
-                ['#BuildClubManila', '#Appficiency', '#StudentToPro'],
-                'bg-tile-blue',
-                'scatter-high scatter-tilt-mild-left h-mid'
+                'bg-tile-green',
+                'scatter-high'
             );
 
-            // 2. Staggered Trio: John Danmel (Orange Tile) + Darla David (Purple Tile) + Samuel Jedidiah Uy (Pink Tile)
+            // 2. John Danmel Laranga
             if (sessions.length > 1) {
-                carouselHTML += posterCardHTML(sessions[1], sessions[1].originalIndex, 'DEVCON LAGUNA // 01', 'bg-tile-orange', 'scatter-low scatter-tilt-right h-short');
+                carouselHTML += speakerCardRunwayHTML(
+                    sessions[1],
+                    sessions[1].originalIndex,
+                    'SESSION // 02 · DEVCON',
+                    'Real-world data pipelines, modern application development, and open community building across CALABARZON.',
+                    'bg-tile-orange',
+                    'scatter-low'
+                );
             }
+
+            // 3. Darla David
             if (sessions.length > 2) {
-                carouselHTML += posterCardHTML(sessions[2], sessions[2].originalIndex, 'DATA & AI // 02', 'bg-tile-purple', 'scatter-high scatter-tilt-left h-mid');
+                carouselHTML += speakerCardRunwayHTML(
+                    sessions[2],
+                    sessions[2].originalIndex,
+                    'SESSION // 03 · DATA & AI',
+                    'Practical machine learning architectures and applied AI solutions for next-generation builders.',
+                    'bg-tile-pink',
+                    'scatter-mid'
+                );
             }
+
+            // 4. Samuel Jedidiah Uy
             if (sessions.length > 3) {
-                carouselHTML += posterCardHTML(sessions[3], sessions[3].originalIndex, 'APPLIED LLMS // 03', 'bg-tile-pink', 'scatter-low scatter-tilt-mild-right h-tall');
+                carouselHTML += speakerCardRunwayHTML(
+                    sessions[3],
+                    sessions[3].originalIndex,
+                    'SESSION // 04 · APPLIED LLMS',
+                    'Building real-world applications with Large Language Models and generative cloud services.',
+                    'bg-tile-blue',
+                    'scatter-high'
+                );
             }
         }
 
@@ -617,28 +769,13 @@ export function initSpeakers() {
             const tx = -progress * range;
             aboutCarousel.style.transform = `translate3d(${tx}px, 0, 0)`;
 
-            // DYNAMIC IN / OUT ANIMATION: Compute 3D perspective and opacity per card
+            // Cards remain cleanly grid-aligned and uniform without any dynamic scaling or 3D tilt
             const children = aboutCarousel.children;
-            const vCenter = viewportWidth / 2;
-
             for (let i = 0; i < children.length; i++) {
                 const card = children[i];
-                const cardCenter = card.offsetLeft + tx + (card.offsetWidth / 2);
-                const dist = cardCenter - vCenter;
-                const norm = dist / (viewportWidth * 0.55);
-                const clampedNorm = Math.max(-1.5, Math.min(1.5, norm));
-                const absNorm = Math.min(1.2, Math.abs(clampedNorm));
-
-                // Scale: 1.0 at center, down to 0.95 at edge
-                const scale = (1 - (absNorm * 0.05)).toFixed(3);
-                // 3D rotation: enters tilted (-5deg), exits tilted (+5deg)
-                const rotY = (Math.max(-6, Math.min(6, clampedNorm * 5))).toFixed(1);
-                // Subtle vertical parallax
-                const ty = (absNorm * 10).toFixed(1);
-
-                card.style.setProperty('--card-scale', scale);
-                card.style.setProperty('--card-rotate-y', `${rotY}deg`);
-                card.style.setProperty('--card-ty', `${ty}px`);
+                card.style.removeProperty('--card-scale');
+                card.style.removeProperty('--card-rotate-y');
+                card.style.removeProperty('--card-ty');
                 card.style.removeProperty('--card-opacity');
             }
 
@@ -675,7 +812,9 @@ export function initSpeakers() {
 
         let rafId = 0;
         function tick() {
-            render(getScroll());
+            if (!isModalOpen) {
+                render(getScroll());
+            }
             rafId = requestAnimationFrame(tick);
         }
 
@@ -753,14 +892,17 @@ export function initSpeakers() {
 
     function handleCardClick(e) {
         //let the LinkedIn links do their thing without opening the modal
-        if (e.target.closest('a')) return;
+        if (e.target.closest('a') || e.target.closest('.spk-li')) return;
 
-        const card = e.target.closest('.speaker-card, .asym-hero-card, .asym-mini-card, .asym-poster-card, .speaker-inline-card');
+        const card = e.target.closest('.asym-speaker-card, .speaker-card, .asym-hero-card, .asym-mini-card, .asym-poster-card, .speaker-inline-card');
         if (!card) return;
 
         const index = Number(card.dataset.speakerIndex);
         if (!Number.isNaN(index) && speakers[index]) {
-            openSpeakerModal(speakers[index]);
+            const tileMatch = card.className.match(/bg-tile-(orange|purple|green|blue|pink)/)
+                || card.className.match(/\b(blue|green|pink)\b/);
+            const tileClass = tileMatch ? (tileMatch[0].startsWith('bg-tile-') ? tileMatch[0] : `bg-tile-${tileMatch[0]}`) : '';
+            openSpeakerModal(speakers[index], tileClass);
         }
     }
 

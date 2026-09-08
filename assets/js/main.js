@@ -5,9 +5,11 @@
 
 import { initTheme } from './modules/theme.js';
 import { initRouter } from './modules/routing.js';
+import { initAssistiveTouch } from './modules/assistiveTouch.js';
 import { initSmoothScroll } from './modules/smoothScroll.js';
 import { initCountdown } from './modules/countdown.js';
 import { initSpeakers } from './modules/speakersUI.js';
+import { initScheduleUI } from './modules/scheduleUI.js';
 import { initMerch } from './modules/merchUI.js';
 import { initChapters } from './modules/chaptersUI.js';
 import { initSponsors } from './modules/sponsorsUI.js';
@@ -21,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
     initTheme();
     initRouter();
+    initAssistiveTouch();
     // Smooth scroll (Lenis) — before content/reveal so its showPage wrap and
     // scroll source are ready for the blueprint horizontal pan. No-ops on
     // touch / reduced-motion (native scroll).
@@ -29,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Initialize UI views & dynamic content
     initSpeakers();
+    initScheduleUI();
     initMerch();
     initChapters();
     initSponsors();

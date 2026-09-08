@@ -44,7 +44,8 @@ const CFG = {
   bootSweepDensity: 0.34,     // fraction of cells in the band that light up (higher = more boxes)
 
   // Ambient Blocks (Animated background boxes)
-  blockOpacity: 1.0,          // High opacity for the persistent boxes
+  blockOpacity: 1.0,          // High opacity for persistent boxes on desktop gutters
+  mobileBlockOpacity: 0.32,   // Calibrated subtle opacity for mobile edge accents (guarantees text readability)
   blockRepeatY: 54,           // Vertical repeat interval (in rows)
   blockAnimIntervalMs: 4500,  // How often blocks decide to shift/recolor
 
@@ -180,19 +181,26 @@ function runBootSweep(elapsed) {
   if (reducedMotion) return;
   const t = elapsed / CFG.bootSweepMs; // 0..1
   if (t >= 1) return;
+  const currentW = viewW || window.innerWidth;
+  const isMobile = currentW < 1024;
   const cols = Math.ceil(viewW / gridSize);
   const rows = Math.ceil(viewH / gridSize);
   const maxDiag = cols + rows;
   // Diagonal wavefront position (in col+row units).
   const front = t * maxDiag;
   const band = CFG.bootSweepBandCells;
+
+  // On mobile, use softer density and brightness so initial entry is a smooth cyber accent
+  const density = isMobile ? 0.16 : CFG.bootSweepDensity;
+  const brightness = isMobile ? 0.40 : CFG.bootSweepBrightness;
+
   for (let col = 0; col <= cols; col++) {
     for (let row = 0; row <= rows; row++) {
       const d = col + row;
       if (d <= front && d > front - band) {
         // Only light a subset so it reads as cells, not a solid fill.
-        if (Math.random() < CFG.bootSweepDensity) {
-          lightCell(col, row, CFG.bootSweepBrightness, (col + row) % colors.length);
+        if (Math.random() < density) {
+          lightCell(col, row, brightness, (col + row) % colors.length);
         }
       }
     }
@@ -200,6 +208,7 @@ function runBootSweep(elapsed) {
 }
 
 /* ========================== Ambient Blocks ============================== */
+/* Desktop ambient blocks (wide side gutters) */
 const ambientBlocks = [
   // Left side
   { c: 1, r: 3, color: 4 }, { c: 2, r: 6, color: 0 }, { c: 1, r: 9, color: 3 }, { c: 2, r: 9, color: 2 },
@@ -226,66 +235,104 @@ const ambientBlocks = [
   lastAnimTs: Math.random() * 2000
 }));
 
+/* Mobile ambient blocks: strictly edge-anchored to col 0 (left edge) and col -1 (right edge).
+   Spaced comfortably apart vertically so they frame the mobile screen without ever touching text. */
+const mobileAmbientBlocks = [
+  // Left edge (col 0)
+  { c: 0, r: 4, color: 4 },
+  { c: 0, r: 14, color: 0 },
+  { c: 0, r: 25, color: 3 },
+  { c: 0, r: 36, color: 1 },
+  { c: 0, r: 47, color: 2 },
+  // Right edge (col -1)
+  { c: -1, r: 9, color: 1 },
+  { c: -1, r: 19, color: 2 },
+  { c: -1, r: 30, color: 4 },
+  { c: -1, r: 41, color: 0 },
+  { c: -1, r: 52, color: 3 },
+].map(b => ({
+  ...b,
+  currentC: b.c, currentR: b.r,
+  targetC: b.c, targetR: b.r,
+  lastAnimTs: Math.random() * 2000
+}));
+
 function updateAmbientBlocks(ts, dt) {
   if (reducedMotion) return;
-  for (const b of ambientBlocks) {
+  const currentW = viewW || window.innerWidth;
+  const totalCols = Math.floor(document.body.clientWidth / gridSize);
+  const isMobile = currentW < 1024 || totalCols < 20;
+  const blocks = isMobile ? mobileAmbientBlocks : ambientBlocks;
+
+  for (const b of blocks) {
     if (ts - b.lastAnimTs > CFG.blockAnimIntervalMs) {
       b.lastAnimTs = ts + Math.random() * 500;
       // 50% chance to move, 50% chance to recolor
       if (Math.random() < 0.5) {
-        let tc, tr;
-        
-        if (b.targetC === b.c && b.targetR === b.r) {
-          // Currently at base position: move exactly 1 tile away
-          tc = b.c;
-          tr = b.r;
-          const rand = Math.random();
-          if (rand < 0.25) tc = b.c - 1;
-          else if (rand < 0.5) tc = b.c + 1;
-          else if (rand < 0.75) tr = b.r - 1;
-          else tr = b.r + 1;
-        } else {
-          // Currently away from base: must step back to base (prevents diagonals/2-tile jumps)
-          tc = b.c;
-          tr = b.r;
-        }
-
-        // Ensure we don't overlap with any other block's current target
-        let collision = false;
-        for (const other of ambientBlocks) {
-          if (other !== b && other.targetC === tc && other.targetR === tr) {
-            collision = true;
-            break;
+        if (isMobile) {
+          // On mobile, keep column locked strictly to the edge (0 or -1);
+          // only step vertically by ±1 tile so it NEVER drifts into body text.
+          if (b.targetR === b.r) {
+            b.targetR = b.r + (Math.random() < 0.5 ? -1 : 1);
+          } else {
+            b.targetR = b.r;
           }
-        }
-        
-        if (!collision) {
-          b.targetC = tc;
-          b.targetR = tr;
+        } else {
+          // Desktop gutter behavior
+          let tc, tr;
+          if (b.targetC === b.c && b.targetR === b.r) {
+            tc = b.c;
+            tr = b.r;
+            const rand = Math.random();
+            if (rand < 0.25) tc = b.c - 1;
+            else if (rand < 0.5) tc = b.c + 1;
+            else if (rand < 0.75) tr = b.r - 1;
+            else tr = b.r + 1;
+          } else {
+            tc = b.c;
+            tr = b.r;
+          }
+
+          let collision = false;
+          for (const other of blocks) {
+            if (other !== b && other.targetC === tc && other.targetR === tr) {
+              collision = true;
+              break;
+            }
+          }
+          if (!collision) {
+            b.targetC = tc;
+            b.targetR = tr;
+          }
         }
       } else {
         b.color = (b.color + 1 + Math.floor(Math.random() * (colors.length - 1))) % colors.length;
       }
     }
 
-    // Smoothly interpolate current to target position (faster for a snappier, less laggy feel)
+    // Smoothly interpolate current to target position
     b.currentC += (b.targetC - b.currentC) * 14 * dt;
     b.currentR += (b.targetR - b.currentR) * 14 * dt;
   }
 }
 
 function drawAmbientBlocks() {
+  const currentW = viewW || window.innerWidth;
+  const totalCols = Math.floor(document.body.clientWidth / gridSize);
+  const isMobile = currentW < 1024 || totalCols < 20;
+
+  const blocks = isMobile ? mobileAmbientBlocks : ambientBlocks;
+  const opacity = isMobile ? CFG.mobileBlockOpacity : CFG.blockOpacity;
+
   const size = gridSize;
   const scrollX = window.scrollX || window.pageXOffset || 0;
   const scrollY = window.scrollY || window.pageYOffset || 0;
   
-  // Base total columns on the body clientWidth (matches CSS 100%)
-  const totalCols = Math.floor(document.body.clientWidth / gridSize);
   const visRows = Math.ceil(viewH / gridSize) + 2;
   const startVisRow = Math.floor(scrollY / gridSize) - 1;
 
-  for (const b of ambientBlocks) {
-    ctx.fillStyle = rgba(colors[b.color % colors.length], CFG.blockOpacity);
+  for (const b of blocks) {
+    ctx.fillStyle = rgba(colors[b.color % colors.length], opacity);
     
     // Resolve right-aligned columns
     const actualCol = b.currentC < 0 ? totalCols + b.currentC : b.currentC;

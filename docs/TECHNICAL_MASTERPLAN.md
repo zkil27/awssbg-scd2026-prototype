@@ -192,7 +192,7 @@ gantt
 
 #### Phase 3: Soft Launch & Teaser Campaign (August 1 – August 23)
 - [ ] Hardcode event date, theme, and tentative venue in hero header.
-- [ ] Connect primary CTA buttons ("Register Now") directly to external Luma registration link (`https://lu.ma/...`).
+- [x] Connect primary CTA buttons ("Register Now") directly to external Luma registration link (`https://lu.ma/f8knjt7n`).
 - [ ] Calibrate countdown timer module (`countdown.js`) to target October 7, 2026.
 
 #### Phase 4: Official Launch & Announcements (August 24 – August 30)

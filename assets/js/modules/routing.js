@@ -27,7 +27,7 @@ export function showPage(name, record = true) {
     document.documentElement.setAttribute('data-page', name);
 
     //update active nav button indicators
-    document.querySelectorAll('.navbtn, .dock-tab').forEach(b => {
+    document.querySelectorAll('.navbtn, .dock-tab, .assistive-hud-item').forEach(b => {
         const on = b.dataset.page === name;
         b.classList.toggle('active', on);
         if (on) b.setAttribute('aria-current', 'page');
