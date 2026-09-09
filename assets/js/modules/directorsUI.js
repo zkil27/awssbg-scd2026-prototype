@@ -35,13 +35,10 @@ function directorCardHTML(d) {
     ? `<img class="director-avatar-img" src="${d.avatar}" alt="${d.name}" loading="lazy">`
     : `<div class="director-monogram" aria-hidden="true" style="--dept-accent: var(${d.accentColor || '--blue'});">
          <span class="monogram-text">${initials}</span>
-         <span class="monogram-grid-accent"></span>
        </div>`;
 
   return `
     <article class="director-card dept-${deptLower}" data-dept="${deptLower}" aria-label="${d.name}, ${d.role}">
-      <div class="director-card-edge" style="--card-accent: var(${d.accentColor || '--blue'});" aria-hidden="true"></div>
-      
       <div class="director-card-top">
         <span class="director-badge dept-badge-${d.deptTag.toLowerCase()}">${d.deptTag}</span>
         <span class="director-role-badge ${roleType.toLowerCase()}">${roleType}</span>

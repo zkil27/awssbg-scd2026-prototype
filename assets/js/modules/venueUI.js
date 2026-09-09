@@ -26,7 +26,7 @@ function initVenueCopy() {
       navigator.clipboard.writeText(address).then(() => {
         if (labelEl) {
           const original = labelEl.textContent;
-          labelEl.textContent = 'Copied to Clipboard! ✓';
+          labelEl.textContent = 'Address Copied';
           copyBtn.classList.add('copied');
           setTimeout(() => {
             labelEl.textContent = original;
@@ -55,7 +55,7 @@ function fallbackCopy(text, labelEl, btnEl) {
 
     if (labelEl) {
       const original = labelEl.textContent;
-      labelEl.textContent = 'Copied! ✓';
+      labelEl.textContent = 'Address Copied';
       btnEl.classList.add('copied');
       setTimeout(() => {
         labelEl.textContent = original;

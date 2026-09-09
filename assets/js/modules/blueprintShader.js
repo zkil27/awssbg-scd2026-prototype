@@ -380,4 +380,16 @@ export function initBlueprintShader() {
     isVisible = true;
     start();
   }
+
+  // On mobile / vertical stack: update scroll progress dynamically as user scrolls through #program
+  window.addEventListener('scroll', () => {
+    if (!isVisible || !section) return;
+    if (document.documentElement.classList.contains('bp-active')) return;
+    const rect = section.getBoundingClientRect();
+    const total = rect.height - window.innerHeight;
+    if (total > 0) {
+      scrollProgress = Math.max(0, Math.min(1, -rect.top / total));
+      if (!animId) renderFrame(performance.now());
+    }
+  }, { passive: true });
 }

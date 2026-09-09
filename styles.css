@@ -1291,7 +1291,11 @@ section {
 :root #program,
 html[data-theme="light"] #program {
   --bp-bg: var(--purple);
-  --bp-bg-image: linear-gradient(135deg, var(--orange) 0%, var(--purple) 32%, var(--blue) 66%, var(--green) 100%);
+  --bp-bg-image: 
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(167, 89, 255, 0.2), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 30%, rgba(7, 227, 131, 0.16), transparent),
+    radial-gradient(ellipse 60% 40% at 0% 65%, rgba(68, 179, 254, 0.16), transparent),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(252, 153, 7, 0.2), transparent);
   --bp-text-strong: #000000;
   --bp-text: #0b0f19;
   --bp-muted: #1e2535;
@@ -1341,7 +1345,11 @@ html[data-theme="light"] #program {
 /* Dark Mode: Vibrant rainbow brand palette with dark obsidian brutalist cards */
 html[data-theme="dark"] #program {
   --bp-bg: var(--purple);
-  --bp-bg-image: linear-gradient(135deg, var(--orange) 0%, var(--purple) 32%, var(--blue) 66%, var(--green) 100%);
+  --bp-bg-image: 
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(167, 89, 255, 0.35), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 30%, rgba(7, 227, 131, 0.25), transparent),
+    radial-gradient(ellipse 60% 40% at 0% 65%, rgba(68, 179, 254, 0.25), transparent),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(252, 153, 7, 0.28), transparent);
   --bp-text-strong: #ffffff;
   --bp-text: #ffffff;
   --bp-muted: rgba(255, 255, 255, 0.92);
@@ -1412,6 +1420,7 @@ html[data-theme="dark"] .blueprint-panel--agenda .bp-num {
 
 #program {
   background-color: var(--bp-backdrop-base, #f5edfc);
+  background-image: var(--bp-bg-image);
   color: var(--bp-text);
   --text-strong: var(--bp-text-strong);
   --text: var(--bp-text);
@@ -2389,18 +2398,36 @@ html:not(.bp-active) .blueprint-panel--agenda:hover {
 
 @media (max-width: 1023px) {
   .blueprint-panel--agenda {
-    padding: 28px 32px;
-    background: var(--brutal-bg);
-    border: var(--brutal-border);
-    box-shadow: var(--brutal-shadow);
+    padding: 24px 22px;
+    background: rgba(13, 21, 39, 0.78) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(1.25);
+    backdrop-filter: blur(16px) saturate(1.25);
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     border-radius: 16px;
   }
+
+  html[data-theme="light"] .blueprint-panel--agenda {
+    background: rgba(255, 255, 255, 0.82) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(1.25);
+    backdrop-filter: blur(16px) saturate(1.25);
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  }
+}
+
+html[data-theme="light"]:not(.bp-active) .blueprint-panel--agenda {
+  background: rgba(255, 255, 255, 0.82) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  backdrop-filter: blur(16px) saturate(1.25);
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 @media (max-width: 640px) {
   html:not(.bp-active) .blueprint-panel--agenda,
   .blueprint-panel--agenda {
-    padding: 22px 20px;
+    padding: 20px 18px;
   }
 }
 
@@ -2497,8 +2524,34 @@ html:not(.bp-active) .blueprint-panel {
   }
 }
 
-/* Hide the WebGL shader canvas, dynamic arch top curve stroke, and desktop progress/hints in vertical stack / mobile */
-html:not(.bp-active) .bp-shader-canvas,
+/* Live WebGL Shader Canvas: active and visible on mobile to project living chromatic waves */
+html:not(.bp-active) .bp-shader-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+  z-index: 0;
+  display: block !important;
+  border-radius: 20px;
+  opacity: 0.88;
+}
+
+@media (max-width: 1023px) {
+  .bp-shader-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none;
+    z-index: 0;
+    display: block !important;
+    border-radius: 20px;
+    opacity: 0.88;
+  }
+}
+
+/* Hide desktop-only artifacts that don't belong in mobile vertical stack */
 html:not(.bp-active) .bp-curve-stroke-wrap,
 html:not(.bp-active) .bp-clip-def,
 html:not(.bp-active) .blueprint-progress,
@@ -2507,7 +2560,6 @@ html:not(.bp-active) .blueprint-hint {
 }
 
 @media (max-width: 1023px) {
-  .bp-shader-canvas,
   .bp-curve-stroke-wrap,
   .bp-clip-def,
   .blueprint-progress,
@@ -2516,18 +2568,53 @@ html:not(.bp-active) .blueprint-hint {
   }
 }
 
-/* Clean transparent pin container on mobile fallback */
+/* Ambient pin stage on mobile fallback */
 html:not(.bp-active) .blueprint-pin {
-  background: transparent !important;
-  overflow: visible !important;
+  position: relative !important;
+  background: rgba(13, 21, 39, 0.45) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  overflow: hidden !important;
   height: auto !important;
+  padding: clamp(20px, 3vw, 32px) clamp(14px, 2.5vw, 24px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="light"]:not(.bp-active) .blueprint-pin {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
 }
 
 @media (max-width: 1023px) {
   .blueprint-pin {
-    background: transparent !important;
-    overflow: visible !important;
+    position: relative !important;
+    background: rgba(13, 21, 39, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    overflow: hidden !important;
     height: auto !important;
+    padding: clamp(20px, 3vw, 32px) clamp(14px, 2.5vw, 24px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+  }
+
+  html[data-theme="light"] .blueprint-pin {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Frosted glass for schedule block cards on mobile */
+  .blueprint-panel--schedule .sched-block {
+    background: rgba(13, 21, 39, 0.85) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(1.25);
+    backdrop-filter: blur(16px) saturate(1.25);
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  }
+
+  html[data-theme="light"] .blueprint-panel--schedule .sched-block {
+    background: rgba(255, 255, 255, 0.88) !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
   }
 }
 
@@ -3293,9 +3380,15 @@ html[data-theme="dark"] .venue-tier-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+.transit-icon-box svg {
+  width: 15px;
+  height: 15px;
+  stroke: var(--teal, #0AA98F);
+  flex-shrink: 0;
 }
 
 .transit-text {
@@ -3332,6 +3425,9 @@ html[data-theme="dark"] .venue-tier-badge {
 
 .venue-btn-row .btn {
   border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
 #btnCopyVenueAddr.copied {
@@ -7068,42 +7164,72 @@ footer {
   z-index: 2;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 4px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  padding: 4px 0 8px;
+}
+
+.directors-filter-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+  width: 0;
+  height: 0;
 }
 
 .directors-filter-bar {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   min-width: max-content;
+  background: var(--bg-2, rgba(15, 23, 42, 0.04));
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px;
 }
 
 .director-filter-pill {
   appearance: none;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  color: var(--text-strong);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 11.5px;
-  font-weight: 500;
-  padding: 8px 14px;
-  border-radius: 0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 999px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   white-space: nowrap;
 }
 
 .director-filter-pill:hover {
-  border-color: var(--text-strong);
+  color: var(--text-strong);
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .director-filter-pill.active {
-  background: var(--text-strong);
-  color: var(--bg-1);
-  border-color: var(--text-strong);
+  background: var(--card-bg, #ffffff);
+  color: var(--text-strong);
+  border-color: var(--card-border, rgba(0, 0, 0, 0.12));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="dark"] .directors-filter-bar {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] .director-filter-pill:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="dark"] .director-filter-pill.active {
+  background: var(--bg-elevated, #1A2333);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 .director-filter-pill .filter-dot {
@@ -7130,7 +7256,7 @@ footer {
 .director-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 0;
+  border-radius: 16px;
   padding: 24px 20px 20px;
   display: flex;
   flex-direction: column;
@@ -7145,18 +7271,9 @@ footer {
 }
 
 .director-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--card-accent, var(--blue));
-  box-shadow: 0 10px 26px -8px rgba(0, 0, 0, 0.18);
-}
-
-.director-card-edge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--card-accent, var(--blue));
+  transform: translateY(-4px);
+  border-color: var(--line-strong, rgba(0, 0, 0, 0.2));
+  box-shadow: 0 14px 32px -8px rgba(0, 0, 0, 0.1);
 }
 
 .director-card-top {
@@ -7170,51 +7287,45 @@ footer {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
-  padding: 3px 8px;
+  padding: 3px 9px;
   letter-spacing: 0.06em;
-  border-radius: 0;
+  border-radius: 999px;
+  border: none;
 }
 
 .dept-badge-exec {
-  background: rgba(252, 153, 7, 0.12);
+  background: rgba(252, 153, 7, 0.14);
   color: var(--orange-text);
-  border: 1px solid rgba(252, 153, 7, 0.35);
 }
 
 .dept-badge-tech {
-  background: rgba(68, 179, 254, 0.12);
+  background: rgba(68, 179, 254, 0.14);
   color: var(--blue-text);
-  border: 1px solid rgba(68, 179, 254, 0.35);
 }
 
 .dept-badge-crea {
-  background: rgba(254, 87, 234, 0.12);
+  background: rgba(254, 87, 234, 0.14);
   color: var(--pink);
-  border: 1px solid rgba(254, 87, 234, 0.35);
 }
 
 .dept-badge-ops {
-  background: rgba(7, 227, 131, 0.12);
+  background: rgba(7, 227, 131, 0.16);
   color: var(--green-text, #059669);
-  border: 1px solid rgba(7, 227, 131, 0.35);
 }
 
 .dept-badge-mktg {
-  background: rgba(167, 89, 255, 0.12);
+  background: rgba(167, 89, 255, 0.14);
   color: var(--purple-text, #7C3AED);
-  border: 1px solid rgba(167, 89, 255, 0.35);
 }
 
 .dept-badge-rels {
-  background: rgba(68, 179, 254, 0.12);
+  background: rgba(68, 179, 254, 0.14);
   color: var(--blue-text);
-  border: 1px solid rgba(68, 179, 254, 0.35);
 }
 
 .dept-badge-fin {
-  background: rgba(252, 153, 7, 0.12);
+  background: rgba(252, 153, 7, 0.14);
   color: var(--orange-text);
-  border: 1px solid rgba(252, 153, 7, 0.35);
 }
 
 .director-role-badge {
@@ -7222,16 +7333,17 @@ footer {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.07em;
-  padding: 2px 6px;
-  border-radius: 0;
-  border: 1px solid var(--line-strong, var(--card-border));
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
   color: var(--muted);
   text-transform: uppercase;
 }
 
 .director-role-badge.director {
   color: var(--text-strong);
-  border-color: var(--text-strong);
+  border-color: var(--line-strong);
+  background: var(--bg-2);
 }
 
 .director-header-block {
@@ -7244,35 +7356,33 @@ footer {
   width: 50px;
   height: 50px;
   flex-shrink: 0;
+  border-radius: 12px;
 }
 
 .director-monogram {
   width: 100%;
   height: 100%;
-  background: var(--bg-3);
-  border: 1px solid var(--card-border);
+  background: var(--bg-3, rgba(0, 0, 0, 0.04));
+  border: 1px solid var(--line);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.director-card:hover .director-monogram {
+  background: var(--bg-2);
+  transform: scale(1.04);
 }
 
 .director-monogram .monogram-text {
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 15px;
-  color: var(--dept-accent, var(--blue));
-  letter-spacing: 0.05em;
-}
-
-.director-monogram .monogram-grid-accent {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 4px;
-  height: 4px;
-  background: var(--dept-accent, var(--blue));
+  color: var(--dept-accent, var(--blue-text));
+  letter-spacing: 0.04em;
 }
 
 .director-avatar-img {
@@ -7280,6 +7390,7 @@ footer {
   height: 100%;
   object-fit: cover;
   border: 1px solid var(--card-border);
+  border-radius: 12px;
 }
 
 .director-identity {
@@ -7331,8 +7442,8 @@ footer {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  padding-top: 12px;
-  border-top: 1px dashed var(--line);
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
   margin-top: auto;
 }
 
@@ -7343,6 +7454,9 @@ footer {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--muted);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg-2);
 }
 
 .director-status-pill .status-indicator-dot {
@@ -7381,4 +7495,5 @@ footer {
     padding: 20px 16px 16px;
   }
 }
+
 

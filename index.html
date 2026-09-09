@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="theme.css?v=20260908-nav-h-fix">
-  <link rel="stylesheet" href="styles.css?v=20260910-mobile-fix">
+  <link rel="stylesheet" href="styles.css?v=20260910-no-emoji">
   <script>
     /* Apply saved theme before paint to avoid flash */
     (function () {
@@ -694,9 +694,9 @@
                 <!-- Bottom Row: Quick Space Switcher Tabs & GPS Coords -->
                 <div class="venue-overlay-row venue-overlay-bottom">
                   <div class="venue-gallery-tabs" id="venueGalleryTabs" role="tablist" aria-label="Venue photo views">
-                    <button type="button" class="venue-tab-btn active" data-index="0" role="tab" aria-selected="true">🏛️ Auditorium</button>
-                    <button type="button" class="venue-tab-btn" data-index="1" role="tab" aria-selected="false">⚡ Expo Hub</button>
-                    <button type="button" class="venue-tab-btn" data-index="2" role="tab" aria-selected="false">🌆 Grounds</button>
+                    <button type="button" class="venue-tab-btn active" data-index="0" role="tab" aria-selected="true">Auditorium</button>
+                    <button type="button" class="venue-tab-btn" data-index="1" role="tab" aria-selected="false">Expo Hub</button>
+                    <button type="button" class="venue-tab-btn" data-index="2" role="tab" aria-selected="false">Civic Grounds</button>
                   </div>
                   <div class="venue-chip chip-coords" id="venueGalleryCoords">14°18'46.9"N · 121°04'44.6"E</div>
                 </div>
@@ -708,7 +708,7 @@
               <div class="venue-meta-header">
                 <span class="venue-subtag">HOST CHAPTER: AWS SBG PUP–BIÑAN</span>
                 <h3 class="venue-name">PUP – Biñan People's Center Auditorium</h3>
-                <p class="venue-address">📍 Biñan People's Center, Biñan, Laguna, Philippines</p>
+                <p class="venue-address">Biñan People's Center, Biñan, Laguna, Philippines</p>
               </div>
 
               <p class="venue-desc">
@@ -724,7 +724,7 @@
                   <div class="floor-info-col">
                     <div class="floor-title-row">
                       <h4>Main Stage Auditorium</h4>
-                      <span class="floor-view-cue" aria-hidden="true">📸 View Photo</span>
+                      <span class="floor-view-cue" aria-hidden="true">View Photo →</span>
                     </div>
                     <p>Keynotes, Cloud &amp; Applied AI tracks, Women in Tech panel, and closing ceremony.</p>
                     <span class="floor-spec">500+ Tiered Seats · Air-Conditioned</span>
@@ -738,7 +738,7 @@
                   <div class="floor-info-col">
                     <div class="floor-title-row">
                       <h4>SS Community Hub</h4>
-                      <span class="floor-view-cue" aria-hidden="true">📸 View Photo</span>
+                      <span class="floor-view-cue" aria-hidden="true">View Photo →</span>
                     </div>
                     <p>Partner booths, hands-on student demos, swag distribution, and mentorship stations.</p>
                     <span class="floor-spec">Interactive Expo Commons · Networking</span>
@@ -747,10 +747,10 @@
               </div>
 
               <div class="venue-feature-pills">
-                <span class="feature-pill">🏛️ Tiered Auditorium</span>
-                <span class="feature-pill">❄️ Air-Conditioned</span>
-                <span class="feature-pill">📶 High-Speed WiFi</span>
-                <span class="feature-pill">⚡ Twin Levels</span>
+                <span class="feature-pill">Tiered Auditorium</span>
+                <span class="feature-pill">Air-Conditioned</span>
+                <span class="feature-pill">High-Speed WiFi</span>
+                <span class="feature-pill">Twin Levels</span>
               </div>
             </div>
           </article>
@@ -783,7 +783,12 @@
               <!-- Transit Checklist -->
               <div class="venue-transit-list">
                 <div class="transit-row">
-                  <div class="transit-icon-box" aria-hidden="true">📍</div>
+                  <div class="transit-icon-box" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                  </div>
                   <div class="transit-text">
                     <strong>Exact Address</strong>
                     <p>Biñan People's Center, Biñan, Laguna 4024</p>
@@ -791,7 +796,16 @@
                 </div>
 
                 <div class="transit-row">
-                  <div class="transit-icon-box" aria-hidden="true">🏛️</div>
+                  <div class="transit-icon-box" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="3" y1="21" x2="21" y2="21"></line>
+                      <line x1="6" y1="21" x2="6" y2="10"></line>
+                      <line x1="10" y1="21" x2="10" y2="10"></line>
+                      <line x1="14" y1="21" x2="14" y2="10"></line>
+                      <line x1="18" y1="21" x2="18" y2="10"></line>
+                      <polygon points="12 3 2 10 22 10 12 3"></polygon>
+                    </svg>
+                  </div>
                   <div class="transit-text">
                     <strong>Prominent Landmarks</strong>
                     <p>Directly adjacent to Alonte Sports Arena and the Biñan City Hall Complex.</p>
@@ -799,7 +813,14 @@
                 </div>
 
                 <div class="transit-row">
-                  <div class="transit-icon-box" aria-hidden="true">🚗</div>
+                  <div class="transit-icon-box" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="1" y="3" width="15" height="13"></rect>
+                      <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+                      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                  </div>
                   <div class="transit-text">
                     <strong>Driving &amp; Parking</strong>
                     <p>Take SLEX Mamplasan or Southwoods Exit toward Biñan City Hall. Free event parking available within civic grounds.</p>
@@ -807,7 +828,16 @@
                 </div>
 
                 <div class="transit-row">
-                  <div class="transit-icon-box" aria-hidden="true">🚌</div>
+                  <div class="transit-icon-box" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="15" rx="2"></rect>
+                      <path d="M3 11h18"></path>
+                      <path d="M7 15h.01"></path>
+                      <path d="M17 15h.01"></path>
+                      <path d="M5 18v2"></path>
+                      <path d="M19 18v2"></path>
+                    </svg>
+                  </div>
                   <div class="transit-text">
                     <strong>Public Commute</strong>
                     <p>Pacita / San Pedro jeeps to Biñan Bayan; tricycles readily available directly to People's Center entrance.</p>
@@ -824,7 +854,11 @@
                   Open Google Maps ↗
                 </a>
                 <button type="button" class="btn btn-ghost btn-sm" id="btnCopyVenueAddr" aria-label="Copy venue address to clipboard">
-                  <span id="btnCopyText">Copy Address 📋</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span id="btnCopyText">Copy Address</span>
                 </button>
               </div>
             </div>
@@ -866,7 +900,7 @@
           <div class="register-cta-row">
             <a class="btn btn-light" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">Register on Luma →</a>
           </div>
-          <p class="register-note">✨ Limited seats available per venue. Instant confirmation via email.</p>
+          <p class="register-note">Limited seats available per venue. Instant confirmation via email.</p>
         </div>
         <div class="qr-box">
           <img src="assets/images/luma-qr.svg" class="qr-mock" width="150" height="150" alt="QR Code – scan to register at lu.ma/f8knjt7n" />
@@ -1322,7 +1356,7 @@
     </div>
   </aside>
 
-  <script type="module" src="assets/js/main.js?v=20260910-venue-gallery"></script>
+  <script type="module" src="assets/js/main.js?v=20260910-no-emoji"></script>
 
   <script>
     /* Branded splash intro: show on entry, then fade out to reveal the site.

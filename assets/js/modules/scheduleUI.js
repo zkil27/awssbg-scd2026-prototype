@@ -138,7 +138,10 @@ function renderSessionCardHTML(session) {
             <span class="pf-card-block-sub">${shortBlock}</span>
           </div>
           <div class="pf-card-time-pill">
-            <span class="pf-time-clock">⏱</span>
+            <svg class="pf-time-clock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
             <span class="pf-time-text">${session.time}</span>
             <span class="pf-card-dur">${session.duration}</span>
           </div>
@@ -148,7 +151,10 @@ function renderSessionCardHTML(session) {
         <p class="pf-card-desc">${session.description}</p>
 
         <div class="pf-card-loc">
-          <span class="pf-loc-icon">📍</span>
+          <svg class="pf-loc-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
           <span>${session.location}</span>
         </div>
 
