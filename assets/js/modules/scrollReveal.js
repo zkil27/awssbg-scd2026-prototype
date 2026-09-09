@@ -29,6 +29,8 @@
 /** Section-level blocks: reveal as a single rise + fade (no stagger). */
 const SECTION_SELECTORS = [
   '.section-head',
+  '.tier-editorial',
+  '.sponsor-cta-banner',
   '.about-grid',
   '.quote-inner',
   '.register-inner',
@@ -38,7 +40,9 @@ const SECTION_SELECTORS = [
 /** Item-level targets: revealed with a per-item stagger + card accent. */
 const CARD_SELECTORS = [
   '.speaker-card',
-  '.sponsor-slot',
+  '.organizer-feature-card',
+  '.pro-card-editorial',
+  '.chapter-ledger-card',
   '.agenda-item',
   '.venue-inline-card',
   '.chapter-card',

@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="theme.css?v=20260908-quantum-top">
-  <link rel="stylesheet" href="styles.css?v=20260908-assistive-vibrant">
+  <link rel="stylesheet" href="theme.css?v=20260908-nav-h-fix">
+  <link rel="stylesheet" href="styles.css?v=20260909-clean-scrollbar">
   <script>
     /* Apply saved theme before paint to avoid flash */
     (function () {
@@ -43,7 +43,7 @@
     </div>
   </div>
 
-  <header class="nav" id="siteNav">
+  <header class="nav nav-in-hero" id="siteNav">
     <div class="nav-inner">
       <button class="brand" onclick="showPage('home')">
         <img class="chip" src="assets/images/south-summit-logo.svg" alt="AWS Student Community Day: South Summit 2026">
@@ -178,93 +178,191 @@
         <span class="brand-box b5"></span>
       </div>
       <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">Sponsors &amp; Partners</p>
-          <h2 class="section-title">Powered by our community</h2>
-          <p class="section-p">Backed by leading cloud educators, enterprise builders, and university student chapters across CALABARZON.</p>
+        <div class="section-head sponsors-section-head">
+          <p class="eyebrow" style="color:var(--teal);">Sponsors &amp; Partners</p>
+          <h2 class="section-title">Powered by industry leaders, cloud innovators, and student builders.</h2>
+          <p class="section-p">AWS Student Community Day: South Summit 2026 brings together cloud platforms, developer networks, and university chapters across South Luzon and Greater Manila.</p>
         </div>
 
-        <div class="sponsors-wrapper">
-          <!-- QUANTUM TIER (Highest) -->
-          <div class="tier">
-            <div class="tier-aside">
-              <span class="tier-badge quantum">QUANTUM PARTNERS</span>
-              <p class="tier-desc">Lead the summit. Headline visibility across the stage, badges, and every touchpoint.</p>
-              <span class="tier-count"><b>1</b> of 2 filled</span>
+        <div class="sponsors-wrapper sponsors-editorial">
+          <!-- 01 // QUANTUM TIER -->
+          <div class="tier-editorial tier-quantum">
+            <div class="tier-dossier">
+              <div class="tier-index-lockup">
+                <span class="tier-num">01</span>
+                <span class="tier-badge quantum">QUANTUM</span>
+              </div>
+              <h3 class="tier-title">Quantum Sponsors</h3>
+              <p class="tier-lead">Keystone &amp; headline sponsor leading the summit stage, keynote sessions, and nationwide builder network.</p>
             </div>
-            <div class="tier-grid quantum">
-              <div class="sponsor-slot active-sponsor">
-                <div class="sponsor-logo-wrap">
-                  <img src="assets/images/south-summit-logo.svg" alt="AWS Student Community" class="sponsor-logo">
+            <div class="tier-stage quantum">
+              <div class="organizer-feature-card color-purple" data-reveal>
+                <div class="organizer-media">
+                  <div class="organizer-logo-frame">
+                    <img src="assets/images/sbg-calabarzon-logo.png" alt="AWS Cloud Clubs Philippines" data-fallback="AWS Cloud Clubs Philippines" class="organizer-logo">
+                  </div>
                 </div>
-                <div class="sponsor-info">
-                  <strong>AWS Cloud Clubs Philippines</strong>
-                  <span>Official Organizing Partner</span>
-                </div>
-              </div>
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner">
-                  <span class="slot-badge">+ Become a Sponsor</span>
-                  <p>Quantum Partner Slot Available</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- CLUSTER TIER (Middle) -->
-          <div class="tier">
-            <div class="tier-aside">
-              <span class="tier-badge cluster">CLUSTER PARTNERS</span>
-              <p class="tier-desc">Prominent placement in booths, print, and speaker sessions throughout the day.</p>
-              <span class="tier-count"><b>0</b> of 3 filled</span>
-            </div>
-            <div class="tier-grid cluster">
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner">
-                  <span>Cluster Partner Slot</span>
-                </div>
-              </div>
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner">
-                  <span>Cluster Partner Slot</span>
-                </div>
-              </div>
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner">
-                  <span>Cluster Partner Slot</span>
+                <div class="organizer-content">
+                  <div class="organizer-label-row">
+                    <span class="editorial-mono-tag">Official Organizing Partner</span>
+                    <span class="editorial-mono-num">01</span>
+                  </div>
+                  <h3 class="organizer-title">AWS Cloud Clubs Philippines</h3>
+                  <p class="organizer-bio">A student-led community network supported by AWS, empowering Filipino students with cloud computing skills, foundational AWS certifications, hands-on architectural labs, and industry mentorship.</p>
+                  <div class="organizer-meta-table">
+                    <div class="organizer-meta-row">
+                      <span class="meta-label">Role</span>
+                      <span class="meta-value">Host &amp; Co-Organizer</span>
+                    </div>
+                    <div class="organizer-meta-row">
+                      <span class="meta-label">Network</span>
+                      <span class="meta-value">Nationwide Student Builder Collective</span>
+                    </div>
+                  </div>
+                  <div class="organizer-action">
+                    <a href="https://www.facebook.com/AWSCloudClubsPH" target="_blank" rel="noopener" class="editorial-link">
+                      <span>Learn about AWS Cloud Clubs</span>
+                      <svg class="editorial-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                        <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- CORE PARTNERS TIER (Foundational / Chapters) -->
-          <div class="tier">
-            <div class="tier-aside">
-              <span class="tier-badge core">CORE &amp; CHAPTER PARTNERS</span>
-              <p class="tier-desc">Student chapters and community groups co-building the summit across CALABARZON.</p>
-              <span class="tier-count"><b>5</b> chapters</span>
+          <!-- 02 // PRO TIER -->
+          <div class="tier-editorial tier-pro">
+            <div class="tier-dossier">
+              <div class="tier-index-lockup">
+                <span class="tier-num">02</span>
+                <span class="tier-badge pro">PRO</span>
+              </div>
+              <h3 class="tier-title">Pro Partners</h3>
+              <p class="tier-lead">Technology, platform, and community partners powering hands-on cloud tracks, certification pathways, and developer tooling.</p>
             </div>
-            <div class="tier-grid core">
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner"><span>DEVCON Laguna</span></div>
+            <div class="tier-stage pro pro-cards-grid">
+              <article class="pro-card-editorial color-green" data-reveal>
+                <div class="pro-card-masthead">
+                  <div class="pro-card-tags">
+                    <span class="pro-card-index">01</span>
+                    <span class="pro-card-badge">Regional Tech Partner</span>
+                  </div>
+                  <a href="https://devcon.ph" target="_blank" rel="noopener" class="pro-card-link" aria-label="Visit DEVCON Laguna">
+                    <svg class="editorial-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </div>
+                <div class="pro-card-main">
+                  <h4 class="pro-card-name">DEVCON Laguna</h4>
+                  <span class="pro-card-institution">Developer Connect Philippines</span>
+                  <p class="pro-card-desc">Developer Connect Philippines — fostering developer growth, tech symposiums, and grassroots engineering communities across Laguna and Region IV-A.</p>
+                </div>
+                <div class="pro-card-foot">
+                  <span class="pro-card-track">Developer Ecosystem &amp; Community</span>
+                  <span class="pro-card-location">Laguna Chapter</span>
+                </div>
+              </article>
+
+              <article class="pro-card-editorial color-blue" data-reveal>
+                <div class="pro-card-masthead">
+                  <div class="pro-card-tags">
+                    <span class="pro-card-index">02</span>
+                    <span class="pro-card-badge">Cloud Learning Partner</span>
+                  </div>
+                  <a href="https://tutorialsdojo.com" target="_blank" rel="noopener" class="pro-card-link" aria-label="Visit Tutorials Dojo">
+                    <svg class="editorial-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                </div>
+                <div class="pro-card-main">
+                  <h4 class="pro-card-name">Tutorials Dojo</h4>
+                  <span class="pro-card-institution">Tutorials Dojo</span>
+                  <p class="pro-card-desc">Industry-leading cloud training and certification learning platform empowering student builders with practical AWS architectural insights and exam preparation resources.</p>
+                </div>
+                <div class="pro-card-foot">
+                  <span class="pro-card-track">Cloud &amp; AI Learning Pathways</span>
+                  <span class="pro-card-location">Philippines / Global</span>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- 03 // LITE TIER -->
+          <div class="tier-editorial tier-lite">
+            <div class="tier-dossier">
+              <div class="tier-index-lockup">
+                <span class="tier-num">03</span>
+                <span class="tier-badge lite">LITE</span>
               </div>
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner"><span>AWSCC Haribon</span></div>
-              </div>
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner"><span>AWSCC Adamson</span></div>
-              </div>
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner"><span>AWSCC PUP Manila</span></div>
-              </div>
-              <div class="sponsor-slot open-slot">
-                <div class="slot-inner"><span>AWSCC UCabuyao</span></div>
-              </div>
+              <h3 class="tier-title">Lite Partners</h3>
+              <p class="tier-lead">Student builder chapters and campus collectives co-building the summit across CALABARZON and Greater Manila.</p>
+            </div>
+            <div class="tier-stage lite chapter-ledger-grid">
+              <article class="chapter-ledger-card color-blue" data-reveal>
+                <div class="chapter-card-masthead">
+                  <span class="chapter-index">01</span>
+                  <span class="chapter-badge">Student Chapter</span>
+                </div>
+                <div class="chapter-card-main">
+                  <h4 class="chapter-name">AWSCC Haribon</h4>
+                  <p class="chapter-institution">Pamantasan ng Lungsod ng Maynila</p>
+                </div>
+                <div class="chapter-card-meta">
+                  <span class="chapter-accent-indicator" aria-hidden="true"></span>
+                  <span class="chapter-location">Intramuros, Manila</span>
+                </div>
+              </article>
+              <article class="chapter-ledger-card color-purple" data-reveal>
+                <div class="chapter-card-masthead">
+                  <span class="chapter-index">02</span>
+                  <span class="chapter-badge">Student Chapter</span>
+                </div>
+                <div class="chapter-card-main">
+                  <h4 class="chapter-name">AWSCC Adamson</h4>
+                  <p class="chapter-institution">Adamson University</p>
+                </div>
+                <div class="chapter-card-meta">
+                  <span class="chapter-accent-indicator" aria-hidden="true"></span>
+                  <span class="chapter-location">Ermita, Manila</span>
+                </div>
+              </article>
+              <article class="chapter-ledger-card color-pink" data-reveal>
+                <div class="chapter-card-masthead">
+                  <span class="chapter-index">03</span>
+                  <span class="chapter-badge">Student Chapter</span>
+                </div>
+                <div class="chapter-card-main">
+                  <h4 class="chapter-name">AWSCC PUP Manila</h4>
+                  <p class="chapter-institution">Polytechnic University of the Philippines</p>
+                </div>
+                <div class="chapter-card-meta">
+                  <span class="chapter-accent-indicator" aria-hidden="true"></span>
+                  <span class="chapter-location">Santa Mesa, Manila</span>
+                </div>
+              </article>
+              <article class="chapter-ledger-card color-green" data-reveal>
+                <div class="chapter-card-masthead">
+                  <span class="chapter-index">04</span>
+                  <span class="chapter-badge">Student Chapter</span>
+                </div>
+                <div class="chapter-card-main">
+                  <h4 class="chapter-name">AWSCC UCabuyao</h4>
+                  <p class="chapter-institution">University of Cabuyao</p>
+                </div>
+                <div class="chapter-card-meta">
+                  <span class="chapter-accent-indicator" aria-hidden="true"></span>
+                  <span class="chapter-location">Cabuyao, Laguna</span>
+                </div>
+              </article>
             </div>
           </div>
 
           <!-- PROSPECTIVE SPONSOR CTA BANNER -->
-          <div class="sponsor-cta-banner">
+          <div class="sponsor-cta-banner" data-reveal>
             <div class="sponsor-cta-copy">
               <h4>Want to partner with South Summit 2026?</h4>
               <p>Connect with 500+ passionate student builders, cloud engineers, and future tech leaders in CALABARZON.</p>
@@ -286,7 +384,7 @@
       </div>
       <div class="wrap">
         <div class="section-head">
-          <p class="eyebrow" style="color:var(--purple);">Event Details</p>
+          <p class="eyebrow">Event Details</p>
           <h2 class="section-title">The Blueprint</h2>
           <p class="section-p">The theme runs through the whole day — three motions instead of one track: what you
             build, what powers it, and how you lead with it. The agenda runs throughout the day at the Laguna venue.</p>
@@ -373,52 +471,42 @@
 
               <div class="bp-sched-headline-row">
                 <div class="bp-sched-title-group">
-                  <h3 class="bp-sched-title">The running order</h3>
-                  <span class="bp-sched-sub">Full summit timeline across morning keynotes, technical tracks, and afternoon panels</span>
+                  <h3 class="bp-sched-title">The Running Order</h3>
                 </div>
                 <div class="sched-view-switcher" role="tablist" aria-label="Toggle schedule block layout">
                   <button type="button" class="sched-view-tab active" data-view="both" role="tab" aria-selected="true">
-                    Dual Block View
+                    Dual View
                   </button>
                   <button type="button" class="sched-view-tab" data-view="morning" role="tab" aria-selected="false">
-                    01 // Morning
+                    Morning
                   </button>
                   <button type="button" class="sched-view-tab" data-view="afternoon" role="tab" aria-selected="false">
-                    02 // Afternoon
+                    Afternoon
                   </button>
                 </div>
               </div>
 
               <div class="schedule-container sched-clickable-card" id="schedInteractiveTrigger" role="button" tabindex="0" aria-label="Click to open program flow in focus view">
-                <div class="schedule-card-crosshair top-left">+</div>
-                <div class="schedule-card-crosshair top-right">+</div>
-                <div class="schedule-card-crosshair bottom-left">+</div>
-                <div class="schedule-card-crosshair bottom-right">+</div>
-                
                 <div class="schedule sched-blocks-split" id="schedBlocksContainer">
                   <!-- BLOCK 01: MORNING -->
                   <div class="sched-block block-morning">
-                    <div class="sched-block-crosshair top-left">+</div>
-                    <div class="sched-block-crosshair top-right">+</div>
-                    <div class="sched-block-crosshair bottom-left">+</div>
-                    <div class="sched-block-crosshair bottom-right">+</div>
                     <div class="sched-block-header">
                       <div class="sched-block-title-row">
-                        <span class="sched-block-pill morning">BLOCK 01</span>
+                        <span class="sched-block-pill morning">01</span>
                         <span class="sched-block-label">MORNING STAGE</span>
                       </div>
                       <span class="sched-block-time-range">08:00 AM – 12:00 PM</span>
                     </div>
                     <div class="sched-block-rows">
                       <div class="sched-row">
-                        <div class="time"><span class="t-val">8:00 AM</span><span class="t-dur">60m</span></div>
+                        <div class="time"><span class="t-val">8:00 AM</span><span class="t-dur">60 MIN</span></div>
                         <div class="what">
                           <div class="what-header"><span class="sched-tag-pill checkin">CHECK-IN</span><b>Doors open &amp; registration</b></div>
                           <span>Badge pickup, welcome kits, and community hub opens</span>
                         </div>
                       </div>
                       <div class="sched-row">
-                        <div class="time"><span class="t-val">9:00 AM</span><span class="t-dur">90m</span></div>
+                        <div class="time"><span class="t-val">9:00 AM</span><span class="t-dur">90 MIN</span></div>
                         <div class="what">
                           <div class="what-header"><span class="sched-tag-pill keynote">KEYNOTE</span><b>Opening Ceremony &amp; Keynote</b></div>
                           <span>Cloud × AI: Build. Power. Lead.</span>
@@ -426,7 +514,7 @@
                         </div>
                       </div>
                       <div class="sched-row">
-                        <div class="time"><span class="t-val">10:30 AM</span><span class="t-dur">90m</span></div>
+                        <div class="time"><span class="t-val">10:30 AM</span><span class="t-dur">90 MIN</span></div>
                         <div class="what">
                           <div class="what-header"><span class="sched-tag-pill tracks">TRACKS</span><b>Technical &amp; career tracks</b></div>
                           <span>Cloud fundamentals, applied AI, and student builder career pathways</span>
@@ -438,20 +526,16 @@
 
                   <!-- BLOCK 02: AFTERNOON -->
                   <div class="sched-block block-afternoon">
-                    <div class="sched-block-crosshair top-left">+</div>
-                    <div class="sched-block-crosshair top-right">+</div>
-                    <div class="sched-block-crosshair bottom-left">+</div>
-                    <div class="sched-block-crosshair bottom-right">+</div>
                     <div class="sched-block-header">
                       <div class="sched-block-title-row">
-                        <span class="sched-block-pill afternoon">BLOCK 02</span>
+                        <span class="sched-block-pill afternoon">02</span>
                         <span class="sched-block-label">AFTERNOON STAGE</span>
                       </div>
                       <span class="sched-block-time-range">01:00 PM – 05:00 PM</span>
                     </div>
                     <div class="sched-block-rows">
                       <div class="sched-row">
-                        <div class="time"><span class="t-val">1:00 PM</span><span class="t-dur">90m</span></div>
+                        <div class="time"><span class="t-val">1:00 PM</span><span class="t-dur">90 MIN</span></div>
                         <div class="what">
                           <div class="what-header"><span class="sched-tag-pill panel">PANEL</span><b>Women in Tech &amp; showcase</b></div>
                           <span>Flagship panel and student-led lightning talks</span>
@@ -459,14 +543,14 @@
                         </div>
                       </div>
                       <div class="sched-row">
-                        <div class="time"><span class="t-val">2:30 PM</span><span class="t-dur">105m</span></div>
+                        <div class="time"><span class="t-val">2:30 PM</span><span class="t-dur">105 MIN</span></div>
                         <div class="what">
                           <div class="what-header"><span class="sched-tag-pill community">COMMUNITY</span><b>Sponsor &amp; community booths</b></div>
                           <span>Networking, photobooth, partner challenges &amp; speed mentoring</span>
                         </div>
                       </div>
                       <div class="sched-row">
-                        <div class="time"><span class="t-val">4:15 PM</span><span class="t-dur">45m</span></div>
+                        <div class="time"><span class="t-val">4:15 PM</span><span class="t-dur">45 MIN</span></div>
                         <div class="what">
                           <div class="what-header"><span class="sched-tag-pill finale">FINALE</span><b>Closing ceremony &amp; recognition</b></div>
                           <span>Grand raffle draw, volunteer appreciation, and group photo</span>
@@ -474,11 +558,6 @@
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <div class="sched-foot-bar">
-                  <p class="sched-note">* Timing to be confirmed with speakers &amp; sponsors.</p>
-                  <span class="sched-expand-cue">Click to view full flow &amp; speaker bios ⤢</span>
                 </div>
               </div>
             </article>
@@ -503,7 +582,7 @@
       </div>
       <div class="wrap">
         <div class="section-head">
-          <p class="eyebrow" style="color:var(--green);">Venue</p>
+          <p class="eyebrow" style="color:var(--green-text);">Venue</p>
           <h2 class="section-title">Where builders gather</h2>
         </div>
 
@@ -655,51 +734,52 @@
       <span class="brand-box pe-purple"></span>
     </div>
 
-    <!-- SPEAKERS LINEUP ASYMMETRIC HORIZONTAL STAGE -->
-    <section id="about-speakers-carousel" class="about-speakers-carousel-section">
-      <div class="about-carousel-pin is-before" id="aboutCarouselPin">
+    <!-- SPEAKERS LINEUP KINETIC ROSTER -->
+    <section id="about-speakers-roster" class="about-roster-section grid-bg">
+      <div class="wrap">
 
-        <!-- Persistent Pinned HUD / Header -->
-        <header class="about-carousel-hud">
-          <div class="ac-hud-left">
-            <span class="ac-hud-eyebrow">02 // LINEUP RUNWAY</span>
-            <h2 class="ac-hud-title">The Complete Lineup</h2>
+        <!-- Persistent HUD / Stage Header -->
+        <header class="about-roster-hud">
+          <div class="ar-hud-left">
+            <span class="ar-hud-eyebrow">Speakers Lineup</span>
+            <h2 class="ar-hud-title">The Complete Lineup</h2>
           </div>
-          <div class="ac-hud-center">
-            <nav class="ac-category-pills" aria-label="Speaker categories">
-              <button type="button" class="ac-pill active" data-target="keynotes" id="pillKeynotes">
-                <span class="pill-dot orange"></span>Keynotes
+          <div class="ar-hud-center">
+            <nav class="ar-category-pills" aria-label="Speaker categories">
+              <button type="button" class="ar-pill active" data-target="all" id="pillAll">
+                All (17)
               </button>
-              <button type="button" class="ac-pill" data-target="panels" id="pillPanels">
-                <span class="pill-dot purple"></span>Panels
+              <button type="button" class="ar-pill" data-target="keynotes" id="pillKeynotes">
+                <span class="pill-dot orange"></span>Keynotes (6)
               </button>
-              <button type="button" class="ac-pill" data-target="sessions" id="pillSessions">
-                <span class="pill-dot teal"></span>Sessions
+              <button type="button" class="ar-pill" data-target="panels" id="pillPanels">
+                <span class="pill-dot purple"></span>Panels (7)
+              </button>
+              <button type="button" class="ar-pill" data-target="sessions" id="pillSessions">
+                <span class="pill-dot green"></span>Sessions (4)
               </button>
             </nav>
           </div>
-          <div class="ac-hud-right">
-            <span class="ac-hint">Scroll down to pan <span class="ac-arrow">&rarr;</span></span>
+          <div class="ar-hud-right">
+            <span class="ar-hint font-mono text-xs">Hover or select to spotlight</span>
           </div>
         </header>
 
-        <!-- Viewport & Asymmetric Runway Track -->
-        <div class="about-carousel-viewport" id="aboutCarouselViewport">
-          <div class="about-carousel-track" id="aboutSpeakerCarousel">
-            <!-- Asymmetric spreads and speaker cards rendered by JS -->
+        <!-- Kinetic Roster Stage: Typographic Roster + Monumental Spotlight -->
+        <div class="about-roster-stage" id="aboutRosterStage">
+          <!-- Left: Typographic Roster List -->
+          <div class="roster-list-column" id="rosterListColumn" role="tablist" aria-label="Summit Lineup">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Right: Monumental Hero Spotlight Stage -->
+          <div class="roster-spotlight-column">
+            <div class="roster-spotlight-card" id="rosterSpotlightCard" aria-live="polite">
+              <!-- Rendered by JS -->
+            </div>
           </div>
         </div>
 
-        <!-- Persistent Progress Tracker Footer -->
-        <footer class="about-carousel-footer">
-          <div class="about-progress-line">
-            <span class="about-progress-fill" id="aboutProgressFill"></span>
-          </div>
-          <div class="about-progress-info">
-            <span class="about-active-label" id="aboutActiveCategoryLabel">01 // KEYNOTE SPEAKERS</span>
-            <span class="about-counter-label">18 SESSIONS &amp; VOICES</span>
-          </div>
-        </footer>
       </div>
     </section>
 
@@ -713,7 +793,7 @@
     <section class="section-light grid-bg light">
       <div class="wrap">
         <div class="section-head">
-          <p class="eyebrow" style="color:var(--orange);">Organizers</p>
+          <p class="eyebrow" style="color:var(--orange-text);">Organizers</p>
           <h2 class="section-title">AWS Student Builder Groups — South Luzon</h2>
           <p class="section-p">Co-organized by 9 AWS SBG &amp; AWS LC chapters across CALABARZON. One community working
             together to make this summit happen.</p>
@@ -862,8 +942,11 @@
           <h6>Event</h6><a href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">Register</a>
         </div>
         <div class="foot-col">
-          <h6>Connect</h6><span class="foot-soon">Instagram</span><span class="foot-soon">Facebook</span><span
-            class="foot-soon">LinkedIn</span><span class="foot-soon">Contact us</span>
+          <h6>Connect</h6>
+          <a href="https://www.facebook.com/awsscdsouth" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://www.linkedin.com/company/awsscdsouth" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://www.instagram.com/awsscd_southsummit/" target="_blank" rel="noopener">Instagram</a>
+          <a href="mailto:partners@awsscd2026.org">Contact us</a>
         </div>
       </div>
       <div class="foot-bottom">
@@ -883,6 +966,7 @@
         <path d="M172.036 593.758C193.716 594.475 216.999 593.959 238.796 594.011C284.869 594.265 330.944 594.286 377.018 594.069L522.011 594.054C545.763 594.011 569.942 594.402 593.646 593.764C594.163 633.183 592.897 673.366 593.24 712.811C593.382 729.708 592.765 747.748 593.72 764.518C567.637 763.162 537.051 764.597 510.352 764.096L510.331 708.883C510.352 699.348 510.631 688.643 510.199 679.193C509.171 678.281 508.638 678.634 506.819 678.603C479.829 679.114 449.918 677.859 423.556 679.119C424.337 688.016 423.894 704.643 423.836 714.351C423.736 730.377 424.268 748.402 423.588 764.249C419.818 764.444 415.404 764.312 411.607 764.238C388.029 763.795 364.078 764.887 340.545 764.148C341.013 756.46 340.624 744.368 340.62 736.378L340.701 679.209C332.734 678.423 320.566 678.903 312.237 678.84C293.04 678.692 273.743 679.114 254.537 678.624C253.744 687.151 254.151 700.714 254.155 709.748L254.199 764.212C227.206 764.734 198.386 764.191 171.265 764.191C171.095 738.061 171.454 711.693 171.119 685.59C170.826 667.012 170.725 648.433 170.814 629.855C170.811 620.595 170.775 611.303 170.879 602.043C170.905 599.67 170.652 595.541 172.036 593.758Z"/>
         <path d="M379.354 0.189319C392.891 0.876975 409.608 0.192497 423.561 0.457223C423.472 28.2757 423.024 58.1787 423.799 85.8431L481.211 85.8753C486.969 85.8774 504.767 86.2523 509.761 85.2599C511.38 79.7623 510.426 10.125 510.246 0.440342C536.946 -0.0173928 566.524 0.0142476 593.197 0.469873C593.53 13.8111 593.24 28.3521 593.24 41.8384L593.477 117.286C593.493 135.019 593.166 152.842 593.635 170.566C572.294 169.638 545.183 170.471 523.435 170.465L384.939 170.405C345.199 171.023 303.84 170.118 263.844 170.255C243.649 170.477 223.453 170.554 203.257 170.488C193.333 170.51 180.5 170.875 170.813 170.346C171.178 152.688 170.885 135.307 170.959 117.683L171.318 0.434532C196.747 0.0632818 228.966 -0.328527 254.191 0.449305L254.277 85.8484L340.734 85.7967C341.105 58.7392 341.354 27.3575 340.67 0.454053C353.349 0.0458889 366.471 0.547385 379.354 0.189319Z"/>
       </svg>
+    </button>
 
     <!-- Backdrop overlay when HUD is open -->
     <div class="assistive-backdrop" id="assistiveBackdrop" aria-hidden="true"></div>
@@ -989,11 +1073,9 @@
     (function () {
       var splash = document.getElementById('splashScreen');
       if (!splash) return;
-      /* how long the splash stays fully visible before it starts fading.
-         Timed so the wordmark reveals and settles (~1550ms), holds for readability (~850ms),
-         then smoothly fades out. */
+
       var isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var SPLASH_MS = isReduced ? 800 : 2400;
+      var SPLASH_MS = isReduced ? 800 : 1600;
       function dismiss() {
         if (splash.classList.contains('is-hidden')) return;
         splash.classList.add('is-hidden');
@@ -1002,9 +1084,13 @@
           if (e.target === splash) done();
         }, { once: true });
         /* transitionend may not fire (reduced-motion) — guarantee removal */
-        setTimeout(done, 950);
+        setTimeout(done, 850);
       }
-      setTimeout(dismiss, SPLASH_MS);
+      if (SPLASH_MS === 0) {
+        dismiss();
+      } else {
+        setTimeout(dismiss, SPLASH_MS);
+      }
       /* Allow user to click anywhere or press Escape to skip immediately */
       splash.addEventListener('click', dismiss);
       document.addEventListener('keydown', function onKey(e) {

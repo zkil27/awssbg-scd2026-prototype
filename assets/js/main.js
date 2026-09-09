@@ -16,8 +16,6 @@ import { initSponsors } from './modules/sponsorsUI.js';
 import { initComputeGrid } from './modules/computeGrid.js';
 import { initScrollReveal } from './modules/scrollReveal.js';
 import { initBlueprintScroll } from './modules/blueprintScroll.js';
-import { initMouseTrail } from './modules/mouseTrail.js';
-import { initKineticTypography } from './modules/kinetic.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
@@ -48,8 +46,4 @@ document.addEventListener('DOMContentLoaded', () => {
     //    chips affect the track width) and after Lenis is set up, since the pan
     //    reads Lenis's smoothed scroll. No-ops on touch / reduced-motion.
     initBlueprintScroll();
-
-    // 6. Interaction effects
-    initMouseTrail();
-    initKineticTypography();
 });

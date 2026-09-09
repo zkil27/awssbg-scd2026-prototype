@@ -22,9 +22,9 @@
      the SAME boxes carry from the top all the way to the footer. */
   --cell-repeat-y: calc(var(--grid-size) * 24);
 
-  /* Typography — original event monospace typography */
+  /* Typography — Inter for legible body copy, IBM Plex Mono for badges/tags */
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
-  --font-sans: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Plus Jakarta Sans', sans-serif;
 
   /* Layout */
@@ -45,15 +45,10 @@
   --reveal-ease: cubic-bezier(0.34, 1.56, 0.64, 1);    /* brand spring, matches cards */
   --reveal-stagger: 70ms;                              /* per-item delay step in a group */
 
-  /* ---------- Custom cursors (grid "reticle") ----------
-     Inline SVG data-URIs so no extra asset file is needed. A 28px targeting
-     reticle: corner brackets + center dot, echoing the compute-grid theme.
-     Per-theme color overrides live in the light/dark blocks below. The final
-     "x y" numbers are the hotspot; keep it centered at 14 14. */
-  --cursor-default:
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%2344b3fe"/></svg>') 14 14, crosshair;
-  --cursor-pointer:
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%23fc9907" stroke="%23fc9907" stroke-width="1.8"/></svg>') 14 14, pointer;
+  /* ---------- Cursors ----------
+     Clean standard cursors: default OS arrow and pointer on interactives. */
+  --cursor-default: default;
+  --cursor-pointer: pointer;
 }
 
 /* ---------- LIGHT MODE (default) ---------- */
@@ -86,6 +81,15 @@ html[data-theme="light"] {
   --btn-primary-bg: var(--text-strong);
   --btn-primary-text: #FFFFFF;
   --btn-primary-shadow: rgba(0, 0, 0, 0.25);
+
+  --btn-contrast-bg: var(--text-strong);
+  --btn-contrast-text: #FFFFFF;
+
+  --orange-text: #C2410C;
+  --green-text: #047857;
+  --purple-text: #6B21A8;
+  --blue-text: #0369A1;
+  --pink-text: #BE185D;
 
   --clock-bg: rgba(255, 255, 255, 0.7);
   --clock-border: rgba(255, 255, 255, 0.4);
@@ -162,6 +166,15 @@ html[data-theme="dark"] {
   --btn-primary-text: #12182A;
   --btn-primary-shadow: rgba(255, 255, 255, 0.25);
 
+  --btn-contrast-bg: #FFFFFF;
+  --btn-contrast-text: #060E1A;
+
+  --orange-text: var(--orange);
+  --green-text: var(--green);
+  --purple-text: var(--purple);
+  --blue-text: var(--blue);
+  --pink-text: var(--pink);
+
   --clock-bg: rgba(25, 33, 56, 0.6);
   --clock-border: rgba(255, 255, 255, 0.08);
   --clock-num: #FFFFFF;
@@ -197,13 +210,9 @@ html[data-theme="dark"] {
   --proto-bg: #151A29;
   --sticky-bg: #0E121C;
 
-  /* Brighten the reticle stroke so it reads on the dark background; keep the
-     orange accent dot. (SVG re-declared because data-URIs can't reference
-     other CSS vars.) */
-  --cursor-default:
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%237fd0ff"/></svg>') 14 14, crosshair;
-  --cursor-pointer:
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" fill="%23ffb545" stroke="%23ffb545" stroke-width="1.8"/></svg>') 14 14, pointer;
+  /* Standard cursors in dark mode */
+  --cursor-default: default;
+  --cursor-pointer: pointer;
 
   /* Ambient corner gradient glows (event primer poster - dark mode) */
   --ambient-tl: rgba(68, 179, 254, 0.18);
@@ -438,6 +447,16 @@ footer,
 }
 
 /* ---------- Theme toggle (Modern Cyber-Pill Switch) ---------- */
+.theme-toggle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
 .theme-toggle {
   position: relative;
   width: 58px;
@@ -580,8 +599,17 @@ html[data-theme="dark"] .theme-toggle-thumb {
   stroke: currentColor;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1024px) {
+  :root {
+    --nav-h: 54px;
+  }
   .deco-layer .brand-box {
     display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --nav-h: 58px;
   }
 }

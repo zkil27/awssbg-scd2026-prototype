@@ -13,6 +13,7 @@ import { getLenis } from './smoothScroll.js';
 import { openSpeakerModal, closeSpeakerModal } from './speakersUI.js';
 
 let isScheduleModalOpen = false;
+let closeScheduleTimeout = null;
 
 /* ============================ Schedule Data ============================= */
 
@@ -54,7 +55,7 @@ export const scheduleSessions = [
     title: 'Technical & Career Tracks: Cloud Foundations & Applied AI',
     location: 'Main Auditorium · 4th Floor',
     description: 'Practical demos and beginner-friendly sessions on cloud fundamentals, scalable infrastructure, open community pipelines, and student builder career acceleration.',
-    speakerIndices: [1, 9, 14, 15] // Isaeus (Asi), John Danmel, Darla, Samuel Jedidiah
+    speakerIndices: [1, 9, 12, 13] // Isaeus (Asi), John Danmel, Darla, Samuel Jedidiah
   },
   {
     id: 'session-women-in-tech',
@@ -67,7 +68,7 @@ export const scheduleSessions = [
     title: 'Women in Tech & Industry Flagship Panel: Beyond the Hype',
     location: 'Main Auditorium · 4th Floor',
     description: 'Unfiltered debates, enterprise startup journeys, tech leadership realities, and empowering women builders to architect solutions and lead organizations.',
-    speakerIndices: [3, 4, 5, 8, 12, 13, 16] // Indaleen, Mc Joben, Jon, Mark Achiles, Sonny, Raphael, David
+    speakerIndices: [3, 4, 5, 8, 14, 15, 16] // Indaleen, Mc Joben, Jon, Mark Achiles, Sonny, Raphael, David
   },
   {
     id: 'session-booths',
@@ -126,21 +127,21 @@ function renderSessionCardHTML(session) {
     .join('');
 
   const hasSpeakers = sessionSpeakers.length > 0;
+  const shortBlock = session.block === 'morning' ? '01 // MORNING' : '02 // AFTERNOON';
 
   return `
     <article class="pf-session-card ${session.categoryTheme}" data-block="${session.block}" id="${session.id}">
-      <div class="pf-card-spine" aria-hidden="true">
-        <span class="pf-spine-node"></span>
-      </div>
       <div class="pf-card-content">
         <div class="pf-card-meta-row">
-          <span class="pf-card-block-badge">${session.blockName}</span>
-          <span class="pf-card-category-tag">${session.category}</span>
-          <span class="pf-card-time-pill">
+          <div class="pf-card-tags">
+            <span class="pf-card-cat-pill">${session.category}</span>
+            <span class="pf-card-block-sub">${shortBlock}</span>
+          </div>
+          <div class="pf-card-time-pill">
             <span class="pf-time-clock">⏱</span>
-            ${session.time}
+            <span class="pf-time-text">${session.time}</span>
             <span class="pf-card-dur">${session.duration}</span>
-          </span>
+          </div>
         </div>
 
         <h4 class="pf-card-title">${session.title}</h4>
@@ -153,7 +154,7 @@ function renderSessionCardHTML(session) {
 
         ${hasSpeakers ? `
           <div class="pf-card-speakers-section">
-            <span class="pf-speakers-label">// FEATURED SPEAKERS &amp; PANELISTS</span>
+            <span class="pf-speakers-label">Featured Speakers (${session.speakerIndices.length})</span>
             <div class="pf-card-speakers-grid">
               ${sessionSpeakers}
             </div>
@@ -169,6 +170,12 @@ function renderSessionCardHTML(session) {
 export function openScheduleModal(initialFilter = 'all') {
   const modal = document.getElementById('programFlowModal');
   if (!modal) return;
+
+  if (closeScheduleTimeout) {
+    clearTimeout(closeScheduleTimeout);
+    closeScheduleTimeout = null;
+  }
+  modal.classList.remove('is-closing', 'closing');
 
   // Align background pan to show schedule panel in blueprint section
   const section = document.getElementById('program');
@@ -213,25 +220,40 @@ export function openScheduleModal(initialFilter = 'all') {
   });
 }
 
-export function closeScheduleModal() {
+export function closeScheduleModal(options = {}) {
   const modal = document.getElementById('programFlowModal');
-  if (!modal || !modal.classList.contains('open')) return;
+  if (!modal || !modal.classList.contains('open') || modal.classList.contains('is-closing')) return;
 
   isScheduleModalOpen = false;
-  modal.classList.remove('open');
-  modal.setAttribute('aria-hidden', 'true');
 
   const speakerModal = document.getElementById('speakerModal');
   if (speakerModal && speakerModal.classList.contains('open')) {
-    closeSpeakerModal();
+    closeSpeakerModal(options);
   }
 
-  document.documentElement.classList.remove('modal-scroll-lock');
+  const finalize = () => {
+    if (closeScheduleTimeout) {
+      clearTimeout(closeScheduleTimeout);
+      closeScheduleTimeout = null;
+    }
+    modal.classList.remove('open', 'is-closing', 'closing');
+    modal.setAttribute('aria-hidden', 'true');
 
-  const lenis = getLenis();
-  if (lenis && typeof lenis.start === 'function') {
-    lenis.start();
+    document.documentElement.classList.remove('modal-scroll-lock');
+
+    const lenis = getLenis();
+    if (lenis && typeof lenis.start === 'function') {
+      lenis.start();
+    }
+  };
+
+  if (options.instant || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    finalize();
+    return;
   }
+
+  modal.classList.add('is-closing');
+  closeScheduleTimeout = setTimeout(finalize, 260);
 }
 
 function filterSchedule(filterKey) {
@@ -342,9 +364,9 @@ export function initScheduleUI() {
   // 4. Global keyboard ESC listener
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isScheduleModalOpen) {
-      // Only close schedule modal if speaker modal is not open on top of it
+      // Only close schedule modal if speaker modal is not open (or closing) on top of it
       const speakerModal = document.getElementById('speakerModal');
-      if (!speakerModal || !speakerModal.classList.contains('open')) {
+      if (!speakerModal || (!speakerModal.classList.contains('open') && !speakerModal.classList.contains('is-closing'))) {
         closeScheduleModal();
       }
     }

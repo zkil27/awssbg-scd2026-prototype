@@ -272,9 +272,9 @@ export function initAssistiveTouch() {
         }
     });
 
-    // Reposition on window resize / orientation change
+    // Reposition on window resize / orientation change if previously moved
     window.addEventListener('resize', () => {
-        if (window.innerWidth <= 980) {
+        if (window.innerWidth <= 980 && currentLeft !== null) {
             snapToEdge();
         }
     }, { passive: true });

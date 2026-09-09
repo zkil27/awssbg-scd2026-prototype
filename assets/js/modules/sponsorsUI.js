@@ -1,95 +1,152 @@
 /**
  * Sponsors UI Module
- * Renders sponsor tiers (Platinum, Gold, Community) from sponsors data.
+ * AWS Student Community Day: South Summit 2026
+ * Pure editorial layout: Quantum, Pro, and Lite Partner tiers
  */
 import { sponsors } from '../data/sponsors.js';
 
 function escapeHTML(value) {
-    return String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
+  return String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
 }
 
-function sponsorSlotHTML(s) {
-    const name = escapeHTML(s.name || 'Partner');
+function renderQuantumSlot(s) {
+  const name = escapeHTML(s.name || 'AWS Cloud Clubs Philippines');
+  const role = escapeHTML(s.role || 'Official Organizing Partner');
+  const desc = escapeHTML(s.description || '');
+  const metaRows = (s.meta || []).map(m => `
+    <div class="organizer-meta-row">
+      <span class="meta-label">${escapeHTML(m.label)}</span>
+      <span class="meta-value">${escapeHTML(m.value)}</span>
+    </div>
+  `).join('');
 
-    // Open / prospective slot — the tier still has room. A CTA-flavored slot
-    // (e.g. Platinum "+ Become a Sponsor") reads a little louder than a plain
-    // named placeholder chapter.
-    if (s.open) {
-        if (s.cta) {
-            return `
-      <div class="sponsor-slot open-slot">
-        <div class="slot-inner">
-          <span class="slot-badge">${escapeHTML(s.cta)}</span>
-          <p>${name}</p>
-        </div>
-      </div>`;
-        }
-        return `
-      <div class="sponsor-slot open-slot">
-        <div class="slot-inner"><span>${name}</span></div>
-      </div>`;
-    }
+  const urlLink = s.url
+    ? `<a href="${escapeHTML(s.url)}" target="_blank" rel="noopener" class="editorial-link">
+         <span>Learn about AWS Cloud Clubs</span>
+         <svg class="editorial-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+           <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+         </svg>
+       </a>`
+    : '';
 
-    // Confirmed partner with a logo — featured partners get the emphasized
-    // "active" treatment (logo chip + name + role, left-aligned).
-    const roleHTML = s.role ? `<span>${escapeHTML(s.role)}</span>` : '';
-    if (s.imgUrl) {
-        return `
-      <div class="sponsor-slot${s.featured ? ' active-sponsor' : ''}" title="${name}">
-        <div class="sponsor-logo-wrap">
-          <img src="${escapeHTML(s.imgUrl)}" alt="${name}" data-fallback="${name}" class="sponsor-logo">
+  return `
+    <div class="organizer-feature-card color-purple" data-reveal>
+      <div class="organizer-media">
+        <div class="organizer-logo-frame">
+          <img src="${escapeHTML(s.imgUrl || 'assets/images/south-summit-logo.svg')}"
+               alt="${name}"
+               data-fallback="${name}"
+               class="organizer-logo">
         </div>
-        <div class="sponsor-info">
-          <strong>${name}</strong>
-          ${roleHTML}
+      </div>
+      <div class="organizer-content">
+        <div class="organizer-label-row">
+          <span class="editorial-mono-tag">${role}</span>
+          <span class="editorial-mono-num">01</span>
         </div>
-      </div>`;
-    }
-
-    // Confirmed partner without a logo — name (+ role) as a simple info block.
-    return `
-      <div class="sponsor-slot${s.featured ? ' active-sponsor' : ''}">
-        <div class="sponsor-info">
-          <strong>${name}</strong>
-          ${roleHTML}
-        </div>
-      </div>`;
+        <h3 class="organizer-title">${name}</h3>
+        <p class="organizer-bio">${desc}</p>
+        ${metaRows ? `<div class="organizer-meta-table">${metaRows}</div>` : ''}
+        ${urlLink ? `<div class="organizer-action">${urlLink}</div>` : ''}
+      </div>
+    </div>`;
 }
 
-function wireLogoFallbacks(grid) {
-    grid.querySelectorAll('img[data-fallback]').forEach(img => {
-        img.addEventListener('error', () => {
-            // Swap a broken logo for the standard brand mark so the slot keeps
-            // its editorial shape (logo chip + name) instead of collapsing.
-            img.src = 'assets/images/south-summit-logo.svg';
-        }, { once: true });
-    });
+function renderProSlot(s, i) {
+  const name = escapeHTML(s.name || '');
+  const role = escapeHTML(s.role || 'Pro Partner');
+  const institution = escapeHTML(s.institution || '');
+  const desc = escapeHTML(s.description || '');
+  const track = escapeHTML(s.track || '');
+  const location = escapeHTML(s.location || '');
+  const color = s.color || 'green';
+  const indexNum = String(i + 1).padStart(2, '0');
+
+  const urlLink = s.url
+    ? `<a href="${escapeHTML(s.url)}" target="_blank" rel="noopener" class="pro-card-link" aria-label="Visit ${name}">
+         <svg class="editorial-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+           <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+         </svg>
+       </a>`
+    : '';
+
+  return `
+    <article class="pro-card-editorial color-${color}" data-reveal>
+      <div class="pro-card-masthead">
+        <div class="pro-card-tags">
+          <span class="pro-card-index">${indexNum}</span>
+          <span class="pro-card-badge">${role}</span>
+        </div>
+        ${urlLink}
+      </div>
+      <div class="pro-card-main">
+        <h4 class="pro-card-name">${name}</h4>
+        ${institution ? `<span class="pro-card-institution">${institution}</span>` : ''}
+        ${desc ? `<p class="pro-card-desc">${desc}</p>` : ''}
+      </div>
+      <div class="pro-card-foot">
+        ${track ? `<span class="pro-card-track">${track}</span>` : ''}
+        ${location ? `<span class="pro-card-location">${location}</span>` : ''}
+      </div>
+    </article>`;
+}
+
+function renderLiteSlot(s, i) {
+  const name = escapeHTML(s.name || '');
+  const role = escapeHTML(s.role || 'Student Chapter');
+  const institution = escapeHTML(s.institution || s.description || '');
+  const location = escapeHTML(s.location || '');
+  const color = s.color || 'blue';
+  const indexNum = String(i + 1).padStart(2, '0');
+
+  return `
+    <article class="chapter-ledger-card color-${color}" data-reveal>
+      <div class="chapter-card-masthead">
+        <span class="chapter-index">${indexNum}</span>
+        <span class="chapter-badge">${role}</span>
+      </div>
+      <div class="chapter-card-main">
+        <h4 class="chapter-name">${name}</h4>
+        <p class="chapter-institution">${institution}</p>
+      </div>
+      <div class="chapter-card-meta">
+        <span class="chapter-accent-indicator" aria-hidden="true"></span>
+        <span class="chapter-location">${location}</span>
+      </div>
+    </article>`;
+}
+
+function wireLogoFallbacks(container) {
+  container.querySelectorAll('img[data-fallback]').forEach(img => {
+    img.addEventListener('error', () => {
+      img.src = 'assets/images/south-summit-logo.svg';
+    }, { once: true });
+  });
 }
 
 export function initSponsors() {
-    const quantumGrid = document.querySelector('.tier-grid.quantum, .tier-grid.platinum');
-    const clusterGrid = document.querySelector('.tier-grid.cluster, .tier-grid.gold');
-    const coreGrid = document.querySelector('.tier-grid.core, .tier-grid.community');
+  const quantumStage = document.querySelector('.tier-stage.quantum');
+  const proStage = document.querySelector('.tier-stage.pro, .pro-cards-grid');
+  const liteStage = document.querySelector('.tier-stage.lite, .chapter-ledger-grid');
 
-    const quantumSponsors = sponsors.filter(s => s.tier === 'quantum' || s.tier === 'platinum');
-    const clusterSponsors = sponsors.filter(s => s.tier === 'cluster' || s.tier === 'gold');
-    const coreSponsors = sponsors.filter(s => s.tier === 'core' || s.tier === 'community' || s.tier === 'partner');
+  const quantumSponsors = sponsors.filter(s => s.tier === 'quantum');
+  const proSponsors = sponsors.filter(s => s.tier === 'pro');
+  const liteSponsors = sponsors.filter(s => s.tier === 'lite');
 
-    // Only override if data is provided for that tier
-    if (quantumGrid && quantumSponsors.length > 0) {
-        quantumGrid.innerHTML = quantumSponsors.map(sponsorSlotHTML).join('');
-        wireLogoFallbacks(quantumGrid);
-    }
+  if (quantumStage && quantumSponsors.length > 0) {
+    quantumStage.innerHTML = quantumSponsors.map(renderQuantumSlot).join('');
+    wireLogoFallbacks(quantumStage);
+  }
 
-    if (clusterGrid && clusterSponsors.length > 0) {
-        clusterGrid.innerHTML = clusterSponsors.map(sponsorSlotHTML).join('');
-        wireLogoFallbacks(clusterGrid);
-    }
+  if (proStage && proSponsors.length > 0) {
+    proStage.innerHTML = proSponsors.map((s, idx) => renderProSlot(s, idx)).join('');
+    wireLogoFallbacks(proStage);
+  }
 
-    if (coreGrid && coreSponsors.length > 0) {
-        coreGrid.innerHTML = coreSponsors.map(sponsorSlotHTML).join('');
-        wireLogoFallbacks(coreGrid);
-    }
+  if (liteStage && liteSponsors.length > 0) {
+    liteStage.innerHTML = liteSponsors.map((s, idx) => renderLiteSlot(s, idx)).join('');
+    wireLogoFallbacks(liteStage);
+  }
 }
