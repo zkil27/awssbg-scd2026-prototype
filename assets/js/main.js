@@ -12,6 +12,7 @@ import { initSpeakers } from './modules/speakersUI.js';
 import { initScheduleUI } from './modules/scheduleUI.js';
 import { initMerch } from './modules/merchUI.js';
 import { initChapters } from './modules/chaptersUI.js';
+import { initDirectors } from './modules/directorsUI.js';
 import { initSponsors } from './modules/sponsorsUI.js';
 import { initComputeGrid } from './modules/computeGrid.js';
 import { initScrollReveal } from './modules/scrollReveal.js';
@@ -35,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScheduleUI();
     initMerch();
     initChapters();
+    initDirectors();
     initSponsors();
     initVenueUI();
 

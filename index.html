@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="theme.css?v=20260908-nav-h-fix">
-  <link rel="stylesheet" href="styles.css?v=20260910-venue-editorial">
+  <link rel="stylesheet" href="styles.css?v=20260910-venue-gallery">
   <script>
     /* Apply saved theme before paint to avoid flash */
     (function () {
@@ -616,129 +616,207 @@
           <p class="section-p">Two floors of keynotes, hands-on cloud labs, and builder networking at PUP – Biñan People's Center Auditorium, Laguna.</p>
         </div>
 
-        <div class="venue-dossier-grid">
-          <!-- LEFT COLUMN: Venue Photo Showcase & Floor Directory -->
-          <div class="venue-main-col">
-            <!-- Photo Showcase Card -->
-            <div class="venue-photo-card" data-reveal>
-              <div class="venue-photo-frame">
-                <!-- PLACEHOLDER VENUE IMAGE: Swap file at assets/images/venue-placeholder.jpg or update src below -->
-                <img src="assets/images/venue-placeholder.jpg" 
-                     alt="PUP – Biñan People's Center Auditorium interior" 
-                     class="venue-hero-img" 
-                     id="venueHeroImg"
-                     loading="lazy" />
-                <div class="venue-photo-overlay" aria-hidden="true">
-                  <div class="venue-photo-badge top-left">
-                    <span class="venue-badge-dot"></span>
-                    <span>MAIN AUDITORIUM</span>
+        <div class="venue-grid">
+          <!-- CARD 1 (LEFT): The Venue & Spaces -->
+          <article class="venue-card venue-card--spaces" data-reveal>
+            <!-- Photo Media Gallery Frame -->
+            <div class="venue-media-frame venue-gallery-frame" id="venueGallery" tabindex="0" role="region" aria-label="Venue photo gallery">
+              <!-- Slide Images (Organizers can swap or add more slides here!) -->
+              <div class="venue-gallery-track">
+                <!-- Slide 1: Main Auditorium -->
+                <div class="venue-gallery-slide active" 
+                     data-index="0"
+                     data-tag="MAIN AUDITORIUM"
+                     data-tag-class="chip-primary"
+                     data-capacity="500+ CAPACITY"
+                     data-coords="14°18'46.9&quot;N · 121°04'44.6&quot;E"
+                     data-label="Auditorium">
+                  <img src="assets/images/venue-placeholder.jpg" 
+                       alt="PUP – Biñan People's Center Auditorium interior" 
+                       class="venue-media-img" 
+                       id="venueHeroImg"
+                       loading="lazy" />
+                </div>
+                <!-- Slide 2: Community Hub Expo Floor -->
+                <div class="venue-gallery-slide" 
+                     data-index="1"
+                     data-tag="COMMUNITY HUB"
+                     data-tag-class="chip-accent"
+                     data-capacity="EXPO &amp; DEMOS"
+                     data-coords="LEVEL 02 COMMONS"
+                     data-label="Expo Hub">
+                  <img src="assets/images/venue-hub.jpg" 
+                       alt="PUP – Biñan People's Center Level 02 Partner Expo &amp; Community Hub" 
+                       class="venue-media-img" 
+                       loading="lazy" />
+                </div>
+                <!-- Slide 3: Civic Center Complex Exterior -->
+                <div class="venue-gallery-slide" 
+                     data-index="2"
+                     data-tag="CIVIC COMPLEX"
+                     data-tag-class="chip-green"
+                     data-capacity="EVENT GROUNDS"
+                     data-coords="BIÑAN · LAGUNA"
+                     data-label="Civic Grounds">
+                  <img src="assets/images/venue-exterior.jpg" 
+                       alt="Biñan People's Center Auditorium Civic Complex Grounds" 
+                       class="venue-media-img" 
+                       loading="lazy" />
+                </div>
+              </div>
+
+              <!-- Navigation Arrows -->
+              <button type="button" class="venue-nav-btn venue-nav-prev" id="venuePrevBtn" aria-label="Previous photo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button type="button" class="venue-nav-btn venue-nav-next" id="venueNextBtn" aria-label="Next photo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+
+              <!-- Gallery Overlay HUD -->
+              <div class="venue-media-overlay" aria-hidden="true">
+                <!-- Top Row: Tag & Counter / Capacity -->
+                <div class="venue-overlay-row venue-overlay-top">
+                  <div class="venue-chip chip-primary" id="venueGalleryTag">
+                    <span class="venue-chip-dot"></span>
+                    <span id="venueGalleryTagText">MAIN AUDITORIUM</span>
                   </div>
-                  <div class="venue-photo-badge top-right">500+ BUILDER CAPACITY</div>
-                  <div class="venue-photo-badge bottom-right">14°18'46.9"N · 121°04'44.6"E</div>
+                  <div class="venue-overlay-badges">
+                    <span class="venue-chip venue-chip-counter" id="venueGalleryCounter">01 / 03</span>
+                    <div class="venue-chip chip-accent" id="venueGalleryCapacity">500+ CAPACITY</div>
+                  </div>
                 </div>
-              </div>
 
-              <div class="venue-photo-dossier">
-                <div class="venue-dossier-header">
-                  <span class="venue-host-tag">HOST CHAPTER: AWS SBG PUP–BIÑAN</span>
-                  <h3 class="venue-entity-name">PUP – Biñan People's Center Auditorium</h3>
-                  <span class="venue-entity-addr">📍 Biñan People's Center, Biñan, Laguna, Philippines</span>
-                </div>
-                <p class="venue-entity-desc">
-                  South Summit 2026's official gathering ground across two dedicated levels — bringing together 500+ student builders, keynote speakers, and cloud industry leaders from across CALABARZON under one roof.
-                </p>
-                <div class="venue-meta-tags">
-                  <span class="venue-meta-tag">🏛️ Tiered Auditorium</span>
-                  <span class="venue-meta-tag">❄️ Fully Air-Conditioned</span>
-                  <span class="venue-meta-tag">📶 High-Speed Builder WiFi</span>
-                  <span class="venue-meta-tag">⚡ Twin-Level Access</span>
+                <!-- Bottom Row: Quick Space Switcher Tabs & GPS Coords -->
+                <div class="venue-overlay-row venue-overlay-bottom">
+                  <div class="venue-gallery-tabs" id="venueGalleryTabs" role="tablist" aria-label="Venue photo views">
+                    <button type="button" class="venue-tab-btn active" data-index="0" role="tab" aria-selected="true">🏛️ Auditorium</button>
+                    <button type="button" class="venue-tab-btn" data-index="1" role="tab" aria-selected="false">⚡ Expo Hub</button>
+                    <button type="button" class="venue-tab-btn" data-index="2" role="tab" aria-selected="false">🌆 Grounds</button>
+                  </div>
+                  <div class="venue-chip chip-coords" id="venueGalleryCoords">14°18'46.9"N · 121°04'44.6"E</div>
                 </div>
               </div>
             </div>
 
-            <!-- Floor Directory Grid -->
-            <div class="venue-floors-grid">
-              <div class="venue-floor-card" data-reveal>
-                <div class="venue-floor-head">
-                  <span class="venue-floor-level level-4">LEVEL 04</span>
-                  <span class="venue-floor-type">STAGE SESSIONS</span>
+            <!-- Venue Details Content -->
+            <div class="venue-card-body">
+              <div class="venue-meta-header">
+                <span class="venue-subtag">HOST CHAPTER: AWS SBG PUP–BIÑAN</span>
+                <h3 class="venue-name">PUP – Biñan People's Center Auditorium</h3>
+                <p class="venue-address">📍 Biñan People's Center, Biñan, Laguna, Philippines</p>
+              </div>
+
+              <p class="venue-desc">
+                South Summit 2026's official gathering ground across two dedicated levels — bringing together 500+ student builders, keynote speakers, and cloud leaders from across CALABARZON.
+              </p>
+
+              <!-- Nested Floor Spaces (Click to jump to space photo!) -->
+              <div class="venue-floors-container">
+                <div class="venue-floor-row venue-floor-clickable active-floor" data-venue-target="0" role="button" tabindex="0" title="Click to view auditorium photo">
+                  <div class="floor-badge-col">
+                    <span class="floor-pill pill-cyan">LEVEL 04</span>
+                  </div>
+                  <div class="floor-info-col">
+                    <div class="floor-title-row">
+                      <h4>Main Stage Auditorium</h4>
+                      <span class="floor-view-cue" aria-hidden="true">📸 View Photo</span>
+                    </div>
+                    <p>Keynotes, Cloud &amp; Applied AI tracks, Women in Tech panel, and closing ceremony.</p>
+                    <span class="floor-spec">500+ Tiered Seats · Air-Conditioned</span>
+                  </div>
                 </div>
-                <h4>Main Stage Auditorium</h4>
-                <p>Opening keynotes, technical deep-dives on Cloud &amp; Applied AI, Women in Tech panel discussions, and the grand closing ceremony.</p>
-                <div class="venue-floor-specs">
-                  <span>Capacity: 500+ seats</span>
-                  <span>Primary Keynote Stage</span>
+
+                <div class="venue-floor-row venue-floor-clickable" data-venue-target="1" role="button" tabindex="0" title="Click to view community hub photo">
+                  <div class="floor-badge-col">
+                    <span class="floor-pill pill-green">LEVEL 02</span>
+                  </div>
+                  <div class="floor-info-col">
+                    <div class="floor-title-row">
+                      <h4>SS Community Hub</h4>
+                      <span class="floor-view-cue" aria-hidden="true">📸 View Photo</span>
+                    </div>
+                    <p>Partner booths, hands-on student demos, swag distribution, and mentorship stations.</p>
+                    <span class="floor-spec">Interactive Expo Commons · Networking</span>
+                  </div>
                 </div>
               </div>
 
-              <div class="venue-floor-card" data-reveal>
-                <div class="venue-floor-head">
-                  <span class="venue-floor-level level-2">LEVEL 02</span>
-                  <span class="venue-floor-type">COMMONS &amp; BOOTHS</span>
-                </div>
-                <h4>SS Community Hub</h4>
-                <p>Partner and sponsor experiential booths, chapter project demos, official summit swag distribution, and 1-on-1 mentorship stations.</p>
-                <div class="venue-floor-specs">
-                  <span>Interactive Expo Floor</span>
-                  <span>Networking &amp; Swag</span>
-                </div>
+              <div class="venue-feature-pills">
+                <span class="feature-pill">🏛️ Tiered Auditorium</span>
+                <span class="feature-pill">❄️ Air-Conditioned</span>
+                <span class="feature-pill">📶 High-Speed WiFi</span>
+                <span class="feature-pill">⚡ Twin Levels</span>
               </div>
             </div>
-          </div>
+          </article>
 
-          <!-- RIGHT COLUMN: Interactive Live Map & Travel Guidance -->
-          <div class="venue-side-col">
-            <div class="venue-map-card" data-reveal>
-              <div class="venue-map-masthead">
-                <div class="map-masthead-title">
-                  <span class="live-pulse" aria-hidden="true"></span>
+          <!-- CARD 2 (RIGHT): Map & Access Guide -->
+          <article class="venue-card venue-card--access" data-reveal>
+            <!-- Map Media Frame (Same height & aspect ratio as the photo!) -->
+            <div class="venue-media-frame venue-map-frame">
+              <iframe loading="lazy"
+                src="https://maps.google.com/maps?q=Bi%C3%B1an+People%27s+Center+Auditorium&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=&amp;output=embed" 
+                title="Interactive Map of Biñan People's Center Auditorium, Laguna"
+                allowfullscreen></iframe>
+              <div class="venue-media-overlay" aria-hidden="true">
+                <div class="venue-chip chip-green">
+                  <span class="venue-chip-dot green"></span>
                   <span>LIVE INTERACTIVE MAP</span>
                 </div>
-                <span class="map-masthead-loc">BIÑAN · LAGUNA</span>
+                <div class="venue-chip chip-coords">BIÑAN · LAGUNA</div>
+              </div>
+            </div>
+
+            <!-- Access & Commute Content -->
+            <div class="venue-card-body">
+              <div class="venue-meta-header">
+                <span class="venue-subtag">TRANSIT &amp; DIRECTIONS</span>
+                <h3 class="venue-name">Getting to the Summit</h3>
+                <p class="venue-address">Biñan People's Center, Biñan, Laguna 4024</p>
               </div>
 
-              <div class="venue-iframe-wrap">
-                <iframe loading="lazy"
-                  src="https://maps.google.com/maps?q=Bi%C3%B1an+People%27s+Center+Auditorium&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=&amp;output=embed" 
-                  title="Interactive Map of Biñan People's Center Auditorium, Laguna"
-                  allowfullscreen></iframe>
-              </div>
-
-              <div class="venue-transit-guide">
-                <div class="transit-item">
-                  <div class="transit-icon" aria-hidden="true">📍</div>
-                  <div class="transit-info">
-                    <strong>Full Address</strong>
+              <!-- Transit Checklist -->
+              <div class="venue-transit-list">
+                <div class="transit-row">
+                  <div class="transit-icon-box" aria-hidden="true">📍</div>
+                  <div class="transit-text">
+                    <strong>Exact Address</strong>
                     <p>Biñan People's Center, Biñan, Laguna 4024</p>
                   </div>
                 </div>
 
-                <div class="transit-item">
-                  <div class="transit-icon" aria-hidden="true">🏛️</div>
-                  <div class="transit-info">
+                <div class="transit-row">
+                  <div class="transit-icon-box" aria-hidden="true">🏛️</div>
+                  <div class="transit-text">
                     <strong>Prominent Landmarks</strong>
                     <p>Directly adjacent to Alonte Sports Arena and the Biñan City Hall Complex.</p>
                   </div>
                 </div>
 
-                <div class="transit-item">
-                  <div class="transit-icon" aria-hidden="true">🚗</div>
-                  <div class="transit-info">
+                <div class="transit-row">
+                  <div class="transit-icon-box" aria-hidden="true">🚗</div>
+                  <div class="transit-text">
                     <strong>Driving &amp; Parking</strong>
-                    <p>Take SLEX Mamplasan or Southwoods Exit toward Biñan City Hall. Free event parking available within the civic grounds.</p>
+                    <p>Take SLEX Mamplasan or Southwoods Exit toward Biñan City Hall. Free event parking available within civic grounds.</p>
                   </div>
                 </div>
 
-                <div class="transit-item">
-                  <div class="transit-icon" aria-hidden="true">🚌</div>
-                  <div class="transit-info">
-                    <strong>Public Commuters</strong>
+                <div class="transit-row">
+                  <div class="transit-icon-box" aria-hidden="true">🚌</div>
+                  <div class="transit-text">
+                    <strong>Public Commute</strong>
                     <p>Pacita / San Pedro jeeps to Biñan Bayan; tricycles readily available directly to People's Center entrance.</p>
                   </div>
                 </div>
               </div>
 
-              <div class="venue-actions">
+              <!-- Action Buttons -->
+              <div class="venue-btn-row">
                 <a class="btn btn-primary btn-sm"
                   href="https://www.google.com/maps/place/Bi%C3%B1an+People's+Center+Auditorium/@14.3130254,121.0790571,17z/data=!3m1!4b1!4m6!3m5!1s0x3397d70042017c71:0x8933329e6ace6ce4!8m2!3d14.3130254!4d121.0790571!16s%2Fg%2F11zddgfh6z" 
                   target="_blank"
@@ -750,7 +828,7 @@
                 </button>
               </div>
             </div>
-          </div>
+          </article>
         </div>
       </div>
     </section>
@@ -927,6 +1005,57 @@
             together to make this summit happen.</p>
         </div>
         <div class="chapter-grid" id="chapterGrid"></div>
+      </div>
+    </section>
+
+    <!-- SECTION DIVIDER -->
+    <div class="primer-edge" aria-hidden="true">
+      <span class="brand-box pe-purple"></span>
+      <span class="brand-box pe-orange"></span>
+      <span class="brand-box pe-blue"></span>
+      <span class="brand-box pe-green"></span>
+    </div>
+
+    <!-- SUMMIT DIRECTORS & LEADERSHIP -->
+    <section id="about-directors" class="section-light grid-bg light">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow" style="color:var(--blue-text);">Organizing Leadership</p>
+          <h2 class="section-title">Summit Directorate</h2>
+          <p class="section-p">The student directors, associate directors, and executive leads steering AWS Student Community Day: South Summit 2026 across CALABARZON.</p>
+        </div>
+
+        <!-- Filter Pills Navigation -->
+        <div class="directors-filter-wrapper">
+          <nav class="directors-filter-bar font-mono" aria-label="Filter directors by department">
+            <button type="button" class="director-filter-pill active" data-target="all" aria-selected="true">
+              All (16)
+            </button>
+            <button type="button" class="director-filter-pill" data-target="executive" aria-selected="false">
+              <span class="filter-dot orange"></span>Executive (4)
+            </button>
+            <button type="button" class="director-filter-pill" data-target="technology" aria-selected="false">
+              <span class="filter-dot blue"></span>Technology (2)
+            </button>
+            <button type="button" class="director-filter-pill" data-target="creatives" aria-selected="false">
+              <span class="filter-dot pink"></span>Creatives (2)
+            </button>
+            <button type="button" class="director-filter-pill" data-target="operations" aria-selected="false">
+              <span class="filter-dot green"></span>Operations (2)
+            </button>
+            <button type="button" class="director-filter-pill" data-target="marketing" aria-selected="false">
+              <span class="filter-dot purple"></span>Marketing (2)
+            </button>
+            <button type="button" class="director-filter-pill" data-target="relations" aria-selected="false">
+              <span class="filter-dot blue"></span>Relations (2)
+            </button>
+            <button type="button" class="director-filter-pill" data-target="finance" aria-selected="false">
+              <span class="filter-dot orange"></span>Finance (2)
+            </button>
+          </nav>
+        </div>
+
+        <div class="directors-grid" id="directorsGrid"></div>
       </div>
     </section>
 
@@ -1193,7 +1322,7 @@
     </div>
   </aside>
 
-  <script type="module" src="assets/js/main.js?v=20260910-venue-editorial"></script>
+  <script type="module" src="assets/js/main.js?v=20260910-venue-gallery"></script>
 
   <script>
     /* Branded splash intro: show on entry, then fade out to reveal the site.

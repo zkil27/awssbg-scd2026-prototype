@@ -44,10 +44,9 @@ const CARD_SELECTORS = [
   '.pro-card-editorial',
   '.chapter-ledger-card',
   '.agenda-item',
-  '.venue-photo-card',
-  '.venue-floor-card',
-  '.venue-map-card',
+  '.venue-card',
   '.chapter-card',
+  '.director-card',
   '.merch-card',
   '.about-outcomes li',
 ];
