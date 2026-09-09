@@ -17,6 +17,7 @@ import { initComputeGrid } from './modules/computeGrid.js';
 import { initScrollReveal } from './modules/scrollReveal.js';
 import { initBlueprintScroll } from './modules/blueprintScroll.js';
 import { initBlueprintShader } from './modules/blueprintShader.js';
+import { initVenueUI } from './modules/venueUI.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
@@ -35,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMerch();
     initChapters();
     initSponsors();
+    initVenueUI();
 
     // 3. Reactive background animation (sits behind all content)
     initComputeGrid();
