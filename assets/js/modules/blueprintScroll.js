@@ -338,22 +338,22 @@ function deactivate() {
     track.style.willChange = '';
     track.style.removeProperty('--bp-track-pad-right');
   }
-  if (panelData.length) {
-    for (let i = 0; i < panelData.length; i++) {
-      const p = panelData[i];
-      p.el.style.opacity = '';
-      p.el.style.transform = '';
-      p.el.classList.remove('is-focused');
-      if (p.numEl) {
-        p.numEl.style.transform = '';
-        p.numEl.style.removeProperty('--bp-bar-scale');
-      }
-      if (p.bodyEl) {
-        p.bodyEl.style.transform = '';
-      }
+  const allPanels = track ? track.querySelectorAll('.blueprint-panel') : [];
+  allPanels.forEach((el) => {
+    el.style.opacity = '';
+    el.style.transform = '';
+    el.classList.remove('is-focused');
+    const numEl = el.querySelector('.bp-num');
+    if (numEl) {
+      numEl.style.transform = '';
+      numEl.style.removeProperty('--bp-bar-scale');
     }
-    panelData = [];
-  }
+    const bodyEl = el.querySelector('.bp-agenda-body');
+    if (bodyEl) {
+      bodyEl.style.transform = '';
+    }
+  });
+  panelData = [];
   if (fill) fill.style.width = '';
   if (pin) {
     pin.classList.remove('bp-engaged', 'is-before', 'is-pinned', 'is-after');

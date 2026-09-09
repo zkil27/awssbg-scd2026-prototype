@@ -230,6 +230,11 @@ function resize() {
   const width = Math.round(canvas.clientWidth * dpr);
   const height = Math.round(canvas.clientHeight * dpr);
 
+  if (width === 0 || height === 0) {
+    stop();
+    return;
+  }
+
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;
     canvas.height = height;
@@ -239,6 +244,7 @@ function resize() {
 
 function renderFrame(time) {
   if (!gl || !program) return;
+  if (!canvas || canvas.width === 0 || canvas.height === 0) return;
 
   const elapsed = (time - startTime) * 0.001;
   gl.useProgram(program);
@@ -257,6 +263,7 @@ function loop(time) {
 
 function start() {
   if (animId || !isVisible) return;
+  if (!canvas || canvas.clientWidth === 0 || canvas.clientHeight === 0) return;
   startTime = performance.now();
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reducedMotion) {

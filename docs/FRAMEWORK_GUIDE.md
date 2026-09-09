@@ -28,6 +28,7 @@ awssbg-scd2026-prototype/
         │   ├── speakers.js      # Speaker details & talks
         │   ├── merch.js         # Merchandise catalog
         │   ├── chapters.js      # University student builder groups
+        │   ├── directors.js     # Summit directorate & organizing leadership
         │   └── sponsors.js      # Sponsor tiers & partner links
         └── modules/             # Functional UI Layer
             ├── theme.js         # Light/Dark mode toggling & localStorage
@@ -36,6 +37,7 @@ awssbg-scd2026-prototype/
             ├── speakersUI.js    # Marquee track, speaker grid & modal popup
             ├── merchUI.js       # Merch rail & interactive spotlight zoom
             ├── chaptersUI.js    # University chapter cards grid
+            ├── directorsUI.js   # Organizing committee directors grid & filter tabs
             ├── sponsorsUI.js    # Sponsor tier containers
             └── computeGrid.js   # Reactive canvas background (cursor grid glow + boot sweep)
 ```

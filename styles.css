@@ -7056,3 +7056,329 @@ footer {
     }
   }
 }
+
+/* ==========================================================================
+   ABOUT PAGE: SUMMIT DIRECTORS & ORGANIZING LEADERSHIP
+   ========================================================================== */
+
+.directors-filter-wrapper {
+  margin-top: 24px;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 2;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.directors-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: max-content;
+}
+
+.director-filter-pill {
+  appearance: none;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-strong);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  white-space: nowrap;
+}
+
+.director-filter-pill:hover {
+  border-color: var(--text-strong);
+}
+
+.director-filter-pill.active {
+  background: var(--text-strong);
+  color: var(--bg-1);
+  border-color: var(--text-strong);
+}
+
+.director-filter-pill .filter-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.director-filter-pill .filter-dot.orange { background: var(--orange); }
+.director-filter-pill .filter-dot.blue { background: var(--blue); }
+.director-filter-pill .filter-dot.pink { background: var(--pink); }
+.director-filter-pill .filter-dot.green { background: var(--green); }
+.director-filter-pill .filter-dot.purple { background: var(--purple); }
+
+.directors-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.director-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 0;
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.director-card.is-filtered-out {
+  display: none !important;
+}
+
+.director-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--card-accent, var(--blue));
+  box-shadow: 0 10px 26px -8px rgba(0, 0, 0, 0.18);
+}
+
+.director-card-edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--card-accent, var(--blue));
+}
+
+.director-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.director-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  letter-spacing: 0.06em;
+  border-radius: 0;
+}
+
+.dept-badge-exec {
+  background: rgba(252, 153, 7, 0.12);
+  color: var(--orange-text);
+  border: 1px solid rgba(252, 153, 7, 0.35);
+}
+
+.dept-badge-tech {
+  background: rgba(68, 179, 254, 0.12);
+  color: var(--blue-text);
+  border: 1px solid rgba(68, 179, 254, 0.35);
+}
+
+.dept-badge-crea {
+  background: rgba(254, 87, 234, 0.12);
+  color: var(--pink);
+  border: 1px solid rgba(254, 87, 234, 0.35);
+}
+
+.dept-badge-ops {
+  background: rgba(7, 227, 131, 0.12);
+  color: var(--green-text, #059669);
+  border: 1px solid rgba(7, 227, 131, 0.35);
+}
+
+.dept-badge-mktg {
+  background: rgba(167, 89, 255, 0.12);
+  color: var(--purple-text, #7C3AED);
+  border: 1px solid rgba(167, 89, 255, 0.35);
+}
+
+.dept-badge-rels {
+  background: rgba(68, 179, 254, 0.12);
+  color: var(--blue-text);
+  border: 1px solid rgba(68, 179, 254, 0.35);
+}
+
+.dept-badge-fin {
+  background: rgba(252, 153, 7, 0.12);
+  color: var(--orange-text);
+  border: 1px solid rgba(252, 153, 7, 0.35);
+}
+
+.director-role-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  padding: 2px 6px;
+  border-radius: 0;
+  border: 1px solid var(--line-strong, var(--card-border));
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.director-role-badge.director {
+  color: var(--text-strong);
+  border-color: var(--text-strong);
+}
+
+.director-header-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.director-avatar-frame {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.director-monogram {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-3);
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.director-monogram .monogram-text {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--dept-accent, var(--blue));
+  letter-spacing: 0.05em;
+}
+
+.director-monogram .monogram-grid-accent {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 4px;
+  height: 4px;
+  background: var(--dept-accent, var(--blue));
+}
+
+.director-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid var(--card-border);
+}
+
+.director-identity {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.director-name {
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text-strong);
+  margin: 0;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.director-role-title {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-body);
+  display: block;
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+.director-dept-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  display: block;
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+
+.director-focus-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.58;
+  color: var(--about-text, var(--muted));
+  margin: 0;
+  flex-grow: 1;
+}
+
+.director-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+  margin-top: auto;
+}
+
+.director-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.director-status-pill .status-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.director-org-tag {
+  font-size: 9.5px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* Responsive Breakpoints for Directors */
+@media (max-width: 1200px) {
+  .directors-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .directors-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 580px) {
+  .directors-grid {
+    grid-template-columns: 1fr;
+  }
+  .director-card {
+    padding: 20px 16px 16px;
+  }
+}
+
