@@ -6146,6 +6146,8 @@ footer {
   .chapter-grid { grid-template-columns: repeat(2, 1fr); }
   .tier-editorial { grid-template-columns: 1fr; gap: 24px; padding-bottom: 34px; }
   .sponsor-cta-banner { flex-direction: column; align-items: flex-start; gap: 18px; padding: 24px 20px; }
+  .register-inner { grid-template-columns: 1fr; gap: 32px; }
+  .qr-box { justify-self: center; }
   .assistive-nav { display: block; }
   footer { padding-bottom: calc(32px + env(safe-area-inset-bottom)); }
   .proto-badge {
