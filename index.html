@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="theme.css?v=20260908-nav-h-fix">
-  <link rel="stylesheet" href="styles.css?v=20260909-clean-scrollbar">
+  <link rel="stylesheet" href="styles.css?v=20260910-clean-arch">
   <script>
     /* Apply saved theme before paint to avoid flash */
     (function () {
@@ -193,7 +193,6 @@
                 <span class="tier-badge quantum">QUANTUM</span>
               </div>
               <h3 class="tier-title">Quantum Sponsors</h3>
-              <p class="tier-lead">Keystone &amp; headline sponsor leading the summit stage, keynote sessions, and nationwide builder network.</p>
             </div>
             <div class="tier-stage quantum">
               <div class="organizer-feature-card color-purple" data-reveal>
@@ -240,7 +239,6 @@
                 <span class="tier-badge pro">PRO</span>
               </div>
               <h3 class="tier-title">Pro Partners</h3>
-              <p class="tier-lead">Technology, platform, and community partners powering hands-on cloud tracks, certification pathways, and developer tooling.</p>
             </div>
             <div class="tier-stage pro pro-cards-grid">
               <article class="pro-card-editorial color-green" data-reveal>
@@ -299,7 +297,6 @@
                 <span class="tier-badge lite">LITE</span>
               </div>
               <h3 class="tier-title">Lite Partners</h3>
-              <p class="tier-lead">Student builder chapters and campus collectives co-building the summit across CALABARZON and Greater Manila.</p>
             </div>
             <div class="tier-stage lite chapter-ledger-grid">
               <article class="chapter-ledger-card color-blue" data-reveal>
@@ -396,7 +393,35 @@
              driven by Lenis (see modules/blueprintScroll.js). On touch /
              reduced-motion / narrow screens it degrades to a normal vertical
              stack via the CSS fallback — all content stays identical. -->
+        <!-- SVG ClipPath Definition for Dynamic Curved Arch Transition -->
+        <svg class="bp-clip-def" width="0" height="0" style="position:absolute;pointer-events:none;" aria-hidden="true">
+          <defs>
+            <clipPath id="bpCurveClip">
+              <path id="bpCurveClipPath" d="" />
+            </clipPath>
+          </defs>
+        </svg>
+
         <div class="blueprint-pin">
+          <!-- WebGL Procedural Noise Gradient Canvas (Shader-projected Simplex domain warping) -->
+          <canvas class="bp-shader-canvas" aria-hidden="true"></canvas>
+
+          <!-- Dynamic Curved Arch Top Border Stroke -->
+          <div class="bp-curve-stroke-wrap" aria-hidden="true">
+            <svg class="bp-curve-stroke-svg" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="bpCurveStrokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#FC9907" stop-opacity="0.95"/>
+                  <stop offset="25%" stop-color="#A759FF" stop-opacity="0.95"/>
+                  <stop offset="50%" stop-color="#44B3FE" stop-opacity="1.0"/>
+                  <stop offset="75%" stop-color="#07E383" stop-opacity="0.95"/>
+                  <stop offset="100%" stop-color="#FE57EA" stop-opacity="0.95"/>
+                </linearGradient>
+              </defs>
+              <path id="bpCurveStrokePath" fill="none" stroke="url(#bpCurveStrokeGrad)" stroke-width="3" />
+            </svg>
+          </div>
+
           <div class="blueprint-track">
 
             <!-- Panel 0: section intro / editorial cover -->
@@ -1065,7 +1090,7 @@
     </div>
   </aside>
 
-  <script type="module" src="assets/js/main.js"></script>
+  <script type="module" src="assets/js/main.js?v=20260910-clean-arch"></script>
 
   <script>
     /* Branded splash intro: show on entry, then fade out to reveal the site.

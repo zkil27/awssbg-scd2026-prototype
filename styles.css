@@ -1330,6 +1330,12 @@ html[data-theme="light"] #program {
   --bp-switcher-tab-active-color: #ffffff;
   
   --bp-progress-bg: rgba(0, 0, 0, 0.15);
+
+  --bp-backdrop-base: #f5edf9;
+  --bp-noise-spectrum-opacity: 0.72;
+  --bp-noise-ambient-opacity: 0.55;
+  --bp-noise-spectrum-blend: multiply;
+  --bp-noise-grain-opacity: 0.38;
 }
 
 /* Dark Mode: Vibrant rainbow brand palette with dark obsidian brutalist cards */
@@ -1374,6 +1380,12 @@ html[data-theme="dark"] #program {
   --bp-switcher-tab-active-color: #060e1a;
   
   --bp-progress-bg: rgba(0, 0, 0, 0.25);
+
+  --bp-backdrop-base: #090514;
+  --bp-noise-spectrum-opacity: 0.62;
+  --bp-noise-ambient-opacity: 0.5;
+  --bp-noise-spectrum-blend: screen;
+  --bp-noise-grain-opacity: 0.48;
 }
 
 html[data-theme="dark"] .blueprint-panel--agenda h3,
@@ -1399,8 +1411,7 @@ html[data-theme="dark"] .blueprint-panel--agenda .bp-num {
 }
 
 #program {
-  background-color: var(--bp-bg);
-  background-image: var(--bp-bg-image);
+  background-color: var(--bp-backdrop-base, #f5edfc);
   color: var(--bp-text);
   --text-strong: var(--bp-text-strong);
   --text: var(--bp-text);
@@ -1413,10 +1424,11 @@ html[data-theme="dark"] .blueprint-panel--agenda .bp-num {
   --card-border: var(--bp-card-border);
   position: relative;
   overflow: hidden;
-  transition: background-color 0.3s ease, background-image 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 html.bp-active #program {
+  background-color: transparent !important;
   height: calc(100vh + var(--bp-extra, 0px));
   padding: 0;
   position: relative;
@@ -1438,14 +1450,15 @@ html.bp-active #program .section-head {
   /* Fallback (no bp-active): behave like a normal block; JS/CSS below stacks
      the track vertically so all content reads top-to-bottom. */
   position: relative;
-  background: transparent;
+  overflow: hidden;
+  background-color: var(--bp-backdrop-base, #f5edfc);
+  transition: background-color 0.3s ease;
 }
 
 /* Manual pin: a full-viewport frame the JS parks in place.
-   Solid backdrop covers the vertically-scrolling body grid so the horizontal
-   scene reads as one static stage while the panels pan. Uses theme tokens so
-   it follows light/dark. A faint own-grid keeps the brand texture without the
-   vertical drift. */
+   Dynamic fluid blob mesh & analog noise overlay cover the vertically-scrolling
+   body grid so the horizontal scene reads as one unified, living ambient stage
+   while the panels pan across. */
 html.bp-active .blueprint-pin {
   height: 100vh;
   width: 100%;
@@ -1459,12 +1472,8 @@ html.bp-active .blueprint-pin {
   box-sizing: border-box;
   left: 0;
   top: 0;
-  /* Vibrant brand gradient without any grid overlay */
-  background-color: var(--bp-bg);
-  background-image: var(--bp-bg-image);
-  background-size: 100% 100%;
-  background-position: center;
-  transition: background-color 0.3s ease, background-image 0.3s ease;
+  background-color: var(--bp-backdrop-base, #f5edfc);
+  transition: background-color 0.3s ease;
 }
 
 /* Before the pin window: parked at the top of the section. */
@@ -1486,19 +1495,72 @@ html.bp-active .blueprint-pin.is-after {
   bottom: 0;
 }
 
+/* ==========================================================================
+   WEBGL PROCEDURAL NOISE GRADIENT (SHADER-PROJECTED)
+   Mathematical 3D Simplex noise with domain warping directly projects the
+   5 summit palette colors into fluid, living, organic gradient waves.
+   Zero noise overlays on top, zero blur filters. Pure GPU shader.
+   ========================================================================== */
+
+/* Dynamic Curved Arch Transition on .blueprint-pin */
+.bp-clip-def {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.bp-curve-stroke-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  overflow: visible;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.bp-curve-stroke-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+#bpCurveStrokePath {
+  stroke-width: 3.5;
+  filter: drop-shadow(0 0 14px rgba(68, 179, 254, 0.8));
+}
+
+.bp-shader-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  display: block;
+}
+
 .blueprint-track {
   display: flex;
   gap: clamp(24px, 4vw, 64px);
+  position: relative;
+  z-index: 2;
 }
 
 html.bp-active .blueprint-track {
   flex-direction: row;
   flex-wrap: nowrap;
   /* Align panels to a shared TOP baseline (editorial spread), then offset
-     individually â€” reads as a designed grid, not floating boxes. */
+     individually — reads as a designed grid, not floating boxes. */
   align-items: stretch;
   gap: clamp(48px, 6vw, 120px);
-  padding: 0 clamp(64px, 10vw, 220px);
+  padding-left: clamp(48px, 6vw, 120px);
+  padding-right: var(--bp-track-pad-right, max(clamp(48px, 6vw, 120px), calc((100vw - 1560px) / 2)));
   will-change: transform;
 }
 
@@ -1517,6 +1579,8 @@ html.bp-active .blueprint-panel {
   justify-content: flex-start;
   padding: clamp(32px, 3vw, 48px) 0;
   overflow: hidden;
+  will-change: transform, opacity;
+  transform-origin: center center;
 }
 
 /* Asymmetry: staggered vertical offsets against the shared baseline. */
@@ -1604,10 +1668,12 @@ html.bp-active .blueprint-panel--agenda { justify-content: flex-start; }
   margin: 0 0 clamp(16px, 3vh, 40px);
   -webkit-user-select: none;
   user-select: none;
+  will-change: transform;
+  transition: color 0.25s ease;
 }
 
 /* The oversized numeral gets a hairline accent underline + tint to feel typeset
-   rather than decorative. */
+   rather than decorative. Scales dynamically with horizontal scroll progress. */
 .blueprint-panel--agenda .bp-num::after {
   content: "";
   display: block;
@@ -1615,6 +1681,9 @@ html.bp-active .blueprint-panel--agenda { justify-content: flex-start; }
   height: 4px;
   margin-top: clamp(8px, 1.5vh, 20px);
   background: var(--purple);
+  transform-origin: left center;
+  transform: scaleX(var(--bp-bar-scale, 1));
+  transition: transform 0.15s ease-out, box-shadow 0.25s ease;
 }
 
 /* Panel 1: Build -> Orange */
@@ -1635,7 +1704,27 @@ article.blueprint-panel--agenda:nth-of-type(4) .bp-num::after {
   box-shadow: 0 0 14px rgba(7, 227, 131, 0.6);
 }
 
-.bp-agenda-body { max-width: 42ch; }
+/* In-focus illuminated active state as each motion reaches center stage */
+article.blueprint-panel--agenda:nth-of-type(2).is-focused .bp-num::after {
+  box-shadow: 0 0 22px rgba(252, 153, 7, 0.9);
+}
+
+article.blueprint-panel--agenda:nth-of-type(3).is-focused .bp-num::after {
+  box-shadow: 0 0 22px rgba(167, 89, 255, 0.9);
+}
+
+article.blueprint-panel--agenda:nth-of-type(4).is-focused .bp-num::after {
+  box-shadow: 0 0 22px rgba(7, 227, 131, 0.9);
+}
+
+html[data-theme="dark"] html.bp-active .blueprint-panel.is-focused .bp-num {
+  text-shadow: 0 0 32px rgba(255, 255, 255, 0.2);
+}
+
+.bp-agenda-body {
+  max-width: 42ch;
+  will-change: transform;
+}
 
 .blueprint-panel--agenda h3 {
   font-family: var(--font-display, var(--font-sans));
@@ -1665,9 +1754,9 @@ html.bp-active .blueprint-panel--offset-down .bp-num::after { margin: clamp(20px
 
 /* ---- Schedule panel: grand editorial stage (maximum space) ---- */
 html.bp-active .blueprint-panel--schedule {
-  width: calc(100vw - 2 * clamp(64px, 10vw, 220px));
+  width: min(calc(100vw - 2 * clamp(40px, 5vw, 100px)), 1560px);
   max-width: 1560px;
-  min-width: clamp(860px, 80vw, 1380px);
+  min-width: min(860px, calc(100vw - 48px));
   margin-left: 0;
   margin-right: 0;
   height: calc(100vh - var(--nav-h) - clamp(72px, 9.5vh, 100px));
@@ -1715,7 +1804,7 @@ html.bp-active .blueprint-panel--schedule {
   color: var(--bp-focus-btn-color, #0b0f19);
   background: var(--bp-focus-btn-bg, #ffffff);
   border: 1px solid var(--bp-focus-btn-border, rgba(0, 0, 0, 0.16));
-  border-radius: 0;
+  border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
@@ -1788,6 +1877,7 @@ html.bp-active .blueprint-panel--schedule {
   background: var(--bp-card-bg, #ffffff);
   padding: 3px;
   border: 1px solid var(--line, rgba(0, 0, 0, 0.15));
+  border-radius: 8px;
   font-family: var(--font-mono);
   transition: background-color 0.25s ease, border-color 0.25s ease;
 }
@@ -1802,7 +1892,7 @@ html.bp-active .blueprint-panel--schedule {
   color: var(--muted, #4b5563);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 0;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1878,6 +1968,9 @@ html.bp-active .sched-blocks-split {
 .sched-blocks-split.view-morning,
 .sched-blocks-split.view-afternoon {
   grid-template-columns: 1fr;
+  max-width: 920px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Stage block cards: architectural broadsheet editorial layout */
@@ -1887,11 +1980,11 @@ html.bp-active .sched-blocks-split {
   min-width: 0;
   background: var(--bp-card-bg, #ffffff);
   border: 1px solid var(--bp-card-border, rgba(0, 0, 0, 0.15));
-  border-radius: 0;
+  border-radius: 16px;
+  overflow: hidden;
   padding: clamp(16px, 2vh, 24px) clamp(18px, 2.4vw, 36px);
   position: relative;
   box-shadow: var(--bp-card-shadow, 0 10px 30px rgba(0, 0, 0, 0.12));
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
   box-sizing: border-box;
 }
 
@@ -1900,28 +1993,6 @@ html.bp-active .sched-block {
   min-height: 0;
 }
 
-.sched-block:hover {
-  transform: translateY(-2px);
-}
-
-.sched-block.block-morning {
-  border-top: 4px solid var(--orange);
-}
-.sched-block.block-morning:hover {
-  border-color: var(--orange);
-  box-shadow: 0 14px 38px rgba(252, 153, 7, 0.22);
-}
-
-.sched-block.block-afternoon {
-  border-top: 4px solid var(--purple);
-}
-html[data-theme="light"] .sched-block.block-afternoon {
-  border-top-color: var(--purple);
-}
-.sched-block.block-afternoon:hover {
-  border-color: var(--purple);
-  box-shadow: 0 14px 38px rgba(167, 89, 255, 0.22);
-}
 
 /* Block header */
 .sched-block-header {
@@ -1947,7 +2018,7 @@ html[data-theme="light"] .sched-block.block-afternoon {
   font-weight: 800;
   letter-spacing: 0.1em;
   padding: 2px 7px;
-  border-radius: 0;
+  border-radius: 6px;
   text-transform: uppercase;
 }
 
@@ -2136,7 +2207,7 @@ html.bp-active .sched-block-rows {
   margin-top: 0;
   padding: 3px 8px 3px 3px;
   gap: 6px;
-  border-radius: 2px;
+  border-radius: 6px;
   border: 1px solid var(--bp-chip-border, rgba(0, 0, 0, 0.14));
   background: var(--bp-chip-bg, #f8fafc);
   cursor: pointer;
@@ -2161,7 +2232,7 @@ html.bp-active .sched-block-rows {
 .blueprint-panel--schedule .speaker-inline-avatar {
   width: 20px;
   height: 20px;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid var(--bp-chip-border, rgba(0, 0, 0, 0.15));
   object-fit: cover;
   flex-shrink: 0;
@@ -2198,8 +2269,8 @@ html.bp-active .sched-block-rows {
 html.bp-active .blueprint-progress {
   display: block;
   position: absolute;
-  left: clamp(40px, 8vw, 160px);
-  right: clamp(40px, 8vw, 160px);
+  left: max(clamp(40px, 5vw, 100px), calc((100vw - 1560px) / 2));
+  right: max(clamp(40px, 5vw, 100px), calc((100vw - 1560px) / 2));
   bottom: clamp(28px, 5vh, 56px);
   height: 3px;
   background: var(--bp-progress-bg, rgba(0, 0, 0, 0.15));
@@ -2226,7 +2297,7 @@ html.bp-active .blueprint-hint {
   align-items: center;
   gap: 10px;
   position: absolute;
-  right: clamp(40px, 8vw, 160px);
+  right: max(clamp(40px, 5vw, 100px), calc((100vw - 1560px) / 2));
   bottom: clamp(44px, 7vh, 84px);
   font-family: var(--font-mono);
   font-weight: 700;
@@ -2583,6 +2654,11 @@ html[data-theme="dark"] .speaker-inline-card {
 }
 
 /* ===== VENUE ===== */
+#venue {
+  position: relative;
+  z-index: 3;
+}
+
 .sibling-note {
   position: relative;
   z-index: 2;
@@ -2874,8 +2950,8 @@ html.modal-scroll-lock {
   background: var(--bg-card, #ffffff);
   color: var(--text-strong, #0B1526);
   border: 2px solid var(--line-strong, rgba(255, 255, 255, 0.2));
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
   filter: none !important;
   max-height: 88vh;
   overflow-y: auto;
@@ -2884,7 +2960,7 @@ html.modal-scroll-lock {
   padding: 0;
   transform: none !important;
   opacity: 0;
-  clip-path: inset(0 100% 100% 0);
+  clip-path: inset(0 100% 100% 0 round 16px);
   will-change: clip-path, opacity;
   transition: opacity 0.2s ease, clip-path 0.2s cubic-bezier(0.35, 0, 0.2, 1);
 }
@@ -2897,7 +2973,7 @@ html[data-theme="dark"] .modal-card {
 
 .modal-overlay.open .modal-card {
   opacity: 1;
-  clip-path: inset(0 0 0 0);
+  clip-path: inset(0 0 0 0 round 16px);
   animation: modalSquareExpand 0.38s cubic-bezier(0.35, 0, 0.2, 1) forwards;
 }
 
@@ -2919,28 +2995,28 @@ html[data-theme="dark"] .modal-card {
 @keyframes modalSquareExpand {
   0% {
     opacity: 0;
-    clip-path: inset(0 100% 100% 0);
+    clip-path: inset(0 100% 100% 0 round 16px);
   }
   12% {
     opacity: 1;
   }
   100% {
     opacity: 1;
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 0 0 round 16px);
   }
 }
 
 @keyframes modalSquareCollapse {
   0% {
     opacity: 1;
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(0 0 0 0 round 16px);
   }
   75% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    clip-path: inset(100% 0 0 100%);
+    clip-path: inset(100% 0 0 100% round 16px);
   }
 }
 
@@ -2969,7 +3045,7 @@ html[data-theme="dark"] .modal-card {
   z-index: 10;
   width: 36px;
   height: 36px;
-  border-radius: 0;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(11, 21, 38, 0.6);
   color: #FFFFFF;
@@ -3366,7 +3442,7 @@ html[data-theme="dark"] .s-modal-header {
   z-index: 2;
   width: clamp(120px, 32vw, 160px);
   height: clamp(120px, 32vw, 160px);
-  border-radius: 0;
+  border-radius: 12px;
   overflow: hidden;
   border: 2.5px solid var(--blue);
   box-shadow: none;
@@ -3471,7 +3547,7 @@ html[data-theme="dark"] .s-modal-section p strong {
   width: 100%;
   justify-content: center;
   gap: 8px;
-  border-radius: 0;
+  border-radius: 8px;
   box-shadow: none;
 }
 
@@ -3487,7 +3563,7 @@ html[data-theme="dark"] .s-modal-section p strong {
   background: var(--bg-card, #ffffff);
   color: var(--text-strong, #0B1526);
   border: 1px solid var(--line-strong);
-  border-radius: 0 !important;
+  border-radius: 16px !important;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2) !important;
   position: relative;
   overflow: hidden;
@@ -3514,7 +3590,7 @@ html[data-theme="dark"] .pf-modal-card {
   color: var(--text-strong);
   cursor: pointer;
   font-size: 13px;
-  border-radius: 0;
+  border-radius: 8px;
   transition: all 0.2s ease;
   z-index: 10;
 }
@@ -3589,6 +3665,7 @@ html[data-theme="dark"] .pf-modal-close:hover {
   background: rgba(0, 0, 0, 0.04);
   padding: 2px 7px;
   border: 1px solid var(--line);
+  border-radius: 4px;
 }
 
 html[data-theme="dark"] .pf-header-badge {
@@ -3632,7 +3709,7 @@ html[data-theme="dark"] .pf-header-badge {
   color: var(--muted);
   background: transparent;
   border: 1px solid var(--line-strong);
-  border-radius: 0;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -3723,8 +3800,7 @@ html[data-theme="dark"] .pf-modal-body::-webkit-scrollbar-thumb:hover {
   padding: 14px 18px;
   background: rgba(0, 0, 0, 0.015);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--purple);
-  border-radius: 0;
+  border-radius: 10px;
   transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -3743,13 +3819,6 @@ html[data-theme="dark"] .pf-session-card:hover {
   background: rgba(255, 255, 255, 0.04);
   border-color: rgba(255, 255, 255, 0.12);
 }
-
-/* Category Accent Borders */
-.pf-session-card.theme-orange { border-left-color: var(--orange); }
-.pf-session-card.theme-green { border-left-color: var(--green); }
-.pf-session-card.theme-purple { border-left-color: var(--purple); }
-.pf-session-card.theme-blue { border-left-color: var(--blue); }
-.pf-session-card.theme-pink { border-left-color: var(--pink); }
 
 .pf-card-content {
   display: flex;
@@ -3779,7 +3848,7 @@ html[data-theme="dark"] .pf-session-card:hover {
   letter-spacing: 0.08em;
   padding: 2px 7px;
   text-transform: uppercase;
-  border-radius: 0;
+  border-radius: 4px;
   background: rgba(0, 0, 0, 0.05);
   color: var(--text-strong);
   border: 1px solid var(--line);
@@ -3843,6 +3912,7 @@ html[data-theme="dark"] .pf-session-card:hover {
   color: var(--muted);
   padding: 1px 5px;
   border: 1px solid var(--line);
+  border-radius: 4px;
   background: rgba(0, 0, 0, 0.03);
 }
 
@@ -3911,7 +3981,7 @@ html[data-theme="dark"] .pf-card-dur {
   padding: 3px 8px 3px 3px;
   border: 1px solid var(--line);
   background: var(--bg-card, #ffffff);
-  border-radius: 0;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -3930,7 +4000,7 @@ html[data-theme="dark"] .pf-speaker-chip {
 .pf-speaker-chip-avatar {
   width: 22px;
   height: 22px;
-  border-radius: 0;
+  border-radius: 4px;
   object-fit: cover;
   border: 1px solid var(--line);
 }
@@ -4190,7 +4260,7 @@ html[data-theme="dark"] .speaker-section-divider {
 /* Editorial Tier Structure (2-Column Dossier Rhythm) */
 .tier-editorial {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 320px 1fr;
   gap: 40px;
   align-items: start;
   padding-bottom: 48px;
@@ -4210,18 +4280,18 @@ html[data-theme="dark"] .tier-editorial {
 .tier-dossier {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .tier-index-lockup {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .tier-num {
   font-family: var(--font-mono);
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 800;
   color: var(--muted-2);
   opacity: 0.65;
@@ -4230,11 +4300,11 @@ html[data-theme="dark"] .tier-editorial {
 
 .tier-badge {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  padding: 4px 10px;
-  border-radius: 4px;
+  padding: 5px 12px;
+  border-radius: 5px;
   text-transform: uppercase;
   flex-shrink: 0;
 }
@@ -4279,19 +4349,11 @@ html[data-theme="dark"] .tier-badge.light {
 
 .tier-title {
   font-family: var(--font-display, var(--font-sans));
-  font-size: 22px;
+  font-size: clamp(34px, 3.4vw, 44px);
   font-weight: 800;
   color: var(--text-strong);
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  margin: 0;
-}
-
-.tier-lead {
-  font-family: var(--font-sans);
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--muted);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
   margin: 0;
 }
 
@@ -5561,50 +5623,6 @@ footer {
   will-change: auto;
 }
 
-/* Card "power-on" accent: a brand-colored edge sweeps in as the card lands,
-   echoing the grid boxes, then fades out once settled. Purely decorative. */
-[data-reveal].reveal-card::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--reveal-accent, var(--blue));
-  opacity: 0;
-  transform: scaleY(0);
-  transform-origin: top;
-  pointer-events: none;
-  border-radius: inherit;
-  transition:
-    opacity var(--reveal-duration) ease,
-    transform var(--reveal-duration) var(--reveal-ease);
-  transition-delay: calc(var(--reveal-i, 0) * var(--reveal-stagger));
-}
-
-[data-reveal].reveal-card.is-revealed::after {
-  opacity: .9;
-  transform: scaleY(1);
-}
-
-/* After settling, fade the accent away so it's just an entrance flourish. */
-[data-reveal].reveal-card.reveal-done::after {
-  opacity: 0;
-  transform: scaleY(1);
-}
-
-/* Reconcile with the horizontal Blueprint pan: inside the pinned track the pin
-   owns all motion, so neutralize scroll-reveal on any tagged descendants (their
-   translateY would fight the track's translate3d). Only while bp-active â€” in
-   the vertical fallback the schedule card reveals normally. */
-html.bp-active .blueprint-track [data-reveal] {
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-html.bp-active .blueprint-track [data-reveal].reveal-card::after {
-  display: none !important;
-}
 
 /* ===== REDUCED MOTION ===== */
 /* the decorative loops used to run forever and drain the battery */
@@ -5636,9 +5654,6 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
     transition: none !important;
   }
 
-  [data-reveal].reveal-card::after {
-    display: none !important;
-  }
 }
 
 /* ===== BRANDED SPLASH SCREEN ===== */
@@ -5797,14 +5812,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   position: relative;
   width: 100%;
   padding: calc(var(--grid-size) * 1.5) 0 calc(var(--grid-size) * 2.5);
-  background-color: var(--bg);
-}
-
-.about-roster-section,
-.about-roster-section * {
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
+  background: transparent;
 }
 
 /* Persistent HUD Header */
@@ -5816,6 +5824,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   padding: 12px clamp(16px, 3vw, 28px);
   background: var(--bg-elevated);
   border: 1px solid var(--line-strong);
+  border-radius: 12px;
   margin-bottom: calc(var(--grid-size) * 0.6);
 }
 
@@ -5855,6 +5864,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   background: var(--surface, var(--bg-2));
   padding: 4px;
   border: 1px solid var(--line-strong);
+  border-radius: 8px;
 }
 
 .ar-pill {
@@ -5868,6 +5878,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   color: var(--muted);
   background: transparent;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -5881,6 +5892,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   background: var(--bg);
   color: var(--text-strong);
   border: 1px solid var(--line-strong);
+  border-radius: 6px;
 }
 
 .ar-hud-right {
@@ -5908,6 +5920,8 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   flex-direction: column;
   border: 1px solid var(--line-strong);
   background: var(--bg-elevated);
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .roster-group-header {
@@ -5940,7 +5954,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
 .rgh-dot {
   width: 6px;
   height: 6px;
-  border-radius: 0 !important;
+  border-radius: 50%;
   display: inline-block;
 }
 .rgh-dot.purple { background: var(--purple); }
@@ -6031,11 +6045,11 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
 }
 
 .roster-item.is-active .ri-num {
-  color: var(--item-accent, var(--orange));
+  color: var(--item-accent-text, var(--item-accent, var(--orange)));
 }
 
 .roster-item.is-active .ri-track {
-  color: var(--item-accent, var(--orange));
+  color: var(--item-accent-text, var(--item-accent, var(--orange)));
 }
 
 .roster-item .ri-name {
@@ -6050,9 +6064,12 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   transition: color 0.2s ease;
 }
 
-.roster-item:hover .ri-name,
-.roster-item.is-active .ri-name {
+.roster-item:hover .ri-name {
   color: var(--text-strong);
+}
+
+.roster-item.is-active .ri-name {
+  color: var(--item-accent-text, var(--item-accent));
 }
 
 .roster-item .ri-role {
@@ -6100,6 +6117,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   position: relative;
   background: #0B1526;
   border: 2px solid var(--sp-accent, var(--line-strong));
+  border-radius: 16px;
   height: calc(100vh - var(--nav-h, 56px) - 36px);
   min-height: 560px;
   max-height: 720px;
@@ -6177,11 +6195,13 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   align-items: center;
   gap: 6px;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
 }
 
 .sp-dot {
   width: 6px;
   height: 6px;
+  border-radius: 50%;
   background: var(--sp-accent, var(--orange));
   animation: pulseDot 1.8s infinite;
 }
@@ -6241,6 +6261,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   font-size: 12px;
   font-weight: 800;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -6262,6 +6283,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   justify-content: center;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
   color: #ffffff;
   backdrop-filter: blur(8px);
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
@@ -6304,6 +6326,28 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
     border-bottom: 1px solid var(--line-strong);
   }
 
+  /* In mobile view: unclicked speaker name is solid (not faded out) */
+  .roster-item .ri-name {
+    color: var(--text-strong);
+  }
+
+  .roster-item:hover .ri-name {
+    color: var(--text-strong);
+  }
+
+  /* When clicked/active: speaker name becomes colored instead (purple, blue, green, pink, orange) */
+  .roster-item.is-active .ri-name,
+  .roster-item.is-expanded-mobile .ri-name {
+    color: var(--item-accent-text, var(--item-accent)) !important;
+  }
+
+  .roster-item.is-active .ri-num,
+  .roster-item.is-expanded-mobile .ri-num,
+  .roster-item.is-active .ri-track,
+  .roster-item.is-expanded-mobile .ri-track {
+    color: var(--item-accent-text, var(--item-accent)) !important;
+  }
+
   .ri-row {
     padding: 16px 18px;
   }
@@ -6311,7 +6355,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   .roster-item.is-expanded-mobile .ri-arrow {
     transform: rotate(90deg) !important;
     opacity: 1 !important;
-    color: var(--item-accent, var(--orange)) !important;
+    color: var(--item-accent-text, var(--item-accent, var(--orange))) !important;
   }
 
   /* In-Line Bloom Stage expanded on mobile */
@@ -6324,7 +6368,8 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
     box-sizing: border-box;
     flex-direction: column;
     justify-content: space-between;
-    border-top: 1px solid var(--line-strong);
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
     background: #0B1526;
     animation: bloomFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -6353,6 +6398,7 @@ html.bp-active .blueprint-track [data-reveal].reveal-card::after {
   .ri-bloom-card .sp-badge {
     top: 14px;
     left: 14px;
+    border-radius: 6px;
   }
 
   .ri-bloom-card .sp-info {

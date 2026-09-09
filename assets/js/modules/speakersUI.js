@@ -39,6 +39,10 @@ export function openSpeakerModal(speaker, tileTheme = '') {
         } else if (speaker?.tileTheme) {
             const clean = speaker.tileTheme.replace('bg-tile-', '').replace('theme-', '');
             finalTheme = `theme-${clean}`;
+        } else if (speaker?.id === 'speaker-kimi-annika-villareal' || speaker?.id === 'speaker-maxine-sofia-llamas') {
+            finalTheme = 'theme-pink';
+        } else if (speaker?.id === 'speaker-kate-callao' || speaker?.id === 'speaker-trisha-pelagio' || speaker?.id === 'speaker-isaeus-asi-guiang') {
+            finalTheme = 'theme-blue';
         } else if (speaker?.status === 'KEYNOTE' || (speaker?.sessionTitle && speaker.sessionTitle.toLowerCase().includes('keynote'))) {
             finalTheme = 'theme-orange';
         } else if (speaker?.status === 'PANEL' || (speaker?.sessionTitle && speaker.sessionTitle.toLowerCase().includes('panel'))) {
@@ -233,6 +237,13 @@ export function initSpeakers() {
     const pillBuilders = document.getElementById('pillBuilders') || document.getElementById('pillSessions');
 
     function getSpeakerColor(s) {
+        if (!s) return 'purple';
+        if (s.tileTheme) {
+            return s.tileTheme.replace('bg-tile-', '').replace('theme-', '');
+        }
+        const id = s.id || '';
+        if (id === 'speaker-kimi-annika-villareal' || id === 'speaker-maxine-sofia-llamas') return 'pink';
+        if (id === 'speaker-kate-callao' || id === 'speaker-trisha-pelagio' || id === 'speaker-isaeus-asi-guiang') return 'blue';
         if (s.status === 'PANEL') return 'purple';
         if (s.status === 'KEYNOTE') return 'orange';
         if (s.status === 'BUILDER') return 'green';
@@ -356,7 +367,7 @@ export function initSpeakers() {
                     <div class="roster-item ${isActive ? 'is-active' : ''} ${isExpanded ? 'is-expanded-mobile' : ''}" 
                          data-speaker-index="${s.originalIndex}" 
                          data-display-index="${currentIdx}"
-                         style="--item-accent: var(--${color}); --sp-accent: var(--${color});"
+                         style="--item-accent: var(--${color}); --item-accent-text: var(--${color}-text, var(--${color})); --sp-accent: var(--${color});"
                          role="tab" 
                          aria-selected="${isActive ? 'true' : 'false'}"
                          tabindex="0">
@@ -481,6 +492,11 @@ export function initSpeakers() {
                     }, 120);
                 } else {
                     expandedMobileIndex = -1;
+                    activeSpeakerIndex = -1;
+                    items.forEach((el) => {
+                        el.classList.remove('is-active');
+                        el.setAttribute('aria-selected', 'false');
+                    });
                 }
             } else {
                 // Desktop click: update active speaker & stage

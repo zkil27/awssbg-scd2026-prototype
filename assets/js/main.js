@@ -16,6 +16,7 @@ import { initSponsors } from './modules/sponsorsUI.js';
 import { initComputeGrid } from './modules/computeGrid.js';
 import { initScrollReveal } from './modules/scrollReveal.js';
 import { initBlueprintScroll } from './modules/blueprintScroll.js';
+import { initBlueprintShader } from './modules/blueprintShader.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Reactive background animation (sits behind all content)
     initComputeGrid();
+    initBlueprintShader();
 
     // 4. Scroll-triggered entrance motion — last, so the cards injected by the
     //    init*UI() calls above already exist to be tagged and observed.

@@ -20,6 +20,7 @@
 
 import { computeProgress, computeTranslateX, clamp01 } from './blueprintMath.js';
 import { getLenis, shouldEnhance, DESKTOP_MIN_WIDTH } from './smoothScroll.js';
+import { setShaderScroll } from './blueprintShader.js';
 
 /* ================================ State ================================= */
 
@@ -40,6 +41,11 @@ let resizeObserver = null;
 let showPageWrapped = false;
 let lastProgress = 0;
 let pinState = '';          // 'is-before' | 'is-pinned' | 'is-after'
+let panelData = [];         // cached panel geometry for 60/120fps scroll animation
+let clipPathEl = null;      // SVG clipPath element for top curve transition
+let strokePathEl = null;    // SVG stroke path for glowing top border
+let strokeWrapEl = null;    // wrapper for curve stroke
+let lastArch = -1;          // cached arch height for performance
 
 const HINT_ENGAGE_AT = 0.04; // fade the "scroll →" hint after this progress
 
@@ -58,6 +64,26 @@ function homeVisible() {
 /* ============================ Measurement =============================== */
 
 /**
+ * Cache panel layout geometry once per measure so render() performs zero DOM reads.
+ */
+function measurePanels() {
+  if (!track) return;
+  const panelEls = track.querySelectorAll('.blueprint-panel');
+  panelData = Array.from(panelEls).map((el) => ({
+    el,
+    isIntro: el.classList.contains('blueprint-panel--intro'),
+    isAgenda: el.classList.contains('blueprint-panel--agenda'),
+    isSchedule: el.classList.contains('blueprint-panel--schedule'),
+    isOffsetUp: el.classList.contains('blueprint-panel--offset-up'),
+    isOffsetDown: el.classList.contains('blueprint-panel--offset-down'),
+    numEl: el.querySelector('.bp-num'),
+    bodyEl: el.querySelector('.bp-agenda-body'),
+    left: el.offsetLeft,
+    width: el.offsetWidth,
+  }));
+}
+
+/**
  * Recompute geometry: section offset, track width, and the horizontal range.
  * The spacer height (extra scroll distance) is written to a CSS var so the
  * section is exactly tall enough to pan the whole track.
@@ -66,6 +92,21 @@ function measure() {
   if (!section || !track) return;
 
   viewportWidth = window.innerWidth;
+
+  // Dynamically compute the exact right padding needed so that at the end of the
+  // pan, the schedule panel ("The Running Order") is centered in the viewport
+  // across every monitor size (from laptops up to 1440p, 4K, and Ultrawide displays):
+  // Left space in viewport = viewportWidth - paddingRight - panelWidth
+  // For Left space == Right space (paddingRight):
+  // paddingRight = (viewportWidth - panelWidth) / 2
+  const schedulePanel = track.querySelector('.blueprint-panel--schedule');
+  if (schedulePanel) {
+    const minPad = Math.max(48, Math.min(120, Math.round(viewportWidth * 0.06)));
+    const panelWidth = schedulePanel.offsetWidth;
+    const targetRightPad = Math.max(minPad, Math.round((viewportWidth - panelWidth) / 2));
+    track.style.setProperty('--bp-track-pad-right', `${targetRightPad}px`);
+  }
+
   trackWidth = track.scrollWidth;
   range = Math.max(0, trackWidth - viewportWidth);
 
@@ -76,6 +117,11 @@ function measure() {
   // is accounted for. offsetTop is relative to the offsetParent; the page uses
   // position:relative containers, so add up to the document top.
   sectionTop = documentOffsetTop(section);
+
+  measurePanels();
+  clipPathEl = document.getElementById('bpCurveClipPath');
+  strokePathEl = document.getElementById('bpCurveStrokePath');
+  strokeWrapEl = document.querySelector('.bp-curve-stroke-wrap');
 }
 
 /** Absolute distance from the document top, walking offsetParent chain. */
@@ -118,11 +164,114 @@ function render(scroll) {
   setPinState(scroll);
 
   const progress = computeProgress(scroll, sectionTop, range);
-  const tx = computeTranslateX(progress, trackWidth, viewportWidth);
+  const tx = computeTranslateX(progress, trackWidth, viewportWidth, 0.88);
 
   track.style.transform = `translate3d(${tx}px, 0, 0)`;
 
-  if (fill) fill.style.width = `${(clamp01(progress) * 100).toFixed(2)}%`;
+  if (fill) fill.style.width = `${(clamp01(progress / 0.88) * 100).toFixed(2)}%`;
+
+  // Update WebGL procedural noise gradient shader with horizontal scroll progress
+  setShaderScroll(progress);
+
+  // Dynamic curved arch transition when entering from the sponsors section
+  const viewportHeight = window.innerHeight;
+  const enterStart = sectionTop - viewportHeight;
+  const enterDistance = Math.min(viewportHeight * 0.95, 850);
+  const currentY = scroll - enterStart;
+
+  let enterProgress = 0;
+  if (currentY <= 0) {
+    enterProgress = 0;
+  } else if (currentY >= enterDistance) {
+    enterProgress = 1;
+  } else {
+    enterProgress = currentY / enterDistance;
+  }
+
+  if (enterProgress < 1 && clipPathEl && strokePathEl) {
+    // Big prominent arch curvature: up to 240px peak in center, flattening as enterProgress -> 1
+    const maxArch = Math.min(240, Math.max(120, Math.round(viewportWidth * 0.15)));
+    const ease = 1 - Math.pow(1 - enterProgress, 2.2);
+    const arch = parseFloat((maxArch * (1 - ease)).toFixed(1));
+
+    if (Math.abs(arch - lastArch) >= 0.5) {
+      lastArch = arch;
+      const w = viewportWidth;
+      const h = viewportHeight + 200;
+      const curveD = `M 0,${arch} Q ${w / 2},${-arch} ${w},${arch}`;
+      const clipD = `${curveD} L ${w},${h} L 0,${h} Z`;
+
+      clipPathEl.setAttribute('d', clipD);
+      pin.style.clipPath = `url(#bpCurveClip)`;
+      strokePathEl.setAttribute('d', curveD);
+      if (strokeWrapEl) strokeWrapEl.style.opacity = '1';
+    }
+  } else if (lastArch !== 0) {
+    lastArch = 0;
+    if (pin) pin.style.clipPath = '';
+    if (strokeWrapEl) strokeWrapEl.style.opacity = '0';
+  }
+
+  // Dynamic horizontal scroll animation for each panel in the spread
+  if (!panelData.length) measurePanels();
+  const viewportCenter = viewportWidth * 0.5;
+  const reach = viewportWidth * 0.55;
+
+  for (let i = 0; i < panelData.length; i++) {
+    const p = panelData[i];
+    const panelCenter = p.left + p.width * 0.5 + tx;
+    const dist = (panelCenter - viewportCenter) / reach;
+
+    // Smooth Hermite focus curve: 1 at center, 0 when far away
+    const u = clamp01(1 - Math.abs(dist));
+    let focus = u * u * (3 - 2 * u);
+
+    // Intro panel stays 100% visible before horizontal scroll engages
+    if (p.isIntro && progress < 0.15) {
+      focus = Math.max(focus, 1 - progress / 0.15);
+    }
+    // Schedule panel stays 100% visible in the resting dwell zone
+    if (p.isSchedule && progress >= 0.85) {
+      focus = 1;
+    }
+
+    // Optical focus: opacity and subtle scale
+    const opacity = (0.35 + 0.65 * focus).toFixed(3);
+    const scale = (0.96 + 0.04 * focus).toFixed(3);
+
+    // Staggered vertical float
+    let ty = 0;
+    if (p.isOffsetUp) {
+      ty = (1 - focus) * 16;
+    } else if (p.isOffsetDown) {
+      ty = -(1 - focus) * 16;
+    } else if (p.isAgenda) {
+      ty = (1 - focus) * 12;
+    }
+
+    p.el.style.opacity = opacity;
+    p.el.style.transform = `scale(${scale}) translate3d(0, ${ty.toFixed(1)}px, 0)`;
+
+    // Subtle parallax depth for the giant numeral (clamped within range)
+    if (p.numEl) {
+      const clampedDist = Math.max(-1, Math.min(1, dist));
+      const numTx = (clampedDist * 16).toFixed(1);
+      p.numEl.style.transform = `translate3d(${numTx}px, 0, 0)`;
+      p.numEl.style.setProperty('--bp-bar-scale', (0.2 + 0.8 * focus).toFixed(3));
+    }
+
+    // Editorial copy body stays anchored to its column (no horizontal drift)
+    if (p.bodyEl && p.bodyEl.style.transform) {
+      p.bodyEl.style.transform = '';
+    }
+
+    // Active reading state
+    if (focus > 0.6) {
+      p.el.classList.add('is-focused');
+    } else {
+      p.el.classList.remove('is-focused');
+    }
+  }
 
   // Engage (hide hint) once the user has meaningfully scrolled in.
   if (!engaged && progress > HINT_ENGAGE_AT) {
@@ -187,9 +336,33 @@ function deactivate() {
   if (track) {
     track.style.transform = '';
     track.style.willChange = '';
+    track.style.removeProperty('--bp-track-pad-right');
+  }
+  if (panelData.length) {
+    for (let i = 0; i < panelData.length; i++) {
+      const p = panelData[i];
+      p.el.style.opacity = '';
+      p.el.style.transform = '';
+      p.el.classList.remove('is-focused');
+      if (p.numEl) {
+        p.numEl.style.transform = '';
+        p.numEl.style.removeProperty('--bp-bar-scale');
+      }
+      if (p.bodyEl) {
+        p.bodyEl.style.transform = '';
+      }
+    }
+    panelData = [];
   }
   if (fill) fill.style.width = '';
-  if (pin) pin.classList.remove('bp-engaged', 'is-before', 'is-pinned', 'is-after');
+  if (pin) {
+    pin.classList.remove('bp-engaged', 'is-before', 'is-pinned', 'is-after');
+    pin.style.backgroundPosition = '';
+    pin.style.clipPath = '';
+  }
+  if (strokeWrapEl) strokeWrapEl.style.opacity = '0';
+  lastArch = -1;
+  setShaderScroll(0);
   pinState = '';
   if (section) section.style.removeProperty('--bp-extra');
 }

@@ -35,10 +35,13 @@ export function computeProgress(scroll, sectionTop, range) {
  * @param {number} progress       0..1
  * @param {number} trackWidth     total width of the flex track, px
  * @param {number} viewportWidth  visible width, px
+ * @param {number} [panRatio=0.88] fraction of scroll progress where the horizontal pan
+ *                                completes, creating a resting dwell with the panel centered
  * @returns {number} translateX in px (0 or negative)
  */
-export function computeTranslateX(progress, trackWidth, viewportWidth) {
+export function computeTranslateX(progress, trackWidth, viewportWidth, panRatio = 0.88) {
   const max = trackWidth - viewportWidth;
   if (max <= 0) return 0;
-  return -clamp01(progress) * max;
+  const panProgress = clamp01(progress / panRatio);
+  return -panProgress * max;
 }

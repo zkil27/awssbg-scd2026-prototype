@@ -102,19 +102,16 @@ export const tierMeta = {
   quantum: {
     index: '01',
     name: 'Quantum',
-    title: 'Quantum Sponsors',
-    lead: 'Keystone & headline sponsor leading the summit stage, keynote sessions, and nationwide builder network.'
+    title: 'Quantum Sponsors'
   },
   pro: {
     index: '02',
     name: 'Pro',
-    title: 'Pro Partners',
-    lead: 'Technology, platform, and community partners powering hands-on cloud tracks, certification pathways, and developer tooling.'
+    title: 'Pro Partners'
   },
   lite: {
     index: '03',
     name: 'Lite',
-    title: 'Lite Partners',
-    lead: 'Student builder chapters and campus collectives co-building the summit across CALABARZON and Greater Manila.'
+    title: 'Lite Partners'
   }
 };
