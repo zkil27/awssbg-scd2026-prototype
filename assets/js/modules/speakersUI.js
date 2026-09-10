@@ -11,6 +11,35 @@ const colors = ['blue', 'green', 'pink'];
 
 const FALLBACK_AVATAR = 'assets/images/south-summit-logo.svg';
 
+/**
+ * Re-trigger the spotlight "reveal moment" (the `.is-entering` choreography in
+ * styles.css) each time the active speaker changes. Removing → forcing a reflow
+ * → re-adding the class restarts the CSS animations even though the element is
+ * reused. Skipped entirely under reduced motion or on coarse-pointer / narrow
+ * viewports (the separate spotlight column is hidden below 1024px anyway), so
+ * those users just get an instant content swap. rAF-gated so a fast hover sweep
+ * across rows collapses to a single trigger on the final frame instead of
+ * strobing the card.
+ */
+let spotlightRaf = 0;
+function playSpotlightEntrance(card) {
+    if (!card) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+    if (reduceMotion || !finePointer || window.innerWidth < 1024) {
+        card.classList.remove('is-entering');
+        return;
+    }
+    if (spotlightRaf) cancelAnimationFrame(spotlightRaf);
+    card.classList.remove('is-entering');
+    // Force reflow so the animation can restart from frame 0.
+    void card.offsetWidth;
+    spotlightRaf = requestAnimationFrame(() => {
+        card.classList.add('is-entering');
+        spotlightRaf = 0;
+    });
+}
+
 let scrollLockY = 0;
 let isModalOpen = false;
 let closeSpeakerTimeout = null;
@@ -250,6 +279,101 @@ export function initSpeakers() {
         return 'blue';
     }
 
+    // ---------------------------------------------------------------------
+    // Editorial Gallery Wall (About page "The Lineup").
+    // Every speaker gets their own tile so no one is buried in a list; keynotes
+    // render as larger feature tiles for hierarchy. Tiles carry bg-tile-${color}
+    // so the shared modal (via handleCardClick delegated on #aboutRosterStage)
+    // themes correctly for all five brand colors. Replaces the old two-column
+    // list + single spotlight (that block below is now dormant — its ids no
+    // longer exist in the DOM).
+    // ---------------------------------------------------------------------
+    if (aboutRosterStage && aboutRosterStage.classList.contains('lineup-wall')) {
+        let wallCategory = 'all';
+
+        function getWallList() {
+            if (wallCategory === 'panels') return panels;
+            if (wallCategory === 'keynotes') return keynotes;
+            if (wallCategory === 'builders' || wallCategory === 'sessions') return builders;
+            // 'all' → Panels, then Keynotes, then Builders (matches pill order)
+            return [...panels, ...keynotes, ...builders];
+        }
+
+        const prefersReduced = () =>
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const finePointer = () =>
+            window.matchMedia('(pointer: fine)').matches;
+
+        function tileHTML(s) {
+            const color = getSpeakerColor(s);
+            const isKeynote = s.status === 'KEYNOTE';
+            const name = s.name || 'Speaker';
+            const role = s.role || 'Cloud Leader';
+            const status = s.status || 'SPEAKER';
+            const avatar = s.picUrl || FALLBACK_AVATAR;
+            const linkedin = s.linkedInUrl
+                || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
+            return `
+            <button type="button" class="lineup-tile bg-tile-${color}${isKeynote ? ' is-feature' : ''}"
+                    data-speaker-index="${s.originalIndex}"
+                    style="--tile-accent: var(--${color});"
+                    aria-label="${name}, ${status}. View bio.">
+              <img class="lt-photo" src="${avatar}" alt="${name}" loading="lazy" decoding="async"
+                   onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}';this.classList.add('lt-photo-fallback')">
+              <span class="lt-scrim" aria-hidden="true"></span>
+              <span class="sc-status-badge ${status.toLowerCase()}">${status}</span>
+              <a class="lt-li" href="${linkedin}" target="_blank" rel="noopener"
+                 onclick="event.stopPropagation()" title="LinkedIn Profile" aria-label="${name} on LinkedIn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
+                </svg>
+              </a>
+              <span class="lt-info">
+                <h3 class="lt-name">${name}</h3>
+                <span class="lt-role">${role}</span>
+              </span>
+            </button>`;
+        }
+
+        function playWallEntrance() {
+            if (prefersReduced() || !finePointer()) return;
+            const tiles = aboutRosterStage.querySelectorAll('.lineup-tile');
+            tiles.forEach((el, i) => {
+                el.style.setProperty('--lt-reveal-i', String(Math.min(i, 10)));
+                el.classList.add('tile-reveal');
+                el.addEventListener('animationend', () => {
+                    el.classList.remove('tile-reveal');
+                    el.style.removeProperty('--lt-reveal-i');
+                }, { once: true });
+            });
+        }
+
+        function renderWall() {
+            const list = getWallList();
+            aboutRosterStage.innerHTML = list.map(tileHTML).join('');
+            playWallEntrance();
+        }
+
+        function setWallCategory(cat) {
+            wallCategory = cat;
+            [pillAll, pillPanels, pillKeynotes, pillBuilders].forEach((p) => {
+                if (!p) return;
+                const isMatch = p.dataset.target === cat
+                    || ((cat === 'sessions' || cat === 'builders')
+                        && (p.dataset.target === 'sessions' || p.dataset.target === 'builders'));
+                p.classList.toggle('active', isMatch);
+            });
+            renderWall();
+        }
+
+        if (pillAll) pillAll.addEventListener('click', () => setWallCategory('all'));
+        if (pillPanels) pillPanels.addEventListener('click', () => setWallCategory('panels'));
+        if (pillKeynotes) pillKeynotes.addEventListener('click', () => setWallCategory('keynotes'));
+        if (pillBuilders) pillBuilders.addEventListener('click', () => setWallCategory(pillBuilders.dataset.target || 'sessions'));
+
+        renderWall();
+    }
+
     if (rosterList && spotlightCard) {
         let activeCategory = 'all';
         let activeSpeakerIndex = 0;
@@ -277,7 +401,7 @@ export function initSpeakers() {
             return groups.flatMap((g) => g.items);
         }
 
-        function renderSpotlight(speaker, displayIndex, totalCount) {
+        function renderSpotlight(speaker, displayIndex, totalCount, animate = false) {
             if (!spotlightCard || !speaker) return;
             const color = getSpeakerColor(speaker);
             const num = String(displayIndex + 1).padStart(2, '0');
@@ -322,9 +446,42 @@ export function initSpeakers() {
                 </div>
               </div>
             `;
+
+            // Replay the choreographed "spotlight moment" only on a committed
+            // selection (click / keyboard / filter / initial reveal). Hover is
+            // exploratory, so it does a quiet swap (content + accent-border
+            // morph) without the full entrance — this keeps a slow mouse sweep
+            // down the list from strobing the card.
+            if (animate) {
+                playSpotlightEntrance(spotlightCard);
+            } else {
+                spotlightCard.classList.remove('is-entering');
+            }
         }
 
-        function renderRoster() {
+        /**
+         * One-shot staggered entrance for the roster rows. Runs only when the
+         * list is (re)built by initial load or a category filter change — NOT
+         * on keyboard arrow nav (which also re-renders but should just move the
+         * highlight without re-sweeping the whole list). Each row gets a
+         * clamped per-row index (--ri-reveal-i) and the `.ri-reveal` one-shot
+         * class; the keyframe lives in styles.css. Skipped under reduced motion
+         * so those users see the list immediately.
+         */
+        function staggerRosterRows() {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const items = rosterList.querySelectorAll('.roster-item');
+            items.forEach((el, i) => {
+                el.style.setProperty('--ri-reveal-i', String(Math.min(i, 10)));
+                el.classList.add('ri-reveal');
+                el.addEventListener('animationend', () => {
+                    el.classList.remove('ri-reveal');
+                    el.style.removeProperty('--ri-reveal-i');
+                }, { once: true });
+            });
+        }
+
+        function renderRoster(stagger = false) {
             const groups = getFilteredGroups();
             const list = getFilteredList();
             if (list.length === 0) return;
@@ -417,7 +574,10 @@ export function initSpeakers() {
             });
 
             rosterList.innerHTML = html;
-            renderSpotlight(list[activeSpeakerIndex], activeSpeakerIndex, list.length);
+            if (stagger) staggerRosterRows();
+            // renderRoster is always a committed action (initial load, filter,
+            // or keyboard nav), so the spotlight plays its full moment.
+            renderSpotlight(list[activeSpeakerIndex], activeSpeakerIndex, list.length, true);
         }
 
         // Hover updates spotlight (desktop only)
@@ -499,7 +659,7 @@ export function initSpeakers() {
                     });
                 }
             } else {
-                // Desktop click: update active speaker & stage
+                // Desktop click: update active speaker & stage (committed → animate)
                 activeSpeakerIndex = displayIdx;
                 expandedMobileIndex = displayIdx;
                 const items = rosterList.querySelectorAll('.roster-item');
@@ -507,7 +667,7 @@ export function initSpeakers() {
                     el.classList.toggle('is-active', idx === activeSpeakerIndex);
                     el.setAttribute('aria-selected', idx === activeSpeakerIndex ? 'true' : 'false');
                 });
-                renderSpotlight(list[activeSpeakerIndex], activeSpeakerIndex, list.length);
+                renderSpotlight(list[activeSpeakerIndex], activeSpeakerIndex, list.length, true);
             }
         });
 
@@ -543,7 +703,7 @@ export function initSpeakers() {
                     p.classList.toggle('active', isMatch);
                 }
             });
-            renderRoster();
+            renderRoster(true); // re-stagger the freshly filtered rows
         }
 
         if (pillAll) pillAll.addEventListener('click', () => setCategory('all'));
@@ -551,7 +711,7 @@ export function initSpeakers() {
         if (pillKeynotes) pillKeynotes.addEventListener('click', () => setCategory('keynotes'));
         if (pillBuilders) pillBuilders.addEventListener('click', () => setCategory(pillBuilders.dataset.target || 'sessions'));
 
-        renderRoster();
+        renderRoster(true); // initial staggered entrance
     }
 
     // Render tiny inline cards for schedule on Home page
@@ -581,7 +741,7 @@ export function initSpeakers() {
         // Let the LinkedIn links do their thing without opening the modal
         if (e.target.closest('a') || e.target.closest('.spk-li') || e.target.closest('.sp-li-btn')) return;
 
-        const card = e.target.closest('.sp-btn-bio, .roster-spotlight-card, .ri-bloom-card, .asym-speaker-card, .speaker-card, .asym-hero-card, .asym-mini-card, .asym-poster-card, .speaker-inline-card');
+        const card = e.target.closest('.lineup-tile, .sp-btn-bio, .roster-spotlight-card, .ri-bloom-card, .asym-speaker-card, .speaker-card, .asym-hero-card, .asym-mini-card, .asym-poster-card, .speaker-inline-card');
         if (!card) return;
 
         const index = Number(card.dataset.speakerIndex);

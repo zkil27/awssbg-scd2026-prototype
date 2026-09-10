@@ -33,6 +33,7 @@ html.lenis {
 html {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  background-color: var(--bg);
 }
 
 html::-webkit-scrollbar,
@@ -5085,7 +5086,7 @@ html[data-theme="dark"] .tier-badge.light {
   border: 1px solid rgba(11, 21, 38, 0.16);
   border-radius: 14px;
   padding: 28px 30px;
-  box-shadow: 0 8px 24px rgba(167, 89, 255, 0.2);
+  box-shadow: none;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 
@@ -5093,12 +5094,12 @@ html[data-theme="dark"] .organizer-feature-card {
   background: var(--purple);
   color: #060e1a;
   border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 32px rgba(167, 89, 255, 0.25);
+  box-shadow: none;
 }
 
 .organizer-feature-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 34px rgba(167, 89, 255, 0.3);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
 }
 
 .organizer-media {
@@ -5274,55 +5275,48 @@ html[data-theme="dark"] .organizer-feature-card .organizer-meta-table {
   justify-content: space-between;
   gap: 14px;
   color: #060e1a;
+  box-shadow: none;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 
 .pro-card-editorial.color-green {
   background: var(--green);
-  box-shadow: 0 8px 24px rgba(7, 227, 131, 0.2);
 }
 
 .pro-card-editorial.color-teal {
   background: var(--teal);
-  box-shadow: 0 8px 24px rgba(10, 169, 143, 0.2);
 }
 
 .pro-card-editorial.color-blue {
   background: var(--blue);
-  box-shadow: 0 8px 24px rgba(68, 179, 254, 0.2);
 }
 
 .pro-card-editorial.color-purple {
   background: var(--purple);
-  box-shadow: 0 8px 24px rgba(167, 89, 255, 0.2);
 }
 
 html[data-theme="dark"] .pro-card-editorial.color-green {
   background: var(--green);
   color: #060e1a;
   border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 32px rgba(7, 227, 131, 0.25);
 }
 
 html[data-theme="dark"] .pro-card-editorial.color-teal {
   background: var(--teal);
   color: #060e1a;
   border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 32px rgba(10, 169, 143, 0.25);
 }
 
 html[data-theme="dark"] .pro-card-editorial.color-blue {
   background: var(--blue);
   color: #060e1a;
   border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 32px rgba(68, 179, 254, 0.25);
 }
 
 html[data-theme="dark"] .pro-card-editorial.color-purple {
   background: var(--purple);
   color: #060e1a;
   border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 32px rgba(167, 89, 255, 0.25);
 }
 
 .pro-card-editorial:hover {
@@ -5468,27 +5462,24 @@ html[data-theme="dark"] .pro-card-editorial.color-purple {
   position: relative;
   overflow: hidden;
   color: #060e1a;
+  box-shadow: none;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
 }
 
 .chapter-ledger-card.color-blue {
   background: var(--blue);
-  box-shadow: 0 6px 20px rgba(68, 179, 254, 0.2);
 }
 
 .chapter-ledger-card.color-pink {
   background: var(--pink);
-  box-shadow: 0 6px 20px rgba(254, 87, 234, 0.2);
 }
 
 .chapter-ledger-card.color-green {
   background: var(--green);
-  box-shadow: 0 6px 20px rgba(7, 227, 131, 0.2);
 }
 
 .chapter-ledger-card.color-purple {
   background: var(--purple);
-  box-shadow: 0 6px 20px rgba(167, 89, 255, 0.2);
 }
 
 html[data-theme="dark"] .chapter-ledger-card.color-blue { background: var(--blue); color: #060e1a; border-color: rgba(255, 255, 255, 0.15); }
@@ -7222,17 +7213,246 @@ footer {
   background: transparent;
 }
 
-/* Persistent HUD Header */
+/* The lineup wall wants far more horizontal room than the default ~1280px
+   .wrap, otherwise it leaves big empty side gutters inside the full-width
+   band. Widen just this section's container. */
+.about-roster-section .wrap {
+  max-width: min(1720px, 94vw);
+  padding-left: clamp(16px, 3vw, 40px);
+  padding-right: clamp(16px, 3vw, 40px);
+}
+
+/* ==========================================================================
+   EDITORIAL GALLERY WALL — "The Lineup"
+   Every speaker gets their own photo-forward tile (fixes "no individual
+   spotlight"); keynotes render as larger .is-feature tiles for hierarchy.
+   CSS-grid masonry via row/col spans + dense auto-flow (no JS layout math).
+   Tiles are dark glass with a full-bleed photo, so they read consistently in
+   both light and dark; per-track accent comes from --tile-accent (set in JS).
+   ========================================================================== */
+.lineup-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-auto-rows: 200px;
+  grid-auto-flow: dense;
+  gap: 16px;
+}
+
+.lineup-tile {
+  position: relative;
+  display: block;
+  grid-column: span 1;
+  grid-row: span 1;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--lineup-panel-border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--lineup-panel-bg);
+  color: var(--lineup-panel-ink);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition: transform var(--lineup-move-dur) var(--lineup-move-ease),
+              border-color var(--lineup-move-dur) var(--lineup-move-ease),
+              box-shadow var(--lineup-move-dur) var(--lineup-move-ease);
+}
+
+/* Keynotes become large feature tiles — a genuine spotlight moment. */
+.lineup-tile.is-feature {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.lineup-tile:hover {
+  transform: translateY(-3px);
+  border-color: var(--tile-accent, var(--lineup-panel-border-strong));
+  box-shadow: 0 12px 28px rgba(6, 14, 26, 0.35);
+}
+
+.lineup-tile:focus-visible {
+  outline: 2px solid var(--tile-accent, var(--lineup-panel-ink));
+  outline-offset: 2px;
+}
+
+/* Full-bleed portrait */
+.lineup-tile .lt-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  display: block;
+  z-index: 1;
+  transition: transform var(--lineup-move-dur) var(--lineup-move-ease);
+}
+.lineup-tile:hover .lt-photo {
+  transform: scale(1.04);
+}
+.lineup-tile .lt-photo-fallback {
+  object-fit: contain;
+  padding: 22%;
+  background: var(--lineup-ink);
+}
+
+/* Bottom scrim for text legibility (mirrors the spotlight card scrim) */
+.lineup-tile .lt-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(to top, rgba(6, 14, 26, 0.92) 0%, rgba(6, 14, 26, 0.55) 30%, transparent 62%);
+  pointer-events: none;
+}
+
+.lineup-tile .lt-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+}
+
+.lineup-tile .lt-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+  color: #ffffff;
+  margin: 0;
+  font-size: clamp(14px, 1.2vw, 17px);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.lineup-tile .lt-role {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.78);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Feature (keynote) tiles get more breathing room + larger name */
+.lineup-tile.is-feature .lt-info {
+  padding: 18px 20px;
+}
+.lineup-tile.is-feature .lt-name {
+  font-size: clamp(20px, 2vw, 30px);
+}
+.lineup-tile.is-feature .lt-role {
+  font-size: 12px;
+}
+
+/* Status badge (reuses the shared .sc-status-badge visual) positioned top-left */
+.lineup-tile .sc-status-badge {
+  top: 12px;
+  left: 12px;
+  right: auto;
+  z-index: 3;
+}
+
+/* LinkedIn glass button, top-right (mirrors .sp-li-btn) */
+.lineup-tile .lt-li {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 14, 26, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  color: #ffffff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity var(--lineup-move-dur-fast) var(--lineup-move-ease),
+              transform var(--lineup-move-dur-fast) var(--lineup-move-ease),
+              background-color var(--lineup-move-dur-fast) var(--lineup-move-ease),
+              border-color var(--lineup-move-dur-fast) var(--lineup-move-ease);
+}
+.lineup-tile:hover .lt-li,
+.lineup-tile:focus-within .lt-li {
+  opacity: 1;
+  transform: translateY(0);
+}
+.lineup-tile .lt-li:hover {
+  background: var(--tile-accent, var(--blue));
+  border-color: var(--tile-accent, var(--blue));
+}
+
+/* Responsive: shrink columns, then drop feature spans so tiles stack cleanly. */
+@media (max-width: 860px) {
+  .lineup-wall {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-auto-rows: 150px;
+    gap: 10px;
+  }
+}
+@media (max-width: 560px) {
+  .lineup-wall {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 150px;
+  }
+  /* No oversized feature spans on small screens — every tile equal so nothing
+     overflows or dominates the narrow viewport. */
+  .lineup-tile.is-feature {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+  .lineup-tile.is-feature .lt-name {
+    font-size: clamp(14px, 4vw, 18px);
+  }
+  /* Touch has no hover — keep the LinkedIn button visible. */
+  .lineup-tile .lt-li {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* One-shot staggered tile entrance (initial render + filter change). JS adds
+   .tile-reveal and sets a clamped --lt-reveal-i; a single restrained rise+fade,
+   transform/opacity only. Skipped under reduced motion (JS doesn't add the
+   class, and this media query is a belt-and-braces fallback). */
+@keyframes ltRevealIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.lineup-tile.tile-reveal {
+  animation: ltRevealIn var(--lineup-move-dur) var(--lineup-move-ease) both;
+  animation-delay: calc(var(--lt-reveal-i, 0) * var(--lineup-stagger));
+}
+@media (prefers-reduced-motion: reduce) {
+  .lineup-tile.tile-reveal { animation: none; }
+}
+
+/* Persistent HUD Header — text-only, sitting directly on the blue band (no
+   panel box). Text uses the band's dark ink so it reads like the outside
+   "The Lineup" label rather than a floating widget. */
 .about-roster-hud {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px clamp(16px, 3vw, 28px);
-  background: var(--bg-elevated);
-  border: 1px solid var(--line-strong);
-  border-radius: 12px;
-  margin-bottom: calc(var(--grid-size) * 0.6);
+  padding: 0 4px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  margin-bottom: calc(var(--grid-size) * 0.75);
 }
 
 .ar-hud-left {
@@ -7246,7 +7466,7 @@ footer {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: var(--orange-text, var(--orange));
+  color: var(--orange);
   text-transform: uppercase;
 }
 
@@ -7255,7 +7475,7 @@ footer {
   font-size: clamp(20px, 2.4vw, 28px);
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--text-strong);
+  color: var(--ink-block);
   line-height: 1.1;
   margin: 0;
 }
@@ -7267,39 +7487,103 @@ footer {
 
 .ar-category-pills {
   display: flex;
-  gap: 6px;
-  background: var(--surface, var(--bg-2));
-  padding: 4px;
-  border: 1px solid var(--line-strong);
-  border-radius: 8px;
+  gap: 8px;
+  background: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
 }
 
 .ar-pill {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
+  padding: 7px 15px;
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  background: transparent;
-  border: none;
-  border-radius: 6px;
+  font-weight: 700;
+  color: var(--ink-block);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(22, 28, 36, 0.14);
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: color var(--lineup-move-dur-fast) var(--lineup-move-ease),
+              background-color var(--lineup-move-dur-fast) var(--lineup-move-ease),
+              border-color var(--lineup-move-dur-fast) var(--lineup-move-ease),
+              transform var(--lineup-move-dur-fast) var(--lineup-move-ease),
+              box-shadow var(--lineup-move-dur-fast) var(--lineup-move-ease);
 }
 
 .ar-pill:hover {
-  color: var(--text-strong);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(22, 28, 36, 0.22);
+  transform: translateY(-1px);
 }
 
+/* Tactile press feedback */
+.ar-pill:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* Active pill fills with a solid brand color matching its track. */
 .ar-pill.active {
-  background: var(--bg);
-  color: var(--text-strong);
-  border: 1px solid var(--line-strong);
-  border-radius: 6px;
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(22, 28, 36, 0.18);
+}
+
+#pillAll.active {
+  background: var(--ink-block);
+}
+#pillKeynotes.active {
+  background: var(--orange);
+  color: var(--ink-block);
+}
+#pillPanels.active {
+  background: var(--purple);
+}
+#pillSessions.active {
+  background: var(--green);
+  color: var(--ink-block);
+}
+
+/* On the active (filled) pill the color dot would clash — hide it. */
+.ar-pill.active .pill-dot {
+  background: currentColor !important;
+  opacity: 0.85;
+}
+
+/* Category color dots inside the keynote/panel/session pills. Match the
+   group-header dots so the pill filters read as color-coded. */
+.ar-pill .pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex: none;
+  display: inline-block;
+}
+.ar-pill .pill-dot.orange { background: var(--orange); }
+.ar-pill .pill-dot.purple { background: var(--purple); }
+.ar-pill .pill-dot.green { background: var(--green); }
+
+/* Staggered entrance for the filter tabs — a quick, restrained rise+fade so
+   the tabs feel alive when the section reveals. Transform/opacity only. */
+@keyframes arPillIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ar-category-pills .ar-pill {
+  animation: arPillIn var(--lineup-move-dur) var(--lineup-move-ease) backwards;
+}
+.ar-category-pills .ar-pill:nth-child(1) { animation-delay: 40ms; }
+.ar-category-pills .ar-pill:nth-child(2) { animation-delay: 100ms; }
+.ar-category-pills .ar-pill:nth-child(3) { animation-delay: 160ms; }
+.ar-category-pills .ar-pill:nth-child(4) { animation-delay: 220ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ar-category-pills .ar-pill {
+    animation: none;
+  }
 }
 
 .ar-hud-right {
@@ -7310,25 +7594,29 @@ footer {
 .ar-hint {
   font-family: var(--font-mono);
   font-size: 12px;
-  color: var(--muted);
+  color: rgba(22, 28, 36, 0.62);
 }
 
-/* Kinetic Roster Stage: 2-Column Split */
+/* Kinetic Roster Stage: 2-Column Split.
+   Deliberately asymmetric, spotlight-heavy split so the active speaker's
+   card reads as the cinematic focal point and the list as a supporting index. */
 .about-roster-stage {
   display: grid;
-  grid-template-columns: minmax(0, 1.28fr) minmax(360px, 0.92fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(380px, 1fr);
   gap: calc(var(--grid-size) * 0.75);
   align-items: start;
 }
 
-/* Left Column: Typographic Roster List */
+/* Left Column: Typographic Roster List — glass panel on the blue band. */
 .roster-list-column {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--line-strong);
-  background: var(--bg-elevated);
+  border: 1px solid var(--lineup-panel-border);
+  background: var(--lineup-panel-bg);
   border-radius: 16px;
   overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .roster-group-header {
@@ -7336,15 +7624,15 @@ footer {
   align-items: center;
   justify-content: space-between;
   padding: 10px 22px;
-  background: var(--bg-2);
-  border-bottom: 1px solid var(--line-strong);
-  border-top: 1px solid var(--line-strong);
+  background: var(--lineup-panel-bg-soft);
+  border-bottom: 1px solid var(--lineup-panel-border);
+  border-top: 1px solid var(--lineup-panel-border);
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--lineup-panel-muted);
   user-select: none;
 }
 
@@ -7369,13 +7657,13 @@ footer {
 .rgh-dot.green { background: var(--green); }
 
 .rgh-title {
-  color: var(--text-strong);
+  color: var(--lineup-panel-ink);
   font-weight: 800;
 }
 
 .rgh-count {
   font-size: 10px;
-  color: var(--muted);
+  color: var(--lineup-panel-muted);
   font-family: var(--font-mono);
   letter-spacing: 0.05em;
 }
@@ -7384,8 +7672,8 @@ footer {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid var(--line-strong);
-  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--lineup-panel-border);
+  background: transparent;
   cursor: pointer;
   user-select: none;
   text-decoration: none;
@@ -7394,6 +7682,22 @@ footer {
 
 .roster-item:last-child {
   border-bottom: none;
+}
+
+/* One-shot staggered row entrance (initial load + filter changes only; see
+   staggerRosterRows() in speakersUI.js). Transform/opacity only so it doesn't
+   affect the stacked-card band's scrollHeight measurement. --ri-reveal-i is a
+   clamped per-row index set in JS. */
+@keyframes riRevealIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.roster-item.ri-reveal {
+  animation: riRevealIn var(--lineup-move-dur) var(--lineup-move-ease) both;
+  animation-delay: calc(var(--ri-reveal-i, 0) * var(--lineup-stagger));
+}
+@media (prefers-reduced-motion: reduce) {
+  .roster-item.ri-reveal { animation: none; }
 }
 
 .ri-row {
@@ -7410,12 +7714,12 @@ footer {
 .roster-item:hover .ri-row,
 .roster-item.is-active .ri-row,
 .roster-item:focus-visible .ri-row {
-  background-color: var(--bg-2);
+  background-color: var(--lineup-row-hover);
   padding-left: 30px;
 }
 
 .roster-item.is-active .ri-row {
-  background-color: var(--bg-3, rgba(255, 255, 255, 0.06));
+  background-color: var(--lineup-row-active);
 }
 
 .roster-item .ri-indicator {
@@ -7448,15 +7752,15 @@ footer {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: var(--muted);
+  color: var(--lineup-panel-muted);
 }
 
 .roster-item.is-active .ri-num {
-  color: var(--item-accent-text, var(--item-accent, var(--orange)));
+  color: var(--item-accent, var(--orange));
 }
 
 .roster-item.is-active .ri-track {
-  color: var(--item-accent-text, var(--item-accent, var(--orange)));
+  color: var(--item-accent, var(--orange));
 }
 
 .roster-item .ri-name {
@@ -7467,22 +7771,22 @@ footer {
   letter-spacing: -0.02em;
   line-height: 1.15;
   margin: 0;
-  color: var(--muted-2);
-  transition: color 0.2s ease;
+  color: var(--lineup-panel-faint);
+  transition: color var(--lineup-move-dur) var(--lineup-move-ease);
 }
 
 .roster-item:hover .ri-name {
-  color: var(--text-strong);
+  color: var(--lineup-panel-ink);
 }
 
 .roster-item.is-active .ri-name {
-  color: var(--item-accent-text, var(--item-accent));
+  color: var(--item-accent, var(--orange));
 }
 
 .roster-item .ri-role {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--muted);
+  color: var(--lineup-panel-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -7493,10 +7797,12 @@ footer {
 .roster-item .ri-arrow {
   font-family: var(--font-mono);
   font-size: 16px;
-  color: var(--muted);
+  color: var(--lineup-panel-muted);
   opacity: 0;
   transform: translateX(-8px);
-  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  transition: opacity var(--lineup-move-dur) var(--lineup-move-ease),
+              transform var(--lineup-move-dur) var(--lineup-move-ease),
+              color var(--lineup-move-dur) var(--lineup-move-ease);
   flex-shrink: 0;
   margin-left: 12px;
 }
@@ -7551,6 +7857,55 @@ footer {
 
 .roster-spotlight-card:hover .sp-img {
   transform: scale(1.02);
+}
+
+/* ---------------------------------------------------------------------------
+   Spotlight "reveal moment" — one choreographed gesture that replays each
+   time the active speaker changes (JS re-triggers `.is-entering`; see
+   speakersUI.js). Anti-slop discipline: the PHOTO leads, then the text
+   elements follow on a tight, single-direction offset. Transform + opacity
+   only (compositor-friendly, no reflow, no scrollHeight impact so the
+   stacked-card band height stays correct). Calm ease-out; no bounce.
+   --------------------------------------------------------------------------- */
+@keyframes spPhotoIn {
+  from { opacity: 0; transform: scale(1.06); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spTextIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.roster-spotlight-card.is-entering .sp-img {
+  animation: spPhotoIn 320ms var(--lineup-move-ease) both;
+}
+
+/* Text elements rise in sequence behind the photo. Delays are a tight
+   multiple of --lineup-stagger so the whole moment reads as one gesture
+   (~lands well under 500ms total), not five separate effects. */
+.roster-spotlight-card.is-entering .sp-meta-bar { animation: spTextIn var(--lineup-move-dur) var(--lineup-move-ease) both; animation-delay: calc(var(--lineup-stagger) * 1); }
+.roster-spotlight-card.is-entering .sp-badge    { animation: spTextIn var(--lineup-move-dur) var(--lineup-move-ease) both; animation-delay: calc(var(--lineup-stagger) * 2); }
+.roster-spotlight-card.is-entering .sp-name     { animation: spTextIn var(--lineup-move-dur) var(--lineup-move-ease) both; animation-delay: calc(var(--lineup-stagger) * 3); }
+.roster-spotlight-card.is-entering .sp-role     { animation: spTextIn var(--lineup-move-dur) var(--lineup-move-ease) both; animation-delay: calc(var(--lineup-stagger) * 4); }
+.roster-spotlight-card.is-entering .sp-actions  { animation: spTextIn var(--lineup-move-dur) var(--lineup-move-ease) both; animation-delay: calc(var(--lineup-stagger) * 5); }
+
+/* NOTE: A provisional two-digit index/count "roll" was prototyped here and
+   deliberately removed in the restraint pass — the numbers already ride in
+   with the .sp-meta-bar slide, so a second independent roll on the same bar
+   was redundant motion that read as decoration rather than pointing at the
+   speaker. Fewer, sharper moves. */
+
+/* Reduced motion: no choreography — the card just swaps instantly. */
+@media (prefers-reduced-motion: reduce) {
+  .roster-spotlight-card.is-entering .sp-img,
+  .roster-spotlight-card.is-entering .sp-meta-bar,
+  .roster-spotlight-card.is-entering .sp-badge,
+  .roster-spotlight-card.is-entering .sp-name,
+  .roster-spotlight-card.is-entering .sp-role,
+  .roster-spotlight-card.is-entering .sp-actions {
+    animation: none;
+  }
 }
 
 /* Dual gradient scrim for text contrast on top of full-bleed image */
@@ -7730,29 +8085,29 @@ footer {
   }
 
   .roster-item {
-    border-bottom: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--lineup-panel-border);
   }
 
   /* In mobile view: unclicked speaker name is solid (not faded out) */
   .roster-item .ri-name {
-    color: var(--text-strong);
+    color: var(--lineup-panel-ink);
   }
 
   .roster-item:hover .ri-name {
-    color: var(--text-strong);
+    color: var(--lineup-panel-ink);
   }
 
   /* When clicked/active: speaker name becomes colored instead (purple, blue, green, pink, orange) */
   .roster-item.is-active .ri-name,
   .roster-item.is-expanded-mobile .ri-name {
-    color: var(--item-accent-text, var(--item-accent)) !important;
+    color: var(--item-accent, var(--orange)) !important;
   }
 
   .roster-item.is-active .ri-num,
   .roster-item.is-expanded-mobile .ri-num,
   .roster-item.is-active .ri-track,
   .roster-item.is-expanded-mobile .ri-track {
-    color: var(--item-accent-text, var(--item-accent)) !important;
+    color: var(--item-accent, var(--orange)) !important;
   }
 
   .ri-row {
@@ -7762,7 +8117,7 @@ footer {
   .roster-item.is-expanded-mobile .ri-arrow {
     transform: rotate(90deg) !important;
     opacity: 1 !important;
-    color: var(--item-accent-text, var(--item-accent, var(--orange))) !important;
+    color: var(--item-accent, var(--orange)) !important;
   }
 
   /* In-Line Bloom Stage expanded on mobile */
@@ -8189,9 +8544,17 @@ html[data-theme="dark"] .director-filter-pill.active {
    - Persistent UI (navbar, assistive pod) stays pinned
    ========================================================= */
 
-/* Backdrop canvas seen behind tumbling pages */
+/* Backdrop canvas seen behind tumbling pages (responsive to light & dark modes) */
 ::view-transition {
-  background-color: var(--ink-block, #161C24);
+  background-color: var(--page-transition-bg, var(--bg));
+}
+
+html[data-theme="light"]::view-transition {
+  background-color: var(--page-transition-bg, #F0F2F6);
+}
+
+html[data-theme="dark"]::view-transition {
+  background-color: var(--page-transition-bg, #161C24);
 }
 
 /* 1. Persistent UI Chrome Isolation & Overlays */

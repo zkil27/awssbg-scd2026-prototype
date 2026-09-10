@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="theme.css?v=20260908-nav-h-fix">
-  <link rel="stylesheet" href="styles.css?v=20260911-smooth-vt-fix">
+  <link rel="stylesheet" href="theme.css?v=20260911-vt-theme">
+  <link rel="stylesheet" href="styles.css?v=20260911-vt-theme">
   <script>
     /* Apply saved theme before paint to avoid flash */
     (function () {
@@ -981,10 +981,6 @@
             <div class="wrap">
               <!-- Persistent HUD / Stage Header -->
               <header class="about-roster-hud">
-                <div class="ar-hud-left">
-                  <span class="ar-hud-eyebrow">Speakers Lineup</span>
-                  <h2 class="ar-hud-title">The Complete Lineup</h2>
-                </div>
                 <div class="ar-hud-center">
                   <nav class="ar-category-pills" aria-label="Speaker categories">
                     <button type="button" class="ar-pill active" data-target="all" id="pillAll">
@@ -1002,20 +998,15 @@
                   </nav>
                 </div>
                 <div class="ar-hud-right">
-                  <span class="ar-hint font-mono text-xs">Hover or select to spotlight</span>
+                  <span class="ar-hint font-mono text-xs">Every speaker, their own spotlight</span>
                 </div>
               </header>
 
-              <!-- Kinetic Roster Stage -->
-              <div class="about-roster-stage" id="aboutRosterStage">
-                <div class="roster-list-column" id="rosterListColumn" role="tablist" aria-label="Summit Lineup">
-                  <!-- Rendered by JS -->
-                </div>
-                <div class="roster-spotlight-column">
-                  <div class="roster-spotlight-card" id="rosterSpotlightCard" aria-live="polite">
-                    <!-- Rendered by JS -->
-                  </div>
-                </div>
+              <!-- Editorial Gallery Wall: every speaker gets their own tile.
+                   Kept as #aboutRosterStage so the existing handleCardClick
+                   modal delegation (see speakersUI.js) picks up the tiles. -->
+              <div class="lineup-wall" id="aboutRosterStage" role="list" aria-label="Summit Lineup">
+                <!-- Tiles rendered by JS (renderWall) -->
               </div>
             </div>
           </section>
