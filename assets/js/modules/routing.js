@@ -41,17 +41,23 @@ export function updateNavState() {
     updateHeroNavState();
 }
 
-export function showPage(name, record = true) {
-    //toggle active page container
+let isNavigating = false;
+let currentTransition = null;
+
+/**
+ * Perform the synchronous DOM update for a page switch.
+ */
+function switchPageDOM(name, record = true) {
+    // toggle active page container
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
-    const targetPage = document.getElementById('page-' + name)
+    const targetPage = document.getElementById('page-' + name);
     if (targetPage) targetPage.classList.add('active');
 
-    //update data-page attribute
+    // update data-page attribute
     document.documentElement.setAttribute('data-page', name);
 
-    //update active nav button indicators
+    // update active nav button indicators
     document.querySelectorAll('.navbtn, .dock-tab, .assistive-hud-item').forEach(b => {
         const on = b.dataset.page === name;
         b.classList.toggle('active', on);
@@ -59,31 +65,88 @@ export function showPage(name, record = true) {
         else b.removeAttribute('aria-current');
     });
 
-    //keep the Android back button inside the site
+    // keep the Android back button inside the site
     if (record) {
         history.pushState({ page: name }, '', name === 'home' ? location.pathname + location.search : '#' + name);
     }
 
-    //merch came back stuck on the last opened card
+    // merch came back stuck on the last opened card
     if (window.clearMerchFocus) window.clearMerchFocus();
 
-    //Scroll to top instantly
+    // Scroll to top instantly inside the transition update callback so the incoming snapshot is at top
+    if (window.__lenis) {
+        window.__lenis.scrollTo(0, { immediate: true });
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
     updateNavState();
+}
 
+export function showPage(name, record = true, animate = true) {
+    if (isNavigating) return currentTransition;
+
+    const currentPage = document.documentElement.getAttribute('data-page') || 'home';
+    if (name === currentPage) {
+        if (window.__lenis) {
+            window.__lenis.scrollTo(0);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        return null;
+    }
+
+    const supportsVT = typeof document.startViewTransition === 'function';
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!supportsVT || prefersReducedMotion || !animate) {
+        switchPageDOM(name, record);
+        return null;
+    }
+
+    isNavigating = true;
+    document.documentElement.classList.add('in-page-transition');
+
+    try {
+        currentTransition = document.startViewTransition(() => {
+            switchPageDOM(name, record);
+        });
+
+        const cleanup = () => {
+            isNavigating = false;
+            currentTransition = null;
+            document.documentElement.classList.remove('in-page-transition');
+        };
+
+        currentTransition.finished.then(cleanup, cleanup);
+        return currentTransition;
+    } catch (e) {
+        console.warn('[routing] View Transition failed; falling back to instant switch.', e);
+        isNavigating = false;
+        currentTransition = null;
+        document.documentElement.classList.remove('in-page-transition');
+        switchPageDOM(name, record);
+        return null;
+    }
 }
 
 export function initRouter() {
     //assign variables
     nav = document.getElementById('siteNav');
 
-    const initial = PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
+    function parseRoute() {
+        const raw = (location.hash || '').replace(/^#/, '').toLowerCase();
+        if (raw.startsWith('about')) return 'about';
+        if (raw.startsWith('merch')) return 'merch';
+        return PAGES.includes(raw) ? raw : 'home';
+    }
+
+    const initial = parseRoute();
     document.documentElement.setAttribute('data-page', initial);
 
     window.addEventListener('popstate', (e) => {
-        const page = (e.state && e.state.page) || (PAGES.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home');
+        const page = (e.state && e.state.page) || parseRoute();
         if (window.closeSpeakerModal) window.closeSpeakerModal();
-        showPage(page, false);
+        if (window.showPage) window.showPage(page, false);
+        else showPage(page, false);
     });
 
     window.addEventListener('scroll', updateNavState, { passive: true });
@@ -91,20 +154,23 @@ export function initRouter() {
     updateNavState();
     initNavAutoHide();
 
-
-    // Only listen to actual buttons/links with data-page (NOT <html>)
-    document.querySelectorAll('button[data-page], a[data-page]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const page = btn.getAttribute('data-page');
-            if (page) {
-                e.preventDefault();
-                showPage(page);
-            }
-        });
+    // Delegated click handler for all [data-page] elements (nav, footer, brand, hero CTA, HUD)
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-page]');
+        if (!target) return;
+        const page = target.getAttribute('data-page');
+        if (page && PAGES.includes(page)) {
+            e.preventDefault();
+            if (window.showPage) window.showPage(page);
+            else showPage(page);
+        }
     });
 
     history.replaceState({ page: initial }, '', location.href);
-    if (initial !== 'home') showPage(initial, false);
+    if (initial !== 'home') {
+        if (window.showPage) window.showPage(initial, false, false);
+        else showPage(initial, false, false);
+    }
 
     window.showPage = showPage;
 }

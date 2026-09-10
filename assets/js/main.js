@@ -19,6 +19,7 @@ import { initScrollReveal } from './modules/scrollReveal.js';
 import { initBlueprintScroll } from './modules/blueprintScroll.js';
 import { initBlueprintShader } from './modules/blueprintShader.js';
 import { initVenueUI } from './modules/venueUI.js';
+import { initStackedCards } from './modules/stackedCards.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
@@ -44,11 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initComputeGrid();
     initBlueprintShader();
 
-    // 4. Scroll-triggered entrance motion — last, so the cards injected by the
+    // 4. Stacked cards on About page
+    initStackedCards();
+
+    // 5. Scroll-triggered entrance motion — last, so the cards injected by the
     //    init*UI() calls above already exist to be tagged and observed.
     initScrollReveal();
 
-    // 5. Blueprint horizontal-pan — after content injection (schedule speaker
+    // 6. Blueprint horizontal-pan — after content injection (schedule speaker
     //    chips affect the track width) and after Lenis is set up, since the pan
     //    reads Lenis's smoothed scroll. No-ops on touch / reduced-motion.
     initBlueprintScroll();

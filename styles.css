@@ -290,6 +290,7 @@ header.nav {
   left: 0;
   right: 0;
   width: 100%;
+  height: var(--nav-h);
   box-sizing: border-box;
   z-index: 200;
   background: var(--nav-bg);
@@ -348,7 +349,7 @@ html[data-theme="dark"] header.nav.scrolled {
 /* Fallback for touch-only devices without hover capability */
 @media (hover: none) {
   header.nav {
-    position: sticky;
+    position: fixed;
     transform: none;
     opacity: 1;
     pointer-events: auto;
@@ -368,7 +369,8 @@ html[data-theme="dark"] header.nav.scrolled {
 .nav-inner {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 14px 40px;
+  height: 100%;
+  padding: 0 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6194,7 +6196,7 @@ footer {
 }
 
 @media (max-width: 980px) {
-  .nav-inner { justify-content: space-between; padding: 12px 20px; }
+  .nav-inner { justify-content: space-between; padding: 0 20px; }
   .brand-text { white-space: normal; }
   .brand-text span { white-space: normal; overflow: visible; text-overflow: clip; }
   
@@ -6277,7 +6279,7 @@ footer {
   .organizer-logo-frame { width: 88px; height: 88px; }
   .chapter-ledger-grid { grid-template-columns: 1fr; }
   .venue-photo-dossier, .venue-transit-guide, .venue-actions { padding: 18px 20px; }
-  .nav-inner { padding: 14px 16px; }
+  .nav-inner { padding: 0 16px; }
 
   /* Single column footer + no space-between gaps on the tiniest screens. */
   .foot-grid { grid-template-columns: 1fr; gap: 22px; }
@@ -6509,6 +6511,704 @@ footer {
 .about-bg-boxes .box-right-1 { top: calc(var(--grid-size) * 4); right: 0; }
 .about-bg-boxes .box-right-2 { top: calc(var(--grid-size) * 12); right: var(--grid-size); }
 .about-bg-boxes .box-right-3 { bottom: calc(var(--grid-size) * 4); right: 0; }
+
+/* ==========================================================================
+   ABOUT PAGE: STACKED CARD DECK WEB ANIMATION LAYOUT
+   Olivier Larose-inspired Smooth Scroll Sticky Cards with Parallax Depth
+   ========================================================================== */
+
+/* About Page Container */
+#page-about {
+  padding-top: var(--nav-h);
+  min-height: auto;
+  position: relative;
+  padding-bottom: 0;
+}
+
+/* ==========================================================================
+   TRUE SERIOUS.BUSINESS FULL-BLEED STACKED BANDS (ABOUT PAGE)
+   ========================================================================== */
+
+/* Full-Bleed Stacked Deck Container */
+.about-stacked-deck {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-bottom: 0;
+}
+
+/* ── Click-to-Expand Stacked Band Accordion ─────────────────────────────── */
+/*
+ * Each .sb-band has:
+ *   .sb-card-tab   — always-visible clickable header strip
+ *   .sb-card-body  — the full original section content, hidden when collapsed
+ *
+ * Clicking the tab expands the band to show .sb-card-body.
+ * Only one band is active (.is-active) at a time.
+ */
+.sb-band {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  border-top: 2px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  /* transitions managed in the animation block below */
+}
+
+/* The always-visible clickable tab strip */
+.sb-card-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 clamp(24px, 5.5vw, 84px);
+  min-height: 64px;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.sb-card-tab:hover {
+  background-color: rgba(0, 0, 0, 0.035);
+}
+
+.sb-card-tab:focus-visible {
+  outline: 2px solid var(--sbg-orange, #ff9900);
+  outline-offset: -2px;
+}
+
+.sb-card-tab-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.sb-card-state-pill {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.08);
+  color: inherit;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.sb-band.is-active .sb-card-state-pill {
+  background: rgba(0, 0, 0, 0.13);
+}
+
+.sb-card-chevron {
+  font-size: 1.4rem;
+  line-height: 1;
+  opacity: 0.55;
+  margin-left: auto;
+  display: inline-block;
+  flex-shrink: 0;
+  /* transition managed in animation block below */
+}
+
+.sb-band.is-active .sb-card-chevron {
+  transform: rotate(90deg);
+  opacity: 0.85;
+}
+
+.sb-card-label {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+  color: inherit;
+  /* transition managed in animation block below */
+}
+
+
+/* ── Stacked Deck: Unified High-Fidelity Accordion Animation ───────────── */
+/*
+ * Duration: 0.7s with gentle deceleration curve cubic-bezier(0.22, 1, 0.36, 1).
+ * In all-collapsed mode:
+ *   - Deck fills 100% viewport below navbar (calc(100vh - var(--nav-h))).
+ *   - Each band and tab takes 25% height with prominent display typography.
+ * On click:
+ *   - Inactive bands smoothly compress to 64px strips.
+ *   - Active band smoothly expands to fit its natural content.
+ *   - Card body height smoothly expands while opacity fades in with a 0.12s delay.
+ *   - Chevron rotates 90 degrees and labels smoothly scale.
+ * Zero gap to navbar and footer is maintained at all times.
+ */
+
+.about-stacked-deck {
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Each band */
+.sb-band {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s ease;
+}
+
+/* Tab header */
+.sb-card-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(28px, 6vw, 84px);
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.2s ease;
+}
+
+/* Typography */
+.sb-card-label {
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  margin: 0;
+  color: inherit;
+  transition: font-size 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              letter-spacing 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Chevron */
+.sb-card-chevron {
+  font-size: clamp(1.4rem, 1.8vw, 1.6rem);
+  line-height: 1;
+  opacity: 0.55;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              font-size 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s ease;
+}
+
+/* Card Body */
+.sb-card-body {
+  display: block;
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.28s ease 0s;
+  pointer-events: none;
+}
+
+/* ── All Cards Collapsed: Full-Screen 4-Band Display ───────────────────── */
+.about-stacked-deck.all-collapsed {
+  height: calc(100vh - var(--nav-h));
+  height: calc(100dvh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.about-stacked-deck.all-collapsed .sb-band {
+  flex: 1 1 0%;
+  min-height: 0;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.about-stacked-deck.all-collapsed .sb-card-tab {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.about-stacked-deck.all-collapsed .sb-card-label {
+  font-size: clamp(2rem, 4.2vw, 3.8rem);
+}
+
+.about-stacked-deck.all-collapsed .sb-card-chevron {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  opacity: 0.5;
+  transform: rotate(0deg);
+}
+
+.about-stacked-deck.all-collapsed .sb-band:hover .sb-card-chevron {
+  opacity: 0.95;
+  transform: translateX(10px);
+}
+
+.about-stacked-deck.all-collapsed .sb-card-body {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ── Expanded States ───────────────────────────────────────────────────── */
+.about-stacked-deck:not(.all-collapsed) .sb-band:not(.is-active) {
+  height: 64px;
+}
+
+.about-stacked-deck:not(.all-collapsed) .sb-band:not(.is-active) .sb-card-tab {
+  height: 64px;
+}
+
+.about-stacked-deck:not(.all-collapsed) .sb-band:not(.is-active) .sb-card-label {
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+}
+
+.about-stacked-deck:not(.all-collapsed) .sb-band:not(.is-active) .sb-card-chevron {
+  transform: rotate(0deg);
+  opacity: 0.6;
+  font-size: clamp(1.4rem, 1.8vw, 1.6rem);
+}
+
+.about-stacked-deck:not(.all-collapsed) .sb-band.is-active .sb-card-tab {
+  height: 64px;
+}
+
+.about-stacked-deck:not(.all-collapsed) .sb-band.is-active .sb-card-label {
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+}
+
+.about-stacked-deck:not(.all-collapsed) .sb-band.is-active .sb-card-chevron {
+  transform: rotate(90deg);
+  opacity: 0.85;
+  font-size: clamp(1.5rem, 2vw, 1.8rem);
+}
+
+.sb-band.is-active {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+}
+
+.about-stacked-deck:not(.all-collapsed) .sb-band.is-active .sb-card-body {
+  opacity: 1;
+  pointer-events: auto;
+  transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.45s ease 0.12s;
+}
+
+/* SCD Signature Logo Colorways (Matching Brand Chip)
+ * Card 0 (Top / 12 o'clock): Purple  #AD5CFD
+ * Card 1 (Right / 3 o'clock): Blue   #42B2FE
+ * Card 2 (Bottom / 6 o'clock): Green #00E681
+ * Card 3 (Left / 9 o'clock): Pink    #FE55EB
+ */
+.sb-band-purple {
+  background-color: #AD5CFD;
+  color: #18181b;
+  border-top-color: #8b3df5;
+}
+
+.sb-band-blue {
+  background-color: #42B2FE;
+  color: #18181b;
+  border-top-color: #0284c7;
+}
+
+.sb-band-green {
+  background-color: #00E681;
+  color: #18181b;
+  border-top-color: #059669;
+}
+
+.sb-band-pink {
+  background-color: #FE55EB;
+  color: #18181b;
+  border-top-color: #db2777;
+}
+
+/* Backward compatibility aliases */
+.sb-band-lilac {
+  background-color: #AD5CFD;
+  color: #18181b;
+  border-top-color: #8b3df5;
+}
+
+.sb-band-white {
+  background-color: #42B2FE;
+  color: #18181b;
+  border-top-color: #0284c7;
+}
+
+.sb-band-yellow {
+  background-color: #00E681;
+  color: #18181b;
+  border-top-color: #059669;
+}
+
+.sb-band-dark {
+  background-color: #FE55EB;
+  color: #18181b;
+  border-top-color: #db2777;
+}
+
+/* Band Inner Layout */
+.sb-band-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Giant Display Title */
+.sb-band-header {
+  margin-bottom: clamp(24px, 3.2vw, 40px);
+}
+
+/* Collapsed tab: smaller title */
+.sb-band .sb-band-title {
+  font-family: var(--font-display, var(--font-sans));
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: font-size 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active (expanded) band: full display size */
+.sb-band.is-active .sb-band-title {
+  font-size: clamp(3rem, 5.8vw, 5.8rem);
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  white-space: normal;
+}
+
+/* 3-Column Content Grid Under Headline */
+.sb-band-content {
+  display: grid;
+  grid-template-columns: 1.15fr 0.95fr 1.6fr;
+  gap: clamp(24px, 3.5vw, 52px);
+  align-items: start;
+}
+
+/* Col 1: Lead Story */
+.sb-col-story {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sb-story-lead {
+  font-size: clamp(15px, 1.1vw, 17px);
+  line-height: 1.5;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.92;
+}
+
+.sb-story-sub {
+  font-size: 13.5px;
+  line-height: 1.45;
+  opacity: 0.75;
+  margin: 0;
+}
+
+/* Col 2: Deliverables List */
+.sb-col-deliv {
+  display: flex;
+  flex-direction: column;
+}
+
+.sb-deliv-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sb-deliv-list li {
+  font-size: clamp(13px, 0.95vw, 15px);
+  font-weight: 500;
+  line-height: 1.35;
+  opacity: 0.88;
+}
+
+/* Col 3: Showcase Box */
+.sb-col-showcase {
+  width: 100%;
+}
+
+.sb-showcase-box {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(8px);
+}
+
+.sb-band-white .sb-showcase-box {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.sb-band-dark .sb-showcase-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+/* Manifesto Outcome Tiles */
+.sb-manifesto-outcomes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.sb-outcome-tile {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.sbo-num {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #7c3aed;
+}
+
+.sbo-content h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: #18181b;
+}
+
+.sbo-content p {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #27272a;
+  margin: 0;
+  opacity: 0.88;
+}
+
+/* Lineup Stage Inside Band */
+.sb-lineup-stage .about-roster-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+#card-lineup .roster-list-column {
+  max-height: none;
+  overflow: visible;
+}
+
+#card-lineup .roster-item .ri-name {
+  font-size: clamp(15px, 1.3vw, 19px);
+}
+
+#card-lineup .roster-spotlight-card {
+  height: clamp(520px, 78vh, 680px);
+  min-height: 480px;
+  max-height: 720px;
+}
+
+/* Chapters Grid Inside Band */
+#card-chapters .chapter-grid {
+  max-height: none;
+  overflow: visible;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  padding-right: 0;
+}
+
+#card-chapters .chapter-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  color: #18181b;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+#card-chapters .chapter-card h5 {
+  color: #18181b;
+}
+#card-chapters .chapter-card span {
+  color: #52525b;
+}
+
+/* Directors Grid Inside Band */
+#card-directors .directors-filter-wrapper {
+  margin-bottom: 12px;
+}
+
+#card-directors .directors-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+#card-directors .director-filter-pill {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #18181b;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#card-directors .director-filter-pill:hover {
+  background: #ffffff;
+  color: #18181b;
+}
+
+#card-directors .director-filter-pill.active {
+  background: #18181b;
+  border-color: #18181b;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+#card-directors .directors-grid {
+  max-height: none;
+  overflow: visible;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  padding-right: 0;
+}
+
+#card-directors .director-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  color: #18181b;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#card-directors .director-card:hover {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+#card-directors .director-card h4,
+#card-directors .director-card .director-name {
+  color: #18181b;
+}
+#card-directors .director-card .director-role {
+  color: #52525b;
+}
+
+/* Colorway Section Background & Typography Polish */
+#card-manifesto .section-light {
+  background: transparent;
+}
+#card-manifesto .about-grid > div,
+#card-manifesto .about-grid > ul {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+#card-manifesto .about-lead {
+  color: #18181b;
+}
+#card-manifesto .about-lead + p {
+  color: #3f3f46;
+}
+#card-manifesto .about-outcomes li {
+  color: #3f3f46;
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+#card-manifesto .about-outcomes b {
+  color: #18181b;
+}
+#card-manifesto .section-title,
+#card-chapters .section-title,
+#card-directors .section-title {
+  color: #18181b;
+}
+#card-manifesto .eyebrow,
+#card-chapters .eyebrow,
+#card-directors .eyebrow {
+  color: rgba(24, 24, 27, 0.72) !important;
+}
+#card-chapters .section-p,
+#card-directors .section-p {
+  color: rgba(24, 24, 27, 0.85) !important;
+}
+
+/* Tablet Responsiveness */
+@media (max-width: 1024px) {
+  .sb-card-tab {
+    padding: 0 24px;
+    min-height: 56px;
+  }
+
+  #card-chapters .chapter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  #card-directors .directors-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .sb-card-tab {
+    padding: 0 16px;
+    min-height: 52px;
+  }
+
+  #card-chapters .chapter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #card-directors .directors-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Reduced Motion Safety */
+@media (prefers-reduced-motion: reduce) {
+  .sb-card-body {
+    transition: none !important;
+  }
+  .sb-card-tab::after {
+    transition: none !important;
+  }
+}
+
+
+
 
 /* ==========================================================================
    ABOUT PAGE: CLEAN MINIMAL KINETIC ROSTER
@@ -7479,5 +8179,116 @@ html[data-theme="dark"] .director-filter-pill.active {
     padding: 20px 16px 16px;
   }
 }
+
+/* =========================================================
+   PAGE VIEW TRANSITIONS (Native View Transition API)
+   Zero-library buttery transitions inspired by CodeGrid
+   and Paul Kalkbrenner:
+   - Outgoing page tilts, shrinks, and tumbles away
+   - Incoming page expands from bottom corner via hardware-accelerated clip-path
+   - Persistent UI (navbar, assistive pod) stays pinned
+   ========================================================= */
+
+/* Backdrop canvas seen behind tumbling pages */
+::view-transition {
+  background-color: var(--ink-block, #161C24);
+}
+
+/* 1. Persistent UI Chrome Isolation & Overlays */
+#siteNav {
+  view-transition-name: navbar;
+}
+
+#assistivePod {
+  view-transition-name: assistive-pod;
+}
+
+#splashScreen {
+  view-transition-name: none !important;
+}
+
+#splashScreen.is-hidden {
+  display: none !important;
+}
+
+::view-transition-group(navbar),
+::view-transition-group(assistive-pod) {
+  animation: none;
+  z-index: 1000;
+}
+
+/* Freeze transition group geometry so root bounds do not jump or resize */
+::view-transition-group(root) {
+  animation: none;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Prevent pointer events and layout shifts while transitioning */
+html.in-page-transition {
+  pointer-events: none;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+/* 2. Keyframes (Tuned for silky 60fps responsiveness) */
+
+/* Outgoing page: eases back, scales down, fades, then tumbles away with sleek tilt */
+@keyframes page-out {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  35% {
+    transform: translate3d(-3%, 1%, 0) scale(0.92) rotate(-1.5deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(-95%, 15%, 0) scale(0.7) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+/* Incoming page: starts offset and collapsed in corner, wipes open across viewport */
+@keyframes page-in {
+  0% {
+    transform: translate3d(6%, 5%, 0) scale(0.97);
+    clip-path: inset(70% 0 0 70%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    clip-path: inset(0% 0 0 0%);
+    opacity: 1;
+  }
+}
+
+/* 3. Transition Animation Rules (Fast, buttery timing ~0.55s) */
+::view-transition-old(root) {
+  animation: 0.55s cubic-bezier(0.7, 0, 0.2, 1) both page-out;
+  mix-blend-mode: normal;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+::view-transition-new(root) {
+  animation: 0.5s cubic-bezier(0.7, 0, 0.2, 1) 0.07s both page-in;
+  mix-blend-mode: normal;
+  transform-origin: bottom right;
+  will-change: transform, opacity, clip-path;
+}
+
+/* 4. Accessibility & Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 
 

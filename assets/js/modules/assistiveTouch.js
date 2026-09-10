@@ -252,16 +252,11 @@ export function initAssistiveTouch() {
         });
     }
 
-    // HUD page items
+    // HUD page items (routing is handled globally by routing.js)
     hudItems = document.querySelectorAll('.assistive-hud-item[data-page]');
     hudItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const page = item.dataset.page;
-            if (page) {
-                showPage(page);
-                closeAssistiveHUD();
-            }
+        item.addEventListener('click', () => {
+            closeAssistiveHUD();
         });
     });
 

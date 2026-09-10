@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="theme.css?v=20260908-nav-h-fix">
-  <link rel="stylesheet" href="styles.css?v=20260910-clean-curve">
+  <link rel="stylesheet" href="styles.css?v=20260911-smooth-vt-fix">
   <script>
     /* Apply saved theme before paint to avoid flash */
     (function () {
@@ -45,14 +45,14 @@
 
   <header class="nav nav-in-hero" id="siteNav">
     <div class="nav-inner">
-      <button class="brand" onclick="showPage('home')">
+      <button class="brand" data-page="home">
         <img class="chip" src="assets/images/south-summit-logo.svg" alt="AWS Student Community Day: South Summit 2026">
         <div class="brand-text">AWS SCD: SOUTH SUMMIT 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
       </button>
       <nav class="links">
-        <button class="navbtn active" data-page="home" onclick="showPage('home')">Home</button>
-        <button class="navbtn" data-page="about" onclick="showPage('about')">About</button>
-        <button class="navbtn" data-page="merch" onclick="showPage('merch')">Merch</button>
+        <button class="navbtn active" data-page="home">Home</button>
+        <button class="navbtn" data-page="about">About</button>
+        <button class="navbtn" data-page="merch">Merch</button>
       </nav>
       <div class="nav-cta">
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode"
@@ -149,7 +149,7 @@
             <p class="ed-body-lead">A full-day, student-led summit bringing builders, student leaders, and tech advocates from CALABARZON together to explore cloud computing and AI — and to build the confidence to lead with it.</p>
             <div class="hero-actions ed-actions">
               <a class="btn btn-primary" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">Register Now!</a>
-              <button class="btn btn-ghost" onclick="showPage('merch')">Check Out Merch</button>
+              <button class="btn btn-ghost" data-page="merch">Check Out Merch</button>
             </div>
           </div>
 
@@ -490,7 +490,7 @@
                 <button type="button" class="bp-focus-btn" id="btnFocusSchedule" aria-label="Open full program flow in focus mode">
                   <span class="bp-focus-dot" aria-hidden="true"></span>
                   <span class="bp-focus-text">Full Screen Focus</span>
-                  <span class="bp-focus-icon" aria-hidden="true">⤢</span>
+                  <span class="bp-focus-icon" aria-hidden="true">â¤¢</span>
                 </button>
               </header>
 
@@ -629,7 +629,7 @@
                      data-tag="MAIN AUDITORIUM"
                      data-tag-class="chip-primary"
                      data-capacity="500+ CAPACITY"
-                     data-coords="14°18'46.9&quot;N · 121°04'44.6&quot;E"
+                     data-coords="14Â°18'46.9&quot;N · 121Â°04'44.6&quot;E"
                      data-label="Auditorium">
                   <img src="assets/images/venue-placeholder.jpg" 
                        alt="PUP – Biñan People's Center Auditorium interior" 
@@ -656,7 +656,7 @@
                      data-tag="CIVIC COMPLEX"
                      data-tag-class="chip-green"
                      data-capacity="EVENT GROUNDS"
-                     data-coords="BIÑAN · LAGUNA"
+                     data-coords="BIÃ‘AN · LAGUNA"
                      data-label="Civic Grounds">
                   <img src="assets/images/venue-exterior.jpg" 
                        alt="Biñan People's Center Auditorium Civic Complex Grounds" 
@@ -698,7 +698,7 @@
                     <button type="button" class="venue-tab-btn" data-index="1" role="tab" aria-selected="false">Expo Hub</button>
                     <button type="button" class="venue-tab-btn" data-index="2" role="tab" aria-selected="false">Civic Grounds</button>
                   </div>
-                  <div class="venue-chip chip-coords" id="venueGalleryCoords">14°18'46.9"N · 121°04'44.6"E</div>
+                  <div class="venue-chip chip-coords" id="venueGalleryCoords">14Â°18'46.9"N · 121Â°04'44.6"E</div>
                 </div>
               </div>
             </div>
@@ -706,7 +706,7 @@
             <!-- Venue Details Content -->
             <div class="venue-card-body">
               <div class="venue-meta-header">
-                <span class="venue-subtag">HOST CHAPTER: AWS SBG PUP–BIÑAN</span>
+                <span class="venue-subtag">HOST CHAPTER: AWS SBG PUP–BIÃ‘AN</span>
                 <h3 class="venue-name">PUP – Biñan People's Center Auditorium</h3>
                 <p class="venue-address">Biñan People's Center, Biñan, Laguna, Philippines</p>
               </div>
@@ -724,7 +724,7 @@
                   <div class="floor-info-col">
                     <div class="floor-title-row">
                       <h4>Main Stage Auditorium</h4>
-                      <span class="floor-view-cue" aria-hidden="true">View Photo →</span>
+                      <span class="floor-view-cue" aria-hidden="true">View Photo â†’</span>
                     </div>
                     <p>Keynotes, Cloud &amp; Applied AI tracks, Women in Tech panel, and closing ceremony.</p>
                     <span class="floor-spec">500+ Tiered Seats · Air-Conditioned</span>
@@ -738,7 +738,7 @@
                   <div class="floor-info-col">
                     <div class="floor-title-row">
                       <h4>SS Community Hub</h4>
-                      <span class="floor-view-cue" aria-hidden="true">View Photo →</span>
+                      <span class="floor-view-cue" aria-hidden="true">View Photo â†’</span>
                     </div>
                     <p>Partner booths, hands-on student demos, swag distribution, and mentorship stations.</p>
                     <span class="floor-spec">Interactive Expo Commons · Networking</span>
@@ -768,7 +768,7 @@
                   <span class="venue-chip-dot green"></span>
                   <span>LIVE INTERACTIVE MAP</span>
                 </div>
-                <div class="venue-chip chip-coords">BIÑAN · LAGUNA</div>
+                <div class="venue-chip chip-coords">BIÃ‘AN · LAGUNA</div>
               </div>
             </div>
 
@@ -851,7 +851,7 @@
                   href="https://www.google.com/maps/place/Bi%C3%B1an+People's+Center+Auditorium/@14.3130254,121.0790571,17z/data=!3m1!4b1!4m6!3m5!1s0x3397d70042017c71:0x8933329e6ace6ce4!8m2!3d14.3130254!4d121.0790571!16s%2Fg%2F11zddgfh6z" 
                   target="_blank"
                   rel="noopener">
-                  Open Google Maps ↗
+                  Open Google Maps â†—
                 </a>
                 <button type="button" class="btn btn-ghost btn-sm" id="btnCopyVenueAddr" aria-label="Copy venue address to clipboard">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -898,7 +898,7 @@
           <h3>Claim your summit badge</h3>
           <p>Registration is 100% free through Luma. Claim your spot below before tickets run out.</p>
           <div class="register-cta-row">
-            <a class="btn btn-light" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">Register on Luma →</a>
+            <a class="btn btn-light" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">Register on Luma â†’</a>
           </div>
           <p class="register-note">Limited seats available per venue. Instant confirmation via email.</p>
         </div>
@@ -911,192 +911,196 @@
   </div>
 
   <!-- ================================================================= -->
+  <!-- ================================================================= -->
   <!-- ============================ ABOUT PAGE =========================== -->
   <!-- ================================================================= -->
   <div class="page" id="page-about">
 
-    <!-- Grid colored boxes background -->
-    <div class="about-bg-boxes" aria-hidden="true">
-      <span class="brand-box box-left-1 bb-blue"></span>
-      <span class="brand-box box-left-2 bb-pink"></span>
-      <span class="brand-box box-left-3 bb-purple"></span>
-      <span class="brand-box box-right-1 bb-green"></span>
-      <span class="brand-box box-right-2 bb-orange"></span>
-      <span class="brand-box box-right-3 bb-blue"></span>
-    </div>
+    <!-- Stacked Card Accordion Deck -->
+    <div class="about-stacked-deck" id="aboutStackDeck">
 
-    <section class="section-light grid-bg light page-intro">
-      <div class="deco-layer deco-corners" aria-hidden="true">
-        <span class="brand-box b1"></span>
-        <span class="brand-box b2"></span>
-        <span class="brand-box b3"></span>
-        <span class="brand-box b4"></span>
-        <span class="brand-box b5"></span>
-      </div>
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow">What is SCD?</p>
-          <h2 class="section-title">A student-first stage for Cloud &amp; AI</h2>
+      <!-- CARD 01: MANIFESTO -->
+      <div class="sb-band sb-band-purple stack-card" id="card-manifesto" data-card-index="0">
+        <div class="sb-card-tab" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle Manifesto section">
+          <h2 class="sb-card-label">Manifesto</h2>
+          <span class="sb-card-chevron" aria-hidden="true">›</span>
         </div>
-        <div class="about-grid">
-          <div>
-            <p class="about-lead">AWS Student Community Day (SCD) is a <b>student-organized, AWS-supported</b> gathering
-              that brings cloud and AI closer to students who don't yet see themselves in tech. South Summit 2026 is the
-              CALABARZON edition — built by student leaders, for students.</p>
-            <p>Instead of another highly-technical conference, this summit balances real technical exposure with
-              human-centered experiences: beginner-friendly cloud &amp; AI talks, Women in Tech empowerment sessions,
-              career pathways, and a community hub built for networking — not just watching.</p>
-          </div>
-          <ul class="about-outcomes">
-            <li><span class="sq"></span>
-              <div><b>See the opportunity.</b> Get a clearer picture of where Cloud and AI careers actually start.</div>
-            </li>
-            <li><span class="sq"></span>
-              <div><b>Build real confidence.</b> Leave with the belief that you belong in this industry.</div>
-            </li>
-            <li><span class="sq"></span>
-              <div><b>Make real connections.</b> With fellow students, organizers, and industry partners.</div>
-            </li>
-            <li><span class="sq"></span>
-              <div><b>Leave with next steps.</b> Practical, doable actions — not just inspiration.</div>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION DIVIDER -->
-    <div class="primer-edge" aria-hidden="true">
-      <span class="brand-box pe-blue"></span>
-      <span class="brand-box pe-green"></span>
-      <span class="brand-box pe-pink"></span>
-      <span class="brand-box pe-orange"></span>
-      <span class="brand-box pe-purple"></span>
-    </div>
-
-    <!-- SPEAKERS LINEUP KINETIC ROSTER -->
-    <section id="about-speakers-roster" class="about-roster-section grid-bg">
-      <div class="wrap">
-
-        <!-- Persistent HUD / Stage Header -->
-        <header class="about-roster-hud">
-          <div class="ar-hud-left">
-            <span class="ar-hud-eyebrow">Speakers Lineup</span>
-            <h2 class="ar-hud-title">The Complete Lineup</h2>
-          </div>
-          <div class="ar-hud-center">
-            <nav class="ar-category-pills" aria-label="Speaker categories">
-              <button type="button" class="ar-pill active" data-target="all" id="pillAll">
-                All (17)
-              </button>
-              <button type="button" class="ar-pill" data-target="keynotes" id="pillKeynotes">
-                <span class="pill-dot orange"></span>Keynotes (6)
-              </button>
-              <button type="button" class="ar-pill" data-target="panels" id="pillPanels">
-                <span class="pill-dot purple"></span>Panels (7)
-              </button>
-              <button type="button" class="ar-pill" data-target="sessions" id="pillSessions">
-                <span class="pill-dot green"></span>Sessions (4)
-              </button>
-            </nav>
-          </div>
-          <div class="ar-hud-right">
-            <span class="ar-hint font-mono text-xs">Hover or select to spotlight</span>
-          </div>
-        </header>
-
-        <!-- Kinetic Roster Stage: Typographic Roster + Monumental Spotlight -->
-        <div class="about-roster-stage" id="aboutRosterStage">
-          <!-- Left: Typographic Roster List -->
-          <div class="roster-list-column" id="rosterListColumn" role="tablist" aria-label="Summit Lineup">
-            <!-- Rendered by JS -->
-          </div>
-
-          <!-- Right: Monumental Hero Spotlight Stage -->
-          <div class="roster-spotlight-column">
-            <div class="roster-spotlight-card" id="rosterSpotlightCard" aria-live="polite">
-              <!-- Rendered by JS -->
+        <div class="sb-card-body">
+          <!-- Original section layout preserved -->
+          <section class="section-light page-intro">
+            <div class="deco-layer deco-corners" aria-hidden="true">
+              <span class="brand-box b1"></span>
+              <span class="brand-box b2"></span>
+              <span class="brand-box b3"></span>
+              <span class="brand-box b4"></span>
+              <span class="brand-box b5"></span>
             </div>
-          </div>
+            <div class="wrap">
+              <div class="section-head">
+                <p class="eyebrow">What is SCD?</p>
+                <h2 class="section-title">A student-first stage for Cloud &amp; AI</h2>
+              </div>
+              <div class="about-grid">
+                <div>
+                  <p class="about-lead">AWS Student Community Day (SCD) is a <b>student-organized, AWS-supported</b> gathering
+                    that brings cloud and AI closer to students who don't yet see themselves in tech. South Summit 2026 is the
+                    CALABARZON edition — built by student leaders, for students.</p>
+                  <p>Instead of another highly-technical conference, this summit balances real technical exposure with
+                    human-centered experiences: beginner-friendly cloud &amp; AI talks, Women in Tech empowerment sessions,
+                    career pathways, and a community hub built for networking — not just watching.</p>
+                </div>
+                <ul class="about-outcomes">
+                  <li><span class="sq"></span>
+                    <div><b>See the opportunity.</b> Get a clearer picture of where Cloud and AI careers actually start.</div>
+                  </li>
+                  <li><span class="sq"></span>
+                    <div><b>Build real confidence.</b> Leave with the belief that you belong in this industry.</div>
+                  </li>
+                  <li><span class="sq"></span>
+                    <div><b>Make real connections.</b> With fellow students, organizers, and industry partners.</div>
+                  </li>
+                  <li><span class="sq"></span>
+                    <div><b>Leave with next steps.</b> Practical, doable actions — not just inspiration.</div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
         </div>
-
       </div>
-    </section>
 
-    <!-- SECTION DIVIDER -->
-    <div class="primer-edge" aria-hidden="true">
-      <span class="brand-box pe-green"></span>
-      <span class="brand-box pe-pink"></span>
-      <span class="brand-box pe-blue"></span>
-    </div>
-
-    <section class="section-light grid-bg light">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow" style="color:var(--orange-text);">Organizers</p>
-          <h2 class="section-title">AWS Student Builder Groups — South Luzon</h2>
-          <p class="section-p">Co-organized by 9 AWS SBG &amp; AWS LC chapters across CALABARZON. One community working
-            together to make this summit happen.</p>
+      <!-- CARD 02: THE LINEUP -->
+      <div class="sb-band sb-band-blue stack-card" id="card-lineup" data-card-index="1">
+        <div class="sb-card-tab" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle The Lineup section">
+          <h2 class="sb-card-label">The Lineup</h2>
+          <span class="sb-card-chevron" aria-hidden="true">›</span>
         </div>
-        <div class="chapter-grid" id="chapterGrid"></div>
+        <div class="sb-card-body">
+          <!-- Original speakers roster layout preserved -->
+          <section id="about-speakers-roster" class="about-roster-section grid-bg">
+            <div class="wrap">
+              <!-- Persistent HUD / Stage Header -->
+              <header class="about-roster-hud">
+                <div class="ar-hud-left">
+                  <span class="ar-hud-eyebrow">Speakers Lineup</span>
+                  <h2 class="ar-hud-title">The Complete Lineup</h2>
+                </div>
+                <div class="ar-hud-center">
+                  <nav class="ar-category-pills" aria-label="Speaker categories">
+                    <button type="button" class="ar-pill active" data-target="all" id="pillAll">
+                      All (17)
+                    </button>
+                    <button type="button" class="ar-pill" data-target="keynotes" id="pillKeynotes">
+                      <span class="pill-dot orange"></span>Keynotes (6)
+                    </button>
+                    <button type="button" class="ar-pill" data-target="panels" id="pillPanels">
+                      <span class="pill-dot purple"></span>Panels (7)
+                    </button>
+                    <button type="button" class="ar-pill" data-target="sessions" id="pillSessions">
+                      <span class="pill-dot green"></span>Sessions (4)
+                    </button>
+                  </nav>
+                </div>
+                <div class="ar-hud-right">
+                  <span class="ar-hint font-mono text-xs">Hover or select to spotlight</span>
+                </div>
+              </header>
+
+              <!-- Kinetic Roster Stage -->
+              <div class="about-roster-stage" id="aboutRosterStage">
+                <div class="roster-list-column" id="rosterListColumn" role="tablist" aria-label="Summit Lineup">
+                  <!-- Rendered by JS -->
+                </div>
+                <div class="roster-spotlight-column">
+                  <div class="roster-spotlight-card" id="rosterSpotlightCard" aria-live="polite">
+                    <!-- Rendered by JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
-    </section>
 
-    <!-- SECTION DIVIDER -->
-    <div class="primer-edge" aria-hidden="true">
-      <span class="brand-box pe-purple"></span>
-      <span class="brand-box pe-orange"></span>
-      <span class="brand-box pe-blue"></span>
-      <span class="brand-box pe-green"></span>
-    </div>
-
-    <!-- SUMMIT DIRECTORS & LEADERSHIP -->
-    <section id="about-directors" class="section-light grid-bg light">
-      <div class="wrap">
-        <div class="section-head">
-          <p class="eyebrow" style="color:var(--blue-text);">Organizing Leadership</p>
-          <h2 class="section-title">Summit Directorate</h2>
-          <p class="section-p">The student directors, associate directors, and executive leads steering AWS Student Community Day: South Summit 2026 across CALABARZON.</p>
+      <!-- CARD 03: THE NETWORK -->
+      <div class="sb-band sb-band-green stack-card" id="card-chapters" data-card-index="2">
+        <div class="sb-card-tab" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle The Network section">
+          <h2 class="sb-card-label">The Network</h2>
+          <span class="sb-card-chevron" aria-hidden="true">›</span>
         </div>
-
-        <!-- Filter Pills Navigation -->
-        <div class="directors-filter-wrapper">
-          <nav class="directors-filter-bar font-mono" aria-label="Filter directors by department">
-            <button type="button" class="director-filter-pill active" data-target="all" aria-selected="true">
-              All (16)
-            </button>
-            <button type="button" class="director-filter-pill" data-target="executive" aria-selected="false">
-              <span class="filter-dot orange"></span>Executive (4)
-            </button>
-            <button type="button" class="director-filter-pill" data-target="technology" aria-selected="false">
-              <span class="filter-dot blue"></span>Technology (2)
-            </button>
-            <button type="button" class="director-filter-pill" data-target="creatives" aria-selected="false">
-              <span class="filter-dot pink"></span>Creatives (2)
-            </button>
-            <button type="button" class="director-filter-pill" data-target="operations" aria-selected="false">
-              <span class="filter-dot green"></span>Operations (2)
-            </button>
-            <button type="button" class="director-filter-pill" data-target="marketing" aria-selected="false">
-              <span class="filter-dot purple"></span>Marketing (2)
-            </button>
-            <button type="button" class="director-filter-pill" data-target="relations" aria-selected="false">
-              <span class="filter-dot blue"></span>Relations (2)
-            </button>
-            <button type="button" class="director-filter-pill" data-target="finance" aria-selected="false">
-              <span class="filter-dot orange"></span>Finance (2)
-            </button>
-          </nav>
+        <div class="sb-card-body">
+          <!-- Original chapters/organizers layout preserved -->
+          <section class="section-light grid-bg light">
+            <div class="wrap">
+              <div class="section-head">
+                <p class="eyebrow" style="color:var(--orange-text);">Organizers</p>
+                <h2 class="section-title">AWS Student Builder Groups — South Luzon</h2>
+                <p class="section-p">Co-organized by 9 AWS SBG &amp; AWS LC chapters across CALABARZON. One community working
+                  together to make this summit happen.</p>
+              </div>
+              <div class="chapter-grid" id="chapterGrid"></div>
+            </div>
+          </section>
         </div>
-
-        <div class="directors-grid" id="directorsGrid"></div>
       </div>
-    </section>
 
-  </div>
+      <!-- CARD 04: LEADERSHIP -->
+      <div class="sb-band sb-band-pink stack-card" id="card-directors" data-card-index="3">
+        <div class="sb-card-tab" role="button" tabindex="0" aria-expanded="false" aria-label="Toggle Leadership section">
+          <h2 class="sb-card-label">Leadership</h2>
+          <span class="sb-card-chevron" aria-hidden="true">›</span>
+        </div>
+        <div class="sb-card-body">
+          <!-- Original directors layout preserved -->
+          <section id="about-directors" class="section-light grid-bg light">
+            <div class="wrap">
+              <div class="section-head">
+                <p class="eyebrow" style="color:var(--blue-text);">Organizing Leadership</p>
+                <h2 class="section-title">Summit Directorate</h2>
+                <p class="section-p">The student directors, associate directors, and executive leads steering AWS Student Community Day: South Summit 2026 across CALABARZON.</p>
+              </div>
 
-  <!-- ================================================================= -->
-  <!-- ============================ MERCH PAGE =========================== -->
+              <!-- Filter Pills Navigation -->
+              <div class="directors-filter-wrapper">
+                <nav class="directors-filter-bar font-mono" aria-label="Filter directors by department">
+                  <button type="button" class="director-filter-pill active" data-target="all" aria-selected="true">
+                    All (16)
+                  </button>
+                  <button type="button" class="director-filter-pill" data-target="executive" aria-selected="false">
+                    <span class="filter-dot orange"></span>Executive (4)
+                  </button>
+                  <button type="button" class="director-filter-pill" data-target="technology" aria-selected="false">
+                    <span class="filter-dot blue"></span>Technology (2)
+                  </button>
+                  <button type="button" class="director-filter-pill" data-target="creatives" aria-selected="false">
+                    <span class="filter-dot pink"></span>Creatives (2)
+                  </button>
+                  <button type="button" class="director-filter-pill" data-target="operations" aria-selected="false">
+                    <span class="filter-dot green"></span>Operations (2)
+                  </button>
+                  <button type="button" class="director-filter-pill" data-target="marketing" aria-selected="false">
+                    <span class="filter-dot purple"></span>Marketing (2)
+                  </button>
+                  <button type="button" class="director-filter-pill" data-target="relations" aria-selected="false">
+                    <span class="filter-dot blue"></span>Relations (2)
+                  </button>
+                  <button type="button" class="director-filter-pill" data-target="finance" aria-selected="false">
+                    <span class="filter-dot orange"></span>Finance (2)
+                  </button>
+                </nav>
+              </div>
+
+              <div class="directors-grid" id="directorsGrid"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+    </div><!-- /about-stacked-deck -->
+
+  </div><!-- /page-about -->
+
+
   <!-- ================================================================= -->
   <div class="page" id="page-merch">
     <section class="page-intro">
@@ -1226,8 +1230,8 @@
             Lead.</p>
         </div>
         <div class="foot-col">
-          <h6>Explore</h6><button onclick="showPage('home')">Home</button><button
-            onclick="showPage('about')">About</button><button onclick="showPage('merch')">Merch</button>
+          <h6>Explore</h6><button data-page="home">Home</button><button
+            data-page="about">About</button><button data-page="merch">Merch</button>
         </div>
         <div class="foot-col">
           <h6>Event</h6><a href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">Register</a>

@@ -157,7 +157,13 @@ function wrapShowPage() {
 
   window.showPage = function wrappedShowPage(...args) {
     const result = original.apply(this, args);
-    requestAnimationFrame(() => refresh());
+    if (result && typeof result.ready?.then === 'function') {
+      result.ready.then(() => {
+        requestAnimationFrame(() => refresh());
+      });
+    } else {
+      requestAnimationFrame(() => refresh());
+    }
     return result;
   };
   showPageWrapped = true;

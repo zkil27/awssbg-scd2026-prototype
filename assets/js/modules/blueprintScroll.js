@@ -389,10 +389,15 @@ function wrapShowPage() {
     const result = original.apply(this, args);
     // After the page swap settles, re-evaluate (deactivate off-home,
     // re-measure on return to home).
-    requestAnimationFrame(() => {
+    const update = () => {
       reconcile();
       if (active) render(currentScroll());
-    });
+    };
+    if (result && typeof result.finished?.then === 'function') {
+      result.finished.then(() => requestAnimationFrame(update));
+    } else {
+      requestAnimationFrame(update);
+    }
     return result;
   };
   showPageWrapped = true;

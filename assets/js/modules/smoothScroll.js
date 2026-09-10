@@ -108,6 +108,7 @@ async function createLenis() {
 
   document.documentElement.classList.add('lenis');
   active = true;
+  window.__lenis = lenis;
 
   lenis.on('scroll', ({ scroll }) => emitScroll(scroll));
 
@@ -124,6 +125,7 @@ function destroyLenis() {
   rafId = 0;
   lenis.destroy();
   lenis = null;
+  window.__lenis = null;
   active = false;
   document.documentElement.classList.remove('lenis');
   // Reset any subscriber-driven state to the top of the range.
@@ -151,12 +153,15 @@ function wrapShowPage() {
 
   window.showPage = function wrappedShowPage(...args) {
     const result = original.apply(this, args);
-    if (lenis) {
-      lenis.scrollTo(0, { immediate: true });
+    // If a ViewTransition is active, scroll reset is handled cleanly inside switchPageDOM.
+    // We emit the final settled scroll position once the transition completes.
+    if (result && typeof result.finished?.then === 'function') {
+      result.finished.then(() => {
+        emitScroll(lenis ? lenis.scroll : 0);
+      });
     } else {
-      window.scrollTo(0, 0);
+      requestAnimationFrame(() => emitScroll(lenis ? lenis.scroll : 0));
     }
-    requestAnimationFrame(() => emitScroll(lenis ? lenis.scroll : 0));
     return result;
   };
   showPageWrapped = true;
