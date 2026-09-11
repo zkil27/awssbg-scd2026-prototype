@@ -15,7 +15,27 @@ function renderHeroCard(s) {
   const name = escapeHTML(s.name || '');
   const color = s.color || 'purple';
   const logoSrc = escapeHTML(s.imgUrl || 'assets/images/south-summit-logo.svg');
+  const darkLogoSrc = s.imgDarkUrl ? escapeHTML(s.imgDarkUrl) : null;
   const tierTagLabel = s.tier === 'quantum' ? 'QUANTUM SPONSOR' : 'VENUE PARTNER';
+
+  const logoMarkup = darkLogoSrc ? `
+          <img class="hero-logo hero-logo--theme-light"
+               src="${logoSrc}"
+               alt="${name}"
+               loading="lazy"
+               onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
+          <img class="hero-logo hero-logo--theme-dark"
+               src="${darkLogoSrc}"
+               alt="${name}"
+               loading="lazy"
+               onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
+  ` : `
+          <img class="hero-logo"
+               src="${logoSrc}"
+               alt="${name}"
+               loading="lazy"
+               onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
+  `;
 
   return `
     <article class="sponsors-hero-card color-${color}" data-card-color="${color}" data-reveal>
@@ -25,11 +45,7 @@ function renderHeroCard(s) {
       </div>
       <div class="hero-card-media">
         <div class="hero-logo-frame ${s.tier === 'venue' ? 'emblem' : ''}">
-          <img class="hero-logo"
-               src="${logoSrc}"
-               alt="${name}"
-               loading="lazy"
-               onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
+${logoMarkup}
         </div>
       </div>
       <div class="hero-card-body">

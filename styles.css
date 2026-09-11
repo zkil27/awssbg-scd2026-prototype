@@ -5248,26 +5248,50 @@ html[data-theme="dark"] .hero-tier-tag.venue {
 
 .hero-logo-frame {
   width: 100%;
-  max-width: 220px;
+  max-width: 240px;
   height: 80px;
-  border-radius: 10px;
-  background: #FFFFFF;
-  border: 1px solid rgba(11, 21, 38, 0.08);
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 18px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  padding: 6px 12px;
+  box-shadow: none;
 }
 
 html[data-theme="dark"] .hero-logo-frame {
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .hero-logo {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+
+.hero-logo-frame.emblem .hero-logo {
+  max-height: 80px;
+  width: auto;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.15));
+}
+
+/* Theme-adaptive logo variants (e.g. AWS dark text on light mode, white text on dark mode) */
+.hero-logo--theme-dark {
+  display: none !important;
+}
+
+.hero-logo--theme-light {
+  display: block !important;
+}
+
+html[data-theme="dark"] .hero-logo--theme-dark {
+  display: block !important;
+}
+
+html[data-theme="dark"] .hero-logo--theme-light {
+  display: none !important;
 }
 
 .hero-card-body {
@@ -5392,17 +5416,18 @@ html[data-theme="dark"] .marquee-chip:hover {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: #FFFFFF;
-  border: 1px solid rgba(11, 21, 38, 0.1);
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 2px;
   flex-shrink: 0;
 }
 
 html[data-theme="dark"] .marquee-chip-logo-wrap {
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
+  border: none;
 }
 
 .marquee-chip-logo {
