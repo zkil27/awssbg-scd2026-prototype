@@ -82,7 +82,7 @@ export const sponsors = [
   },
   {
     id: 'partner-pro-colegio-de-abogados',
-    name: 'AWS Student Body Group - Colegio de abogados',
+    name: 'AWS Student Body Group - Colegio de Abogados',
     tier: 'pro',
     role: 'Pro Partner',
     institution: 'AWS Student Community',
