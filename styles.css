@@ -1583,7 +1583,15 @@ html.bp-active .blueprint-panel {
 
 /* Asymmetry: staggered vertical offsets against the shared baseline. */
 html.bp-active .blueprint-panel--wide { width: clamp(420px, 42vw, 620px); }
-html.bp-active .blueprint-panel--intro { width: clamp(400px, 40vw, 560px); }
+html.bp-active .blueprint-panel--intro {
+  width: clamp(400px, 40vw, 560px);
+  height: auto;
+  min-height: 500px;
+  padding: clamp(20px, 2.5vh, 36px) 0;
+  overflow: visible;
+  justify-content: flex-start;
+  align-self: center;
+}
 html.bp-active .blueprint-panel--offset-up { margin-top: -6vh; }
 html.bp-active .blueprint-panel--offset-down { margin-top: 8vh; }
 
@@ -1593,7 +1601,7 @@ html.bp-active .blueprint-panel--offset-down { margin-top: 8vh; }
   align-items: baseline;
   gap: 16px;
   padding-bottom: 16px;
-  margin-bottom: 28px;
+  margin-bottom: clamp(16px, 2.5vh, 28px);
   border-bottom: 1px solid var(--line-strong);
   font-family: var(--font-mono);
 }
@@ -1623,34 +1631,42 @@ html.bp-active .blueprint-panel--offset-down { margin-top: 8vh; }
 }
 
 /* ---- Intro panel: editorial cover ---- */
-.blueprint-panel--intro { justify-content: space-between; }
+.blueprint-panel--intro {
+  justify-content: flex-start;
+}
+
+.blueprint-panel--intro > * {
+  flex-shrink: 0;
+}
 
 .bp-title {
   font-family: var(--font-display, var(--font-sans));
   font-weight: 800;
-  line-height: 0.9;
+  line-height: 0.91;
   letter-spacing: -0.035em;
   color: var(--text-strong);
-  font-size: clamp(56px, 8vw, 120px);
-  margin: clamp(24px, 4vh, 56px) 0 auto;
+  font-size: clamp(64px, min(7.5vw, 11vh), 110px);
+  margin: clamp(14px, 1.8vh, 24px) 0 0;
 }
 
 .bp-lead {
   font-family: var(--font-sans);
   color: var(--muted);
-  font-size: clamp(15px, 1.2vw, 18px);
-  line-height: 1.6;
+  font-size: clamp(15px, 1.15vw, 17.5px);
+  line-height: 1.55;
   max-width: 34ch;
+  margin-top: clamp(18px, 2.2vh, 28px);
+  margin-bottom: 0;
 }
 
 .bp-cover-figure {
   display: block;
   font-family: var(--font-display, var(--font-sans));
   font-weight: 800;
-  font-size: 40px;
+  font-size: clamp(28px, 3.2vh, 38px);
   line-height: 1;
   color: var(--purple);
-  margin-top: 24px;
+  margin-top: clamp(14px, 1.8vh, 22px);
 }
 
 /* ---- Agenda panels: folio numeral + editorial copy column ---- */
@@ -6631,6 +6647,57 @@ footer {
   margin: 0;
   color: inherit;
   /* transition managed in animation block below */
+}
+
+/* Rolling text on accordion card hover */
+.sb-card-label.sb-card-label-roll {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  line-height: 1.55em !important;
+  vertical-align: middle;
+}
+
+.sb-roll-char {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  height: 1.55em;
+  line-height: 1.55em;
+  vertical-align: middle;
+}
+
+.sb-roll-space {
+  width: 0.28em;
+  display: inline-block;
+}
+
+.sb-roll-item {
+  display: block;
+  height: 1.55em;
+  line-height: 1.55em;
+  text-align: center;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.sb-roll-clone {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-roll-item {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  .sb-roll-clone {
+    display: none !important;
+  }
 }
 
 

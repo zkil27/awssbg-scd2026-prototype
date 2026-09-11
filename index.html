@@ -11,11 +11,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="theme.css?v=20260911-rect">
-  <link rel="stylesheet" href="styles.css?v=20260911-clean-v3">
+  <link rel="stylesheet" href="styles.css?v=20260911-clean-v6">
   <link rel="stylesheet" href="assets/css/staggeredMenu.css?v=20260911-rect">
   <link rel="stylesheet" href="assets/css/grainient.css">
   <link rel="stylesheet" href="assets/css/masonry.css">
+  <link rel="stylesheet" href="assets/css/splitText.css">
+  <link rel="stylesheet" href="assets/css/pixelTransition.css">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
   <script>
     /* Apply saved theme before paint to avoid flash */
     (function () {
@@ -1469,6 +1472,10 @@
       var isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var SPLASH_MS = isReduced ? 800 : 1600;
       function dismiss() {
+        if (window.__dismissSplashWithPixelTransition) {
+          window.__dismissSplashWithPixelTransition();
+          return;
+        }
         if (splash.classList.contains('is-hidden')) return;
         splash.classList.add('is-hidden');
         var done = function () { splash.hidden = true; };

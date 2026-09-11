@@ -1,0 +1,37 @@
+/**
+ * AWS Student Community Day: South Summit 2026
+ * SplitText Animation Styles (React Bits Port)
+ * Handles line/word splitting, overflow masks, and accessibility overrides.
+ */
+
+.split-parent {
+  overflow: hidden;
+  white-space: normal;
+  word-wrap: break-word;
+  will-change: transform, opacity;
+}
+
+.split-line {
+  display: block;
+  overflow: hidden;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.split-word {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Accessibility: respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .split-parent,
+  .split-line,
+  .split-word {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}

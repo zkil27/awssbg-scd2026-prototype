@@ -21,8 +21,14 @@ import { initBlueprintScroll } from './modules/blueprintScroll.js';
 import { initBlueprintShader } from './modules/blueprintShader.js';
 import { initVenueUI } from './modules/venueUI.js';
 import { initStackedCards } from './modules/stackedCards.js';
+import { initSplitText } from './modules/splitText.js';
+import { initPixelTransition, initSplashPixelTransition } from './modules/pixelTransition.js';
+
+// Arm splash transition immediately so early clicks/timers are captured
+initSplashPixelTransition();
 
 document.addEventListener('DOMContentLoaded', () => {
+    initPixelTransition();
     // 1. Initialize core system modules
     initTheme();
     initRouter();
@@ -50,11 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Stacked cards on About page
     initStackedCards();
 
-    // 5. Scroll-triggered entrance motion — last, so the cards injected by the
+    // 5. Scroll-triggered text animations (React Bits SplitText port)
+    initSplitText();
+
+    // 6. Scroll-triggered entrance motion — last, so the cards injected by the
     //    init*UI() calls above already exist to be tagged and observed.
     initScrollReveal();
 
-    // 6. Blueprint horizontal-pan — after content injection (schedule speaker
+    // 7. Blueprint horizontal-pan — after content injection (schedule speaker
     //    chips affect the track width) and after Lenis is set up, since the pan
     //    reads Lenis's smoothed scroll. No-ops on touch / reduced-motion.
     initBlueprintScroll();

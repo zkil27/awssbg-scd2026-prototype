@@ -388,6 +388,122 @@ if (typeof window !== 'undefined') {
 /**
  * Initializes the Stacked Cards deck on the About page.
  */
+/**
+ * Setup rolling text animation on hover for accordion card headers.
+ * When hovered, current text goes UP, and duplicate text from the bottom goes UP.
+ */
+function setupAccordionRollingText(tab, label) {
+  if (!label || label.dataset.rollingSetup) return;
+  label.dataset.rollingSetup = 'true';
+
+  const text = label.textContent.trim();
+  label.setAttribute('aria-label', text);
+  label.innerHTML = '';
+  label.classList.add('sb-card-label-roll');
+
+  const pairs = [];
+  for (const char of text) {
+    const wrap = document.createElement('span');
+    wrap.className = 'sb-roll-char';
+    if (char === ' ') {
+      wrap.innerHTML = '&nbsp;';
+      wrap.classList.add('sb-roll-space');
+    } else {
+      const primary = document.createElement('span');
+      primary.className = 'sb-roll-item sb-roll-primary';
+      primary.textContent = char;
+
+      const clone = document.createElement('span');
+      clone.className = 'sb-roll-item sb-roll-clone';
+      clone.setAttribute('aria-hidden', 'true');
+      clone.textContent = char;
+
+      wrap.appendChild(primary);
+      wrap.appendChild(clone);
+      pairs.push({ primary, clone });
+
+      // Initial state: clone starts offscreen below at +120% and 0 opacity
+      if (window.gsap) {
+        window.gsap.set(clone, { yPercent: 120, opacity: 0 });
+        window.gsap.set(primary, { yPercent: 0, opacity: 1 });
+      } else {
+        clone.style.transform = 'translateY(120%)';
+        clone.style.opacity = '0';
+      }
+    }
+    label.appendChild(wrap);
+  }
+
+  const onEnter = () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.gsap) {
+      pairs.forEach((p, idx) => {
+        const delay = idx * 0.035;
+        window.gsap.to(p.primary, {
+          yPercent: -120,
+          opacity: 0,
+          duration: 0.75,
+          delay,
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+        window.gsap.to(p.clone, {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.75,
+          delay,
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+      });
+    } else {
+      pairs.forEach(p => {
+        p.primary.style.transform = 'translateY(-120%)';
+        p.primary.style.opacity = '0';
+        p.clone.style.transform = 'translateY(0)';
+        p.clone.style.opacity = '1';
+      });
+    }
+  };
+
+  const onLeave = () => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.gsap) {
+      pairs.forEach((p, idx) => {
+        const delay = idx * 0.025;
+        window.gsap.to(p.primary, {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.65,
+          delay,
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+        window.gsap.to(p.clone, {
+          yPercent: 120,
+          opacity: 0,
+          duration: 0.65,
+          delay,
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+      });
+    } else {
+      pairs.forEach(p => {
+        p.primary.style.transform = 'translateY(0)';
+        p.primary.style.opacity = '1';
+        p.clone.style.transform = 'translateY(120%)';
+        p.clone.style.opacity = '0';
+      });
+    }
+  };
+
+  tab.addEventListener('mouseenter', onEnter);
+  tab.addEventListener('mouseleave', onLeave);
+  tab.addEventListener('focus', onEnter);
+  tab.addEventListener('blur', onLeave);
+}
+
 export function initStackedCards() {
   deckContainer = document.getElementById('aboutStackDeck');
   if (!deckContainer) return;
@@ -404,6 +520,11 @@ export function initStackedCards() {
     tab.setAttribute('role', 'button');
     tab.setAttribute('tabindex', '0');
     tab.style.cursor = 'pointer';
+
+    const label = tab.querySelector('.sb-card-label');
+    if (label) {
+      setupAccordionRollingText(tab, label);
+    }
 
     tab.addEventListener('click', () => toggleCard(i));
 
