@@ -5385,13 +5385,6 @@ html[data-theme="dark"] .marquee-chip-logo-wrap {
   white-space: nowrap;
 }
 
-.marquee-chip-tag {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
 /* Reduced Motion Fallback */
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
@@ -5432,20 +5425,6 @@ html[data-theme="dark"] .sponsor-cta-banner {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 }
 
-.sponsor-cta-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--teal, #0AA98F);
-  display: block;
-  margin-bottom: 6px;
-}
-
-html[data-theme="dark"] .sponsor-cta-eyebrow {
-  color: #2BD4AD;
-}
-
 .sponsor-cta-copy h4 {
   font-family: var(--font-display, var(--font-sans));
   font-size: 20px;
@@ -5462,26 +5441,6 @@ html[data-theme="dark"] .sponsor-cta-eyebrow {
   max-width: 600px;
   margin: 0;
   line-height: 1.5;
-}
-
-.sponsor-cta-stats {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--muted);
-}
-
-.sponsor-cta-stats .cta-stat b {
-  color: var(--text-strong);
-  font-weight: 700;
-}
-
-.sponsor-cta-stats .cta-stat-sep {
-  opacity: 0.4;
 }
 
 .sponsor-cta-actions {
