@@ -10,7 +10,7 @@
 
 ---
 
-> Hosted by the **AWS Student Builder Groups – CALABARZON** (South Luzon, Philippines). This site provides event information, a branded Amazon Q chatbot assistant, and a lightweight, zero‑build deployment pipeline.
+> Hosted by the **AWS Student Builder Groups – CALABARZON** (South Luzon, Philippines). This site provides event information and a lightweight, zero-build deployment pipeline.
 
 ## Table of Contents
 - [Features](#features)
@@ -29,7 +29,6 @@ The portal showcases a modern, responsive UI built with vanilla web technologies
 
 - **Dynamic Light/Dark Theme** – CSS-variables driven, persisted via `localStorage` (defaults to light mode).
 - **Custom Theme Toggle** – 58×32 px sliding pill with mathematically precise Sun and Moon SVG icons.
-- **Amazon Q Chatbot** – 56 px circular button, dual-theme support, floating-card UI.
 - **Responsive Layout** – Fluid spacing, glass-morphism cards, and mobile-friendly navigation.
 - **Zero-Build Deployment** – Works directly on GitHub Pages and static hosts — no bundlers or complex build steps required.
 
@@ -68,11 +67,12 @@ awssbg-scd2026-prototype/
 ├── styles.css                   # Component styles & responsive layouts
 ├── theme.css                    # Design system tokens & color palettes
 ├── assets/
-│   ├── images/                  # Media assets (speakers, merch, sponsors)
+│   ├── images/                  # All media (logos, primer graphic, speaker headshots)
 │   └── js/
 │       ├── main.js              # Central application entry point
 │       ├── data/                # Pure Data Layer (Content Objects)
 │       └── modules/             # Functional UI Presentation Layer
+│                                # (incl. computeGrid.js � reactive grid background)
 └── docs/                        # Documentation Hub (See below)
 ```
 

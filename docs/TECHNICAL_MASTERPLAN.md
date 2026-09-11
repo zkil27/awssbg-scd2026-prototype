@@ -12,7 +12,7 @@ The event website serves as the central operational hub for:
 *   **Public Awareness & Branding**: Establishing a high-impact visual presence reflecting AWS cloud innovation.
 *   **Registration Funneling**: Directing attendees to registration channels (e.g., Luma) with real-time countdown hype.
 *   **Content Dissemination**: Displaying keynote speakers, technical sessions, community chapters, sponsor tiers, and exclusive event merchandise.
-*   **Attendee Operations**: Interactive tools including custom modal popups, merch spotlight rail, and an embedded **Amazon Q** interactive assistant.
+*   **Attendee Operations**: Interactive tools including custom modal popups and a merch spotlight rail.
 
 ### 1.2. Strategic Objectives & Constraints
 *   **Zero Build Dependency**: Built purely with native Web standards (HTML5, CSS3, ES Modules). No Node.js compilation, Webpack, Vite, or npm build step is required for production deployment.
@@ -35,13 +35,11 @@ awssbg-scd2026-prototype/
 │   ├── FRAMEWORK_GUIDE.md       # Developer onboarding & content guide
 │   └── EVENT_GUIDELINES.md      # Event operational guidelines & timeline
 └── assets/
-    ├── amazon-aws-logo.png      # AWS brand mark assets
-    ├── Event-Primer.png         # Conceptual branding primer graphic
-    ├── images/                  # Media asset directories
-    │   ├── speakers/            # Speaker headshots
-    │   ├── merch/               # Merchandise photos & previews
-    │   ├── chapters/            # University chapter logos
-    │   └── sponsors/            # Sponsor logos
+    ├── images/                  # All media assets (flat files + category folders)
+    │   ├── south-summit-logo.svg   # Primary summit brand mark (used site-wide)
+    │   ├── sbg-calabarzon-logo.png  # AWS SBG CALABARZON logo (platinum sponsor)
+    │   ├── event-primer.png        # Conceptual branding primer graphic
+    │   └── speakers/            # Speaker headshots (.webp)
     └── js/
         ├── main.js              # Central entry point (bootstraps all modules)
         ├── data/                # Pure Data Layer (Content Objects)
@@ -57,7 +55,7 @@ awssbg-scd2026-prototype/
             ├── merchUI.js       # Merch rail & spotlight interaction model
             ├── chaptersUI.js    # Chapter grid renderer
             ├── sponsorsUI.js    # Sponsor tier layout manager
-            └── amazonQ.js       # Interactive Amazon Q floating concierge
+            └── computeGrid.js   # Reactive canvas background (cursor grid glow + boot sweep)
 ```
 
 ### 2.1. Technology Stack Specifications
@@ -79,6 +77,7 @@ The application implements a lightweight Single Page Application (SPA) architect
 ### 3.1. Design Aesthetics & Branding
 The visual identity relies on a **"Cyber-Grid"** aesthetic, mimicking terminal interfaces and AWS cloud console telemetry:
 *   **Grid Background**: A repeating 52px geometric grid lines the viewport, punctuated by colorful visual anchor blocks.
+*   **Reactive Compute Grid**: A decorative `<canvas>` layer (`computeGrid.js`) overlays the static grid and lights it up as a live "compute fabric" — grid cells glow in brand colors around the cursor and fade out behind it, and a one-shot "boot-up sweep" powers the grid on at load. It reads the 52px cell size and brand colors from `theme.css` so it stays grid-aligned and theme-driven, sits at `z-index:0` behind all content, and is fully non-interactive (`pointer-events:none`). It honors `prefers-reduced-motion`, disables hover effects on touch devices, and pauses when the tab is hidden or the hero scrolls out of view; if a 2D canvas context is unavailable it becomes a no-op, leaving the static CSS grid intact.
 *   **Glassmorphism**: Headers and cards utilize translucent background surfaces with `backdrop-filter: blur(12px)`.
 *   **Typography**: Exclusively uses a monospaced font stack centered around **IBM Plex Mono** to reinforce developer focus.
 
@@ -181,7 +180,7 @@ gantt
     Merch Showcase Reveal                   :p4b, 2026-08-24, 2026-08-30
     section Phase 5: Pre-Event
     Final Speaker Lineup & Abstracts Lock   :p5, 2026-09-01, 2026-10-01
-    Amazon Q Concierge & QA Optimization    :p5b, 2026-09-15, 2026-10-06
+    Cross-Browser QA & Perf Optimization    :p5b, 2026-09-15, 2026-10-06
 ```
 
 ### Phase Deliverable Checklist
@@ -193,7 +192,7 @@ gantt
 
 #### Phase 3: Soft Launch & Teaser Campaign (August 1 – August 23)
 - [ ] Hardcode event date, theme, and tentative venue in hero header.
-- [ ] Connect primary CTA buttons ("Register Now") directly to external Luma registration link (`https://lu.ma/...`).
+- [x] Connect primary CTA buttons ("Register Now") directly to external Luma registration link (`https://lu.ma/f8knjt7n`).
 - [ ] Calibrate countdown timer module (`countdown.js`) to target October 7, 2026.
 
 #### Phase 4: Official Launch & Announcements (August 24 – August 30)
@@ -203,7 +202,6 @@ gantt
 
 #### Phase 5: Pre-Event Finalization (September 1 – October 6)
 - [ ] Finalize speaker roster and full talk abstracts in `speakers.js`.
-- [ ] Program Amazon Q widget (`amazonQ.js`) with event FAQs (venue location, parking, agenda).
 - [ ] Perform cross-browser testing and performance optimization for mobile connectivity.
 
 ---

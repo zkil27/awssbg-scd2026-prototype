@@ -3,8 +3,8 @@
  * Calculates and renders the time remaining til the summit start.
  */
 
-//Event data is October 7, 2026 at 8:00 AM (Philippine Time)
-//CHANGE THIS IN CASE OF TIME CHANGE VVVVV
+// Event date is October 7, 2026 at 08:00 AM (Philippine Time) — per official summit schedule
+// CHANGE THIS IN CASE OF TIME CHANGE VVVVV
 const target = new Date('2026-10-07T08:00:00+08:00').getTime();
 
 export function initCountdown() {

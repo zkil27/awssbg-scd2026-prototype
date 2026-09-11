@@ -16,73 +16,147 @@
   /* Grid — shared cell size for line grid + colored boxes */
   --grid-size: 52px;
   --grid-line: 1px;
+  /* Vertical repeat interval for the colored accent cells. Each colored-cell
+     background layer tiles down the page every this-many pixels (a whole
+     multiple of --grid-size, so cells stay grid-aligned), which is what makes
+     the SAME boxes carry from the top all the way to the footer. */
+  --cell-repeat-y: calc(var(--grid-size) * 24);
 
-  /* Typography — original event monospace typography */
+  /* Typography — Inter for legible body copy, IBM Plex Mono for badges/tags */
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
-  --font-sans: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Plus Jakarta Sans', sans-serif;
 
   /* Layout */
   --container: 1280px;
-  --nav-h: calc(var(--grid-size) * 2);
+  --nav-h: 76px;
   --header-h: calc(var(--grid-size) * 4);
 
   /* Transitions */
   --theme-ease: background-color .25s ease, color .25s ease, border-color .25s ease;
+
+  /* ---------- Scroll reveal ----------
+     Entrance motion for sections + cards as they scroll into view. Themed to
+     the grid/box aesthetic: elements rise + fade with the brand spring easing,
+     and card grids stagger like the compute-grid boot sweep. See the
+     [data-reveal] rules in styles.css and modules/scrollReveal.js. */
+  --reveal-distance: 22px;                              /* start offset (translateY) */
+  --reveal-duration: .6s;                              /* rise + fade duration */
+  --reveal-ease: cubic-bezier(0.34, 1.56, 0.64, 1);    /* brand spring, matches cards */
+  --reveal-stagger: 70ms;                              /* per-item delay step in a group */
+
+  /* ---------- Cursors ----------
+     Clean standard cursors: default OS arrow and pointer on interactives. */
+  --cursor-default: default;
+  --cursor-pointer: pointer;
+
+  /* ---------- Lineup ("The Lineup" roster on the blue band) ----------
+     The #card-lineup band is ALWAYS the fixed brand blue (#42B2FE) in both
+     light and dark themes, so its inner chrome is themed against that blue —
+     NOT against the page's light/dark surfaces. Using an ink-tinted glass
+     panel (dark, translucent) instead of white "app UI" cards is what makes
+     the roster read as part of the band rather than a pasted-in widget.
+     These tokens are shared (theme-independent) because the band color is. */
+  --lineup-ink: #0B1220;                                  /* dark ink used across the band chrome */
+  --lineup-panel-bg: rgba(11, 18, 32, 0.82);              /* glass panel over blue */
+  --lineup-panel-bg-soft: rgba(11, 18, 32, 0.55);         /* lighter fill (list rows, pill track) */
+  --lineup-panel-border: rgba(255, 255, 255, 0.14);       /* hairline on the dark glass */
+  --lineup-panel-border-strong: rgba(255, 255, 255, 0.22);
+  --lineup-panel-ink: #F5F8FF;                            /* primary text on the glass panel */
+  --lineup-panel-muted: rgba(245, 248, 255, 0.62);        /* secondary text on the glass panel */
+  --lineup-panel-faint: rgba(245, 248, 255, 0.38);        /* tertiary / idle names */
+  --lineup-row-hover: rgba(255, 255, 255, 0.06);          /* row hover wash */
+  --lineup-row-active: rgba(255, 255, 255, 0.10);         /* row active wash */
+
+  /* Motion tokens — restrained, premium. Calm ease-out is the default curve;
+     durations kept short and intent-aware to avoid eager/slop entrances. */
+  --lineup-move-ease: cubic-bezier(0.16, 1, 0.3, 1);      /* calm ease-out (roster's existing curve) */
+  --lineup-move-dur: 220ms;                               /* most moves land in ~180–260ms */
+  --lineup-move-dur-fast: 160ms;
+  --lineup-stagger: 48ms;                                 /* tight offset between choreographed elements */
 }
 
 /* ---------- LIGHT MODE (default) ---------- */
 :root,
 html[data-theme="light"] {
-  --bg: #FFFFFF;
-  --bg-2: #F5F7FB;
-  --bg-3: #EEF1F6;
+  --bg: #FAFBFC;
+  --bg-2: #F0F2F6;
+  --bg-3: #E8EAEE;
   --bg-elevated: #FFFFFF;
   --bg-overlay: rgba(255, 255, 255, 0.72);
+  --page-transition-bg: #F0F2F6;
 
-  --ink: #0B1526;
+  --ink: #0B0F19;
   --cloud: #F5F7FB;
-  --text: #0B1526;
+  --text: #0B0F19;
   --text-strong: #000000;
-  --muted: #3D4868;
-  --muted-2: #677494;
+  --muted: #4B5563;
+  --muted-2: #6B7280;
 
-  --line: rgba(11, 21, 38, 0.06);
-  --line-strong: rgba(11, 21, 38, 0.09);
+  --line: rgba(11, 15, 25, 0.04);
+  --line-strong: rgba(11, 15, 25, 0.08);
 
-  --nav-bg: rgba(255, 255, 255, 0.92);
-  --nav-link: #5B6584;
-  --nav-link-active: #0B1526;
+  --nav-bg: rgba(255, 255, 255, 0.85);
+  --nav-link: #4B5563;
+  --nav-link-active: #0B0F19;
 
-  --btn-ghost-border: rgba(11, 21, 38, 0.18);
-  --btn-ghost-color: #0B1526;
+  --btn-ghost-border: rgba(11, 15, 25, 0.12);
+  --btn-ghost-color: #0B0F19;
   --btn-ghost-hover: var(--blue);
 
-  --clock-bg: #FFFFFF;
-  --clock-border: var(--blue);
-  --clock-num: #0B1526;
+  --btn-primary-bg: var(--text-strong);
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-shadow: rgba(0, 0, 0, 0.25);
+
+  --btn-contrast-bg: var(--text-strong);
+  --btn-contrast-text: #FFFFFF;
+
+  --orange-text: #C2410C;
+  --green-text: #047857;
+  --purple-text: #6B21A8;
+  --blue-text: #0369A1;
+  --pink-text: #BE185D;
+
+  --clock-bg: rgba(255, 255, 255, 0.7);
+  --clock-border: rgba(255, 255, 255, 0.4);
+  --clock-num: #0B0F19;
 
   --card-bg: #FFFFFF;
-  --card-bg-alt: #F5F7FB;
-  --card-border: rgba(11, 21, 38, 0.1);
+  --card-bg-alt: #F0F2F6;
+  --card-border: rgba(11, 15, 25, 0.06);
+
+  --brutal-bg: #FFFFFF;
+  --brutal-border: 1px solid rgba(11, 15, 25, 0.1);
+  --brutal-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+
+  --glass-bg: #FFFFFF;
+  --glass-border: rgba(11, 15, 25, 0.06);
+  --glow-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
 
   --marquee-fade: var(--bg);
 
-  --modal-overlay: rgba(245, 247, 251, 0.85);
+  --expanded-accent: #0284C7;
+  --expanded-shadow: rgba(2, 132, 199, 0.22);
 
-  --footer-link: #3A4661;
-  --sibling-bg: #F5F7FB;
+  --footer-link: #4B5563;
+  --sibling-bg: #F0F2F6;
 
   --sponsor-slot-bg: #FFFFFF;
-  --sponsor-slot-border: #C9D3E0;
-  --sponsor-slot-text: #94A2B8;
+  --sponsor-slot-border: #D1D5DB;
+  --sponsor-slot-text: #6B7280;
 
   --teal: #0AA98F;
-  --about-text: #3A4661;
-  --about-border: #E1E7F0;
+  --about-text: #374151;
+  --about-border: #E5E7EB;
 
-  --proto-bg: #EEF1F6;
+  --proto-bg: #E8EAEE;
   --sticky-bg: #FFFFFF;
+
+  /* Ambient corner gradient glows (event primer poster) */
+  --ambient-tl: rgba(68, 179, 254, 0.28);
+  --ambient-tr: rgba(254, 87, 234, 0.24);
+  --ambient-br: rgba(7, 227, 131, 0.26);
+  --ambient-bl: rgba(68, 179, 254, 0.16);
 
   color-scheme: light;
 }
@@ -90,55 +164,88 @@ html[data-theme="light"] {
 /* ---------- DARK MODE ---------- */
 html[data-theme="dark"] {
   --bg: #12182A;
-  --bg-2: #1A2138;
-  --bg-3: #222B45;
-  --bg-elevated: #1A2138;
-  --bg-overlay: rgba(18, 24, 42, 0.72);
+  --bg-2: #192138;
+  --bg-3: #222C47;
+  --bg-elevated: #192138;
+  --bg-overlay: rgba(18, 24, 42, 0.85);
+  --page-transition-bg: #161C24;
 
   /* Invert ink/cloud so section-light & about text stay readable */
   --ink: #F5F7FB;
-  --cloud: #1A2138;
-  --text: #F5F7FB;
+  --cloud: #192138;
+  --text: #D1D5DB;
   --text-strong: #FFFFFF;
-  --muted: #CBD5E1;
-  --muted-2: #94A3B8;
+  --muted: #9CA3AF;
+  --muted-2: #6B7280;
 
   --line: rgba(255, 255, 255, 0.06);
   --line-strong: rgba(255, 255, 255, 0.09);
 
-  --nav-bg: rgba(18, 24, 42, 0.92);
-  --nav-link: #A8B0C7;
+  --nav-bg: rgba(18, 24, 42, 0.85);
+  --nav-link: #9CA3AF;
   --nav-link-active: #FFFFFF;
 
-  --btn-ghost-border: rgba(255, 255, 255, 0.14);
+  --btn-ghost-border: rgba(255, 255, 255, 0.1);
   --btn-ghost-color: #FFFFFF;
   --btn-ghost-hover: var(--blue);
 
-  --clock-bg: #0B101D;
-  --clock-border: var(--blue);
+  --btn-primary-bg: var(--text-strong);
+  --btn-primary-text: #12182A;
+  --btn-primary-shadow: rgba(255, 255, 255, 0.25);
+
+  --btn-contrast-bg: #FFFFFF;
+  --btn-contrast-text: #060E1A;
+
+  --orange-text: var(--orange);
+  --green-text: var(--green);
+  --purple-text: var(--purple);
+  --blue-text: var(--blue);
+  --pink-text: var(--pink);
+
+  --clock-bg: rgba(25, 33, 56, 0.6);
+  --clock-border: rgba(255, 255, 255, 0.08);
   --clock-num: #FFFFFF;
 
-  --card-bg: #1A2138;
-  --card-bg-alt: #222B45;
-  --card-border: rgba(255, 255, 255, 0.08);
+  --card-bg: #192138;
+  --card-bg-alt: #222C47;
+  --card-border: rgba(255, 255, 255, 0.06);
+
+  --brutal-bg: #192138;
+  --brutal-border: 1px solid rgba(255, 255, 255, 0.08);
+  --brutal-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+
+  --glass-bg: #192138;
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glow-shadow: 0 0 30px rgba(68, 179, 254, 0.08);
 
   --marquee-fade: var(--bg);
 
-  --modal-overlay: rgba(6, 9, 17, 0.85);
+  --expanded-accent: #38BDF8;
+  --expanded-shadow: rgba(0, 0, 0, 0.5);
 
-  --footer-link: #C7D0E4;
-  --sibling-bg: #1A2138;
+  --footer-link: #9CA3AF;
+  --sibling-bg: #0E121C;
 
-  --sponsor-slot-bg: #222B45;
-  --sponsor-slot-border: rgba(255, 255, 255, 0.14);
-  --sponsor-slot-text: #A8B0C7;
+  --sponsor-slot-bg: #151A29;
+  --sponsor-slot-border: rgba(255, 255, 255, 0.08);
+  --sponsor-slot-text: #9CA3AF;
 
   --teal: #2BD4AD;
-  --about-text: #C7D0E4;
-  --about-border: rgba(255, 255, 255, 0.1);
+  --about-text: #D1D5DB;
+  --about-border: rgba(255, 255, 255, 0.08);
 
-  --proto-bg: #222B45;
-  --sticky-bg: #1A2138;
+  --proto-bg: #151A29;
+  --sticky-bg: #0E121C;
+
+  /* Standard cursors in dark mode */
+  --cursor-default: default;
+  --cursor-pointer: pointer;
+
+  /* Ambient corner gradient glows (event primer poster - dark mode) */
+  --ambient-tl: rgba(68, 179, 254, 0.18);
+  --ambient-tr: rgba(254, 87, 234, 0.16);
+  --ambient-br: rgba(7, 227, 131, 0.18);
+  --ambient-bl: rgba(68, 179, 254, 0.12);
 
   color-scheme: dark;
 }
@@ -159,16 +266,43 @@ html {
 body {
   position: relative;
   background-color: var(--bg);
+  /* Grid lines + ambient corner gradients are painted in the body background stack.
+     Grid lines sit above the ambient glows, so the 1px grid pattern cleanly
+     overlays the soft color gradients. Ambient corner gradients are fixed to
+     the viewport so they frame the entire website across all pages and scrolls,
+     matching the event primer poster aesthetic. */
   background-image:
+    /* ---- grid lines (top of stack) ---- */
     linear-gradient(var(--line) var(--grid-line), transparent var(--grid-line)),
-    linear-gradient(90deg, var(--line) var(--grid-line), transparent var(--grid-line));
-  background-size: var(--grid-size) var(--grid-size);
+    linear-gradient(90deg, var(--line) var(--grid-line), transparent var(--grid-line)),
+    /* ---- ambient corner glows (poster gradient aura) ---- */
+    radial-gradient(ellipse 65% 55% at 0% 0%, var(--ambient-tl) 0%, rgba(68, 179, 254, 0.06) 40%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 0%, var(--ambient-tr) 0%, rgba(254, 87, 234, 0.05) 40%, transparent 70%),
+    radial-gradient(ellipse 60% 55% at 100% 100%, var(--ambient-br) 0%, rgba(7, 227, 131, 0.06) 40%, transparent 75%),
+    radial-gradient(ellipse 55% 45% at 0% 100%, var(--ambient-bl) 0%, rgba(68, 179, 254, 0.04) 40%, transparent 70%);
+  background-repeat:
+    repeat, repeat,
+    no-repeat, no-repeat, no-repeat, no-repeat;
+  background-position:
+    left 0 top 0,
+    left 0 top 0,
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%;
+  background-size:
+    var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size),
+    100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-attachment:
+    scroll, scroll,
+    fixed, fixed, fixed, fixed;
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 17px;
   line-height: 1.6;
   overflow-x: clip;
-  padding-bottom: calc(var(--grid-size) * 1.25);
+  padding-bottom: 0;
+  margin-bottom: 0;
   transition: var(--theme-ease);
 }
 
@@ -243,59 +377,26 @@ button {
   display: block;
 }
 
-.primer-edge--bottom .pe-blue {
-  bottom: 0;
-  left: 0;
-  --box-c: var(--blue);
-}
-
-.primer-edge--bottom .pe-green {
-  bottom: 0;
-  left: var(--grid-size);
-  --box-c: var(--green);
-}
-
-.primer-edge--bottom .pe-purple {
-  bottom: 0;
-  left: calc(var(--grid-size) * 2);
-  --box-c: var(--purple);
-}
-
-.primer-edge--bottom .pe-orange {
-  bottom: var(--grid-size);
-  right: var(--grid-size);
-  --box-c: var(--orange);
-}
-
-.primer-edge--bottom .pe-purple-end {
-  bottom: 0;
-  right: 0;
-  --box-c: var(--purple);
-}
 
 .page,
 footer,
 .sticky-cta,
-.modal-overlay,
-.proto-badge,
-.amazon-q-bot,
-.amazon-q-wrap {
+.proto-badge {
   position: relative;
   z-index: 1;
 }
-.modal-overlay { z-index: 300; }
 .sticky-cta { z-index: 150; }
 .proto-badge { z-index: 120; }
-.amazon-q-bot,
-.amazon-q-wrap { z-index: 125; }
 
 /* ---------- Colorful visual boxes ---------- */
+/* The scattered per-section decorative boxes were replaced by grid-locked
+   colored cells painted directly on the <body> background (see the `body`
+   rule above), so they are always aligned to the grid. The old section-level
+   .deco-layer boxes are hidden to avoid duplicate, misaligned squares.
+   NOTE: .primer-edge boxes (hero top / footer bottom) are intentionally
+   edge-anchored and are kept — this only hides the drifting .deco-layer set. */
 .deco-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
+  display: none;
 }
 
 .brand-box {
@@ -303,6 +404,9 @@ footer,
   width: var(--grid-size);
   height: var(--grid-size);
   background: var(--box-c, var(--blue));
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.6;
 }
 
 .brand-box.sm {
@@ -350,37 +454,43 @@ footer,
 .deco-stair-bl .b5 { top: calc(var(--grid-size) * 2); right: var(--grid-size); --box-c: var(--green); }
 
 /* --- Pattern: V cluster (bottom) --- */
-.deco-v .b1 { bottom: calc(var(--grid-size) * 2); left: calc(50% - var(--grid-size) * 1.5); --box-c: var(--purple); }
-.deco-v .b2 { bottom: calc(var(--grid-size) * 2); left: calc(50% + var(--grid-size) * 0.5); --box-c: var(--blue); }
-.deco-v .b3 { bottom: var(--grid-size); left: calc(50% - var(--grid-size) * 0.5); --box-c: var(--pink); }
+.deco-v .b1 { bottom: calc(var(--grid-size) * 2); left: calc(var(--grid-size) * 4); --box-c: var(--purple); }
+.deco-v .b2 { bottom: calc(var(--grid-size) * 2); left: calc(var(--grid-size) * 6); --box-c: var(--blue); }
+.deco-v .b3 { bottom: var(--grid-size); left: calc(var(--grid-size) * 5); --box-c: var(--pink); }
 .deco-v .b4 { top: var(--grid-size); left: var(--grid-size); --box-c: var(--green); }
 .deco-v .b5 { top: calc(var(--grid-size) * 2); left: calc(var(--grid-size) * 2); --box-c: var(--orange); }
 
 /* --- Pattern: edge scatter --- */
 .deco-scatter .b1 { top: calc(var(--grid-size) * 2); right: 0; --box-c: var(--green); }
 .deco-scatter .b2 { top: calc(var(--grid-size) * 3); right: 0; --box-c: var(--blue); }
-.deco-scatter .b3 { top: 50%; right: 0; --box-c: var(--pink); }
+.deco-scatter .b3 { top: calc(var(--grid-size) * 6); right: 0; --box-c: var(--pink); }
 .deco-scatter .b4 { bottom: calc(var(--grid-size) * 3); left: 0; --box-c: var(--orange); }
 .deco-scatter .b5 { bottom: calc(var(--grid-size) * 2); left: 0; --box-c: var(--purple); }
 
-/* Floating purple accent (primer cover) */
+/* Floating purple accent — replaced by the grid-locked colored cells on the
+   <body> background so it always aligns; hidden to avoid a drifting square. */
 .box-floating {
-  position: absolute;
-  width: var(--grid-size);
-  height: var(--grid-size);
-  background: var(--purple);
-  bottom: calc(var(--grid-size) * 3);
-  left: calc(var(--grid-size) * 2);
-  z-index: 1;
-  pointer-events: none;
+  display: none;
 }
 
 /* ---------- Theme toggle (Modern Cyber-Pill Switch) ---------- */
+.theme-toggle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
 .theme-toggle {
   position: relative;
   width: 58px;
   height: 32px;
-  border-radius: 20px;
+  box-sizing: border-box;
+  margin: 0;
+  border-radius: 8px;
   border: 1px solid var(--line-strong, rgba(0, 0, 0, 0.15));
   background: var(--bg-3, #E5E7EB);
   padding: 3px;
@@ -435,7 +545,7 @@ footer,
   left: 3px;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 5px;
   background: linear-gradient(135deg, #FC9907, #F59E0B);
   box-shadow: 0 2px 6px rgba(252, 153, 7, 0.4);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.3s ease;
@@ -495,12 +605,6 @@ html[data-theme="dark"] .theme-toggle-thumb {
   height: 28px;
 }
 
-.s-modal-head .chip {
-  width: 36px;
-  height: 36px;
-  margin-bottom: 12px;
-}
-
 .aws-mark {
   display: inline-flex;
   flex-direction: column;
@@ -524,8 +628,17 @@ html[data-theme="dark"] .theme-toggle-thumb {
   stroke: currentColor;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 980px) {
+  :root {
+    --nav-h: 64px;
+  }
   .deco-layer .brand-box {
     display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --nav-h: 64px;
   }
 }
