@@ -327,6 +327,7 @@ export function animateElement(el, options = {}) {
         },
         onComplete: () => {
           el._animationCompleted = true;
+          el.classList.add('is-done', 'split-completed');
           if (typeof onComplete === 'function') onComplete();
         },
         willChange: 'transform, opacity',

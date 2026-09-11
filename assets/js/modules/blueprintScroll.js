@@ -189,7 +189,7 @@ function render(scroll) {
     enterProgress = currentY / enterDistance;
   }
 
-  if (enterProgress < 1 && clipPathEl && strokePathEl) {
+  if (enterProgress > 0 && enterProgress < 1 && clipPathEl && strokePathEl) {
     // Big prominent arch curvature: up to 240px peak in center, flattening as enterProgress -> 1
     const maxArch = Math.min(240, Math.max(120, Math.round(viewportWidth * 0.15)));
     const ease = 1 - Math.pow(1 - enterProgress, 2.2);
@@ -207,10 +207,12 @@ function render(scroll) {
       strokePathEl.setAttribute('d', curveD);
       if (strokeWrapEl) strokeWrapEl.style.opacity = '1';
     }
-  } else if (lastArch !== 0) {
-    lastArch = 0;
-    if (pin) pin.style.clipPath = '';
-    if (strokeWrapEl) strokeWrapEl.style.opacity = '0';
+  } else {
+    if (lastArch !== 0 || (pin && pin.style.clipPath)) {
+      lastArch = 0;
+      if (pin) pin.style.clipPath = '';
+      if (strokeWrapEl) strokeWrapEl.style.opacity = '0';
+    }
   }
 
   // Dynamic horizontal scroll animation for each panel in the spread

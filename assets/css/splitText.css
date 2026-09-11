@@ -14,8 +14,17 @@
 .split-line {
   display: block;
   overflow: hidden;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
   will-change: transform, opacity;
   transform: translateZ(0);
+}
+
+.split-parent.is-done,
+.split-parent.is-done .split-line,
+.split-parent.split-completed,
+.split-parent.split-completed .split-line {
+  overflow: visible !important;
 }
 
 .split-word {

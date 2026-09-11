@@ -1447,6 +1447,7 @@ html.bp-active #program {
   height: calc(100vh + var(--bp-extra, 0px));
   padding: 0;
   position: relative;
+  margin-top: clamp(60px, 8vh, 120px);
 }
 
 html.bp-active #program .deco-layer {
@@ -1592,8 +1593,14 @@ html.bp-active .blueprint-panel--intro {
   justify-content: flex-start;
   align-self: center;
 }
-html.bp-active .blueprint-panel--offset-up { margin-top: -6vh; }
-html.bp-active .blueprint-panel--offset-down { margin-top: 8vh; }
+html.bp-active .blueprint-panel--offset-up {
+  top: -9vh;
+  margin-top: 0;
+}
+html.bp-active .blueprint-panel--offset-down {
+  top: 9vh;
+  margin-top: 0;
+}
 
 /* ---- Editorial meta row (index / label) shared by every panel ---- */
 .bp-meta {
@@ -1670,7 +1677,14 @@ html.bp-active .blueprint-panel--offset-down { margin-top: 8vh; }
 }
 
 /* ---- Agenda panels: folio numeral + editorial copy column ---- */
-html.bp-active .blueprint-panel--agenda { justify-content: flex-start; }
+html.bp-active .blueprint-panel--agenda {
+  align-self: center;
+  height: auto;
+  min-height: 480px;
+  justify-content: flex-start;
+  overflow: visible;
+  padding: clamp(20px, 2.5vh, 36px) 0;
+}
 
 .blueprint-panel--agenda .bp-num {
   font-family: var(--font-display, var(--font-sans));
@@ -1762,7 +1776,7 @@ html[data-theme="dark"] html.bp-active .blueprint-panel.is-focused .bp-num {
 /* Offset-down panels: numeral sits after the copy for a mirrored rhythm.
    The accent bar renders above the numeral here, so it needs top clearance
    from the glyph (the tight line-height would otherwise let it crowd the "02"). */
-html.bp-active .blueprint-panel--offset-down { flex-direction: column-reverse; justify-content: flex-end; }
+html.bp-active .blueprint-panel--offset-down { flex-direction: column-reverse; justify-content: flex-start; }
 html.bp-active .blueprint-panel--offset-down .bp-num { margin: clamp(16px, 3vh, 40px) 0 0; }
 html.bp-active .blueprint-panel--offset-down .bp-num::after { margin: clamp(20px, 3vh, 36px) 0 0; }
 
@@ -1871,16 +1885,25 @@ html.bp-active .blueprint-panel--schedule {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  overflow: visible;
 }
 
 .bp-sched-title {
   font-family: var(--font-display, var(--font-sans));
   font-weight: 800;
   font-size: clamp(30px, 3vw, 44px);
-  line-height: 1.05;
+  line-height: 1.2;
   letter-spacing: -0.025em;
   color: var(--text-strong);
   margin: 0;
+  padding-bottom: 6px;
+  overflow: visible;
+}
+
+.bp-sched-title .split-line,
+.bp-sched-title.split-parent {
+  overflow: visible !important;
+  padding-bottom: 0.18em;
 }
 
 /* Minimalist Editorial View Switcher */
@@ -2631,8 +2654,10 @@ html:not(.bp-active) .blueprint-panel--schedule .bp-sched-title {
   font-family: var(--font-display, var(--font-sans));
   font-weight: 800;
   font-size: 22px;
+  line-height: 1.2;
   margin: 24px 0 16px;
   color: var(--text-strong);
+  overflow: visible;
 }
 
 @media (max-width: 1023px) {
@@ -2640,8 +2665,10 @@ html:not(.bp-active) .blueprint-panel--schedule .bp-sched-title {
     font-family: var(--font-display, var(--font-sans));
     font-weight: 800;
     font-size: 22px;
+    line-height: 1.2;
     margin: 24px 0 16px;
     color: var(--text-strong);
+    overflow: visible;
   }
 }
 
@@ -4968,6 +4995,18 @@ html[data-theme="dark"] .speaker-section-divider {
 /* ==========================================================================
    SPONSORS & PARTNERS — Option 3: Hero Showcase + Infinite Marquee Stream
    ========================================================================== */
+
+#sponsors {
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  padding: clamp(90px, 12vh, 140px) 0 clamp(80px, 10vh, 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+}
 
 #sponsors .section-head.sponsors-section-head {
   max-width: 1120px;
