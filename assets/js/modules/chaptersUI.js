@@ -19,10 +19,12 @@ function chapterCardHTML(c) {
         </span>`;
     };
 
+    const logoSrc = c.imgUrl || 'assets/images/south-summit-logo.svg';
+
     return `
     <div class="chapter-card">
       <div class="mark">
-        <img class="chip" src="assets/images/south-summit-logo.svg" alt="${name}">
+        <img class="chip" src="${logoSrc}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
       </div>
       <div>
         <h5>${name}</h5>
