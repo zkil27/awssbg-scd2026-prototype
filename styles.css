@@ -7372,10 +7372,20 @@ footer {
 #card-manifesto .about-outcomes b {
   color: #18181b;
 }
+#card-manifesto .section-head {
+  max-width: 100%;
+}
+
 #card-manifesto .section-title,
 #card-chapters .section-title,
 #card-directors .section-title {
   color: #18181b;
+}
+
+@media (min-width: 640px) {
+  #card-manifesto .section-title {
+    white-space: nowrap;
+  }
 }
 #card-manifesto .eyebrow,
 #card-chapters .eyebrow,
