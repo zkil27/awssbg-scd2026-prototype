@@ -490,7 +490,7 @@ footer,
   height: 32px;
   box-sizing: border-box;
   margin: 0;
-  border-radius: 20px;
+  border-radius: 8px;
   border: 1px solid var(--line-strong, rgba(0, 0, 0, 0.15));
   background: var(--bg-3, #E5E7EB);
   padding: 3px;
@@ -545,7 +545,7 @@ footer,
   left: 3px;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: 5px;
   background: linear-gradient(135deg, #FC9907, #F59E0B);
   box-shadow: 0 2px 6px rgba(252, 153, 7, 0.4);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease, box-shadow 0.3s ease;
