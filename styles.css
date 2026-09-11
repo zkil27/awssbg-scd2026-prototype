@@ -5399,53 +5399,6 @@ html[data-theme="dark"] .marquee-chip-logo-wrap {
   }
 }
 
-/* ==========================================================================
-   03 // PROSPECTUS SPONSOR CTA BANNER
-   ========================================================================== */
-
-.sponsor-cta-banner {
-  margin-top: 8px;
-  padding: 28px 32px;
-  background: var(--surface, #FFFFFF);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-}
-
-html[data-theme="dark"] .sponsor-cta-banner {
-  background: rgba(18, 26, 42, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-}
-
-.sponsor-cta-copy h4 {
-  font-family: var(--font-display, var(--font-sans));
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text-strong);
-  margin: 0 0 6px 0;
-  letter-spacing: -0.01em;
-}
-
-.sponsor-cta-copy p {
-  font-family: var(--font-sans);
-  font-size: 13.5px;
-  color: var(--muted);
-  max-width: 600px;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.sponsor-cta-actions {
-  flex-shrink: 0;
-}
 
 /* ===== REGISTRATION ===== */
 .register-band {
@@ -6053,7 +6006,6 @@ footer {
   .venue-floors-grid { grid-template-columns: 1fr; }
   .chapter-grid { grid-template-columns: repeat(2, 1fr); }
   .tier-editorial { grid-template-columns: 1fr; gap: 24px; padding-bottom: 34px; }
-  .sponsor-cta-banner { flex-direction: column; align-items: flex-start; gap: 18px; padding: 24px 20px; }
   .register-inner { grid-template-columns: 1fr; gap: 32px; }
   .qr-box { justify-self: center; }
   .assistive-nav { display: block; }
@@ -6112,7 +6064,6 @@ footer {
   .organizer-logo-frame { width: 88px; height: 88px; }
   .sponsors-hero-card { padding: 22px 18px; }
   .marquee-chip { padding: 8px 14px; }
-  .sponsor-cta-banner { padding: 22px 18px; flex-direction: column; align-items: flex-start; }
   .venue-photo-dossier, .venue-transit-guide, .venue-actions { padding: 18px 20px; }
   .nav-inner { padding: 0 16px; }
 
