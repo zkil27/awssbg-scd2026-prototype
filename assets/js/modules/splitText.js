@@ -181,12 +181,19 @@ export function splitIntoLines(el) {
 function isExcluded(el) {
   if (!el || !el.textContent || !el.textContent.trim()) return true;
 
+  if (el.closest('[data-no-split="true"], [data-no-split]')) return true;
+
   const excludedAncestor = el.closest(
     '.nav, #siteNav, .staggered-menu-panel, .sm-toggle, .dock, .dock-inner, ' +
     '.assistive-hud, .assistive-hud-wrap, #assistiveTouch, button, .btn, ' +
     '#countdown, .cd-digit, .cd-num, .cd-label, #splashScreen, svg, ' +
     '.chip, .badge, .schedule-pill, .sm-panel-itemWrap, .sm-socials-item, ' +
-    '.sb-card-tab, .sb-card-label, .about-stacked-deck .sb-card-tab'
+    '.sb-card-tab, .sb-card-label, .about-stacked-deck .sb-card-tab, ' +
+    '.chapter-card, .chapter-grid, #card-chapters, ' +
+    '.director-card, .directors-grid, #card-directors, ' +
+    '.lineup-wall, .lineup-tile, .roster-spotlight-card, #card-lineup, ' +
+    '.sponsor-card, .sponsors-grid, .marquee-track, .marquee-chip, .marquee, ' +
+    '.modal, .s-modal, .modal-backdrop'
   );
 
   return Boolean(excludedAncestor);

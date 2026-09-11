@@ -5248,26 +5248,50 @@ html[data-theme="dark"] .hero-tier-tag.venue {
 
 .hero-logo-frame {
   width: 100%;
-  max-width: 220px;
+  max-width: 240px;
   height: 80px;
-  border-radius: 10px;
-  background: #FFFFFF;
-  border: 1px solid rgba(11, 21, 38, 0.08);
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 18px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  padding: 6px 12px;
+  box-shadow: none;
 }
 
 html[data-theme="dark"] .hero-logo-frame {
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .hero-logo {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+
+.hero-logo-frame.emblem .hero-logo {
+  max-height: 80px;
+  width: auto;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.15));
+}
+
+/* Theme-adaptive logo variants (e.g. AWS dark text on light mode, white text on dark mode) */
+.hero-logo--theme-dark {
+  display: none !important;
+}
+
+.hero-logo--theme-light {
+  display: block !important;
+}
+
+html[data-theme="dark"] .hero-logo--theme-dark {
+  display: block !important;
+}
+
+html[data-theme="dark"] .hero-logo--theme-light {
+  display: none !important;
 }
 
 .hero-card-body {
@@ -5392,17 +5416,18 @@ html[data-theme="dark"] .marquee-chip:hover {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: #FFFFFF;
-  border: 1px solid rgba(11, 21, 38, 0.1);
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 2px;
   flex-shrink: 0;
 }
 
 html[data-theme="dark"] .marquee-chip-logo-wrap {
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
+  border: none;
 }
 
 .marquee-chip-logo {
@@ -6938,29 +6963,152 @@ footer {
   max-height: 720px;
 }
 
-/* Chapters Grid Inside Band */
+/* Chapters Grid & Cards Inside Band */
+.chapter-grid,
 #card-chapters .chapter-grid {
   max-height: none;
   overflow: visible;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 18px;
   padding-right: 0;
+  position: relative;
+  z-index: 2;
 }
 
+.chapter-card,
 #card-chapters .chapter-card {
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
+  border-radius: 16px;
   color: #18181b;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 22px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
 }
+
+.chapter-card:hover,
+#card-chapters .chapter-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 0, 0, 0.16);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.chapter-card .mark,
+#card-chapters .chapter-card .mark {
+  width: auto;
+  height: 64px;
+  max-width: 150px;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+  box-shadow: none;
+}
+
+.chapter-card .chip,
+#card-chapters .chapter-card .chip,
+.chapter-card .mark img,
+#card-chapters .chapter-card .mark img {
+  max-width: 140px;
+  max-height: 64px;
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+  object-position: left center;
+  display: block;
+}
+
+.chapter-card-info,
+.chapter-card > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-grow: 1;
+}
+
+.chapter-card h5,
 #card-chapters .chapter-card h5 {
+  font-family: var(--font-sans, "Inter", sans-serif);
+  font-weight: 700;
+  font-size: 14.5px;
+  line-height: 1.35;
   color: #18181b;
+  margin: 0;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
+
+.chapter-card span,
 #card-chapters .chapter-card span {
+  font-family: var(--font-mono, monospace);
+  font-size: 11.5px;
+  line-height: 1.4;
   color: #52525b;
+  letter-spacing: 0.01em;
+  display: block;
+  margin-top: 2px;
+}
+
+.chapter-socials,
+#card-chapters .chapter-socials {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.chapter-socials a,
+.chapter-socials .chapter-social-soon,
+#card-chapters .chapter-socials a,
+#card-chapters .chapter-socials .chapter-social-soon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #27272a;
+  transition: all 0.18s ease;
+  text-decoration: none;
+}
+
+.chapter-socials a:hover,
+#card-chapters .chapter-socials a:hover {
+  background: #18181b;
+  color: #ffffff;
+  border-color: #18181b;
+  transform: translateY(-2px);
+}
+
+.chapter-socials .chapter-social-soon,
+#card-chapters .chapter-socials .chapter-social-soon {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.chapter-socials svg,
+#card-chapters .chapter-socials svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
 }
 
 /* Directors Grid Inside Band */

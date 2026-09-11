@@ -54,16 +54,6 @@ function directorCardHTML(d) {
           <span class="director-dept-label">${d.department} Directorate</span>
         </div>
       </div>
-
-      <p class="director-focus-text">${d.focus}</p>
-
-      <div class="director-card-footer">
-        <div class="director-status-pill">
-          <span class="status-indicator-dot"></span>
-          <span>Lead Organizer</span>
-        </div>
-        <div class="director-org-tag font-mono">AWS SBG CALABARZON</div>
-      </div>
     </article>
   `;
 }
