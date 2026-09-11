@@ -1102,42 +1102,51 @@
     </section>
   </div>
 
-  <!-- ============ SPEAKER MODAL ============ -->
+  <!-- ============ SPEAKER MODAL (TECH PASS REDESIGN) ============ -->
   <div class="modal-overlay" id="speakerModal" role="dialog" aria-modal="true" aria-labelledby="smName"
     aria-hidden="true" onclick="if(event.target===this) closeSpeakerModal()">
-    <div class="modal-card">
-      <button class="modal-close" onclick="closeSpeakerModal()" aria-label="Close modal">&#10005;</button>
-      <!-- SPEAKER HERO HEADER WITH SOLID ON-THEME BRAND TILE -->
-      <div class="s-modal-header">
-        <div class="sm-crosshair top-left">+</div>
-        <div class="sm-crosshair top-right">+</div>
-        <div class="s-modal-avatar-frame">
-          <img id="smAvatar" class="s-modal-avatar-img" src="assets/images/south-summit-logo.svg" alt="Speaker">
+    <div class="modal-card sm-pass-card">
+      <button class="modal-close sm-close-btn" onclick="closeSpeakerModal()" aria-label="Close modal">&#10005;</button>
+
+      <div class="sm-pass-layout">
+        <!-- LEFT COLUMN: Full-bleed Speaker Portrait Pane -->
+        <div class="sm-col-media">
+          <img id="smAvatar" class="sm-avatar-img" src="assets/images/south-summit-logo.svg" alt="Speaker Portrait"
+               onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
         </div>
-        <div class="s-modal-intro">
-          <span class="sc-status-badge keynote" id="smBadge">KEYNOTE</span>
-          <h3 id="smName">Speaker Name</h3>
-          <span class="role" id="smRole">Role · Company</span>
-        </div>
-      </div>
-      <div class="s-modal-body">
-        <div class="s-modal-section">
-          <h4>Session Topic</h4>
-          <p id="smSession">Details regarding the speaker's session, what they will build, and the primary takeaways
-            for students attending the summit.</p>
-        </div>
-        <div class="s-modal-section">
-          <h4>About the Speaker</h4>
-          <p id="smBio">A brief biography highlighting their journey into tech, their work with Cloud &amp; AI, and why
-            they are passionate about empowering the student community.</p>
-        </div>
-        <div class="s-modal-foot">
-          <a class="btn btn-primary" id="smLinkedIn" href="#" target="_blank" rel="noopener">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
-            </svg>
-            Connect on LinkedIn
-          </a>
+
+        <!-- RIGHT COLUMN: Speaker Details & Session Info -->
+        <div class="sm-col-content">
+          <div class="sm-header-lockup">
+            <span class="sc-status-badge keynote sm-badge-pill" id="smBadge">KEYNOTE</span>
+            <h3 id="smName" class="sm-name">Speaker Name</h3>
+            <div class="sm-role" id="smRole">Role · Company</div>
+          </div>
+
+          <div class="sm-session-box">
+            <h4 class="sm-box-label">SESSION TOPIC</h4>
+            <p id="smSession" class="sm-session-title">Details regarding the speaker's session, what they will build, and the primary takeaways for students attending the summit.</p>
+          </div>
+
+          <div class="sm-bio-box">
+            <h4 class="sm-box-label">ABOUT THE SPEAKER</h4>
+            <div id="smBio" class="sm-bio-text">
+              A brief biography highlighting their journey into tech, their work with Cloud &amp; AI, and why they are passionate about empowering the student community.
+            </div>
+          </div>
+
+          <div class="sm-actions-row">
+            <a class="btn btn-primary sm-linkedin-btn" id="smLinkedIn" href="#" target="_blank" rel="noopener">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
+              </svg>
+              <span>Connect on LinkedIn</span>
+              <svg class="sm-arrow-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>

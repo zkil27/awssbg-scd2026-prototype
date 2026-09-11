@@ -80,7 +80,7 @@ export function openSpeakerModal(speaker, tileTheme = '') {
         } else {
             finalTheme = 'theme-green';
         }
-        modalCard.classList.add(finalTheme);
+        modalCard.classList.add(finalTheme, 'sm-pass-card');
     }
 
     const name = speaker?.name || 'Speaker Name';
@@ -99,7 +99,7 @@ export function openSpeakerModal(speaker, tileTheme = '') {
     const badgeEl = document.getElementById('smBadge');
     if (badgeEl) {
         badgeEl.textContent = status;
-        badgeEl.className = `sc-status-badge ${status.toLowerCase()}`;
+        badgeEl.className = `sc-status-badge ${status.toLowerCase()} sm-badge-pill`;
     }
 
     const sessionEl = document.getElementById('smSession');
@@ -117,6 +117,7 @@ export function openSpeakerModal(speaker, tileTheme = '') {
 
     const avatarEl = document.getElementById('smAvatar');
     if (avatarEl) {
+        avatarEl.className = 'sm-avatar-img';
         avatarEl.src = speaker?.picUrl || FALLBACK_AVATAR;
         avatarEl.alt = name;
     }
@@ -137,6 +138,45 @@ export function openSpeakerModal(speaker, tileTheme = '') {
         lenis.stop();
     }
     document.documentElement.classList.add('modal-scroll-lock');
+
+    /* GSAP Fluid Entrance Choreography */
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.gsap && !reduceMotion) {
+        window.gsap.killTweensOf([modal, modalCard]);
+
+        const mediaCol = modal.querySelector('.sm-col-media');
+        const headerLockup = modal.querySelector('.sm-header-lockup');
+        const sessionBox = modal.querySelector('.sm-session-box');
+        const bioBox = modal.querySelector('.sm-bio-box');
+        const actionsRow = modal.querySelector('.sm-actions-row');
+
+        const elementsToKill = [mediaCol, headerLockup, sessionBox, bioBox, actionsRow].filter(Boolean);
+        if (elementsToKill.length) window.gsap.killTweensOf(elementsToKill);
+
+        // Initial setup for the entrance animation
+        window.gsap.set(modal, { opacity: 0 });
+        window.gsap.set(modalCard, { opacity: 0, scale: 0.95, y: 16 });
+        if (mediaCol) window.gsap.set(mediaCol, { opacity: 0 });
+        const contentItems = [headerLockup, sessionBox, bioBox, actionsRow].filter(Boolean);
+        if (contentItems.length) {
+            window.gsap.set(contentItems, { opacity: 0, y: 10 });
+        }
+
+        const tl = window.gsap.timeline({ defaults: { ease: 'power2.out' } });
+        tl.to(modal, { opacity: 1, duration: 0.24 })
+          .to(modalCard, { opacity: 1, scale: 1, y: 0, duration: 0.3 }, '<')
+          .to(mediaCol, { opacity: 1, duration: 0.26 }, '<0.05');
+
+        if (contentItems.length) {
+            tl.to(contentItems, {
+                opacity: 1,
+                y: 0,
+                duration: 0.26,
+                stagger: 0.04,
+                ease: 'power2.out'
+            }, '<0.06');
+        }
+    }
 
     /* Wait for the visibility flip before moving focus */
     requestAnimationFrame(() => {
@@ -159,6 +199,15 @@ export function closeSpeakerModal(options = {}) {
         modal.classList.remove('open', 'is-closing', 'closing');
         modal.setAttribute('aria-hidden', 'true');
 
+        // Reset any inline GSAP properties so next open starts fresh
+        const modalCard = modal.querySelector('.modal-card');
+        if (window.gsap) {
+            window.gsap.killTweensOf([modal, modalCard]);
+            window.gsap.set([modal, modalCard], { clearProps: 'all' });
+            const elements = modal.querySelectorAll('.sm-col-media, .sm-header-lockup, .sm-session-box, .sm-bio-box, .sm-actions-row');
+            if (elements.length) window.gsap.set(elements, { clearProps: 'all' });
+        }
+
         const scheduleModal = document.getElementById('programFlowModal');
         const isScheduleOpen = scheduleModal && scheduleModal.classList.contains('open');
 
@@ -171,13 +220,27 @@ export function closeSpeakerModal(options = {}) {
         }
     };
 
-    if (options.instant || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (options.instant || reduceMotion) {
         finalize();
         return;
     }
 
     modal.classList.add('is-closing');
-    closeSpeakerTimeout = setTimeout(finalize, 260);
+
+    // GSAP Out-Animation
+    const modalCard = modal.querySelector('.modal-card');
+    if (window.gsap && modalCard) {
+        window.gsap.killTweensOf([modal, modalCard]);
+        const exitTl = window.gsap.timeline({
+            defaults: { ease: 'power2.in' },
+            onComplete: finalize
+        });
+        exitTl.to(modalCard, { opacity: 0, scale: 0.94, y: 14, duration: 0.22 })
+              .to(modal, { opacity: 0, duration: 0.2 }, '<0.04');
+    } else {
+        closeSpeakerTimeout = setTimeout(finalize, 260);
+    }
 }
 
 function speakerCardHTML(speaker, index, isClone = false, extraClasses = '', isHero = false) {
