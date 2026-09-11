@@ -1465,7 +1465,12 @@
         }
         if (splash.classList.contains('is-hidden')) return;
         splash.classList.add('is-hidden');
-        var done = function () { splash.hidden = true; };
+        var done = function () {
+          if (splash.hidden) return;
+          splash.hidden = true;
+          window.__splashDismissed = true;
+          window.dispatchEvent(new CustomEvent('splash:dismissed'));
+        };
         splash.addEventListener('transitionend', function (e) {
           if (e.target === splash) done();
         }, { once: true });

@@ -241,6 +241,7 @@ export async function initSplashPixelTransition(options = {}) {
   function finishDismissal() {
     if (hasDismissed) return;
     hasDismissed = true;
+    window.__splashDismissed = true;
 
     if (pixelGridEl && pixelGridEl.parentNode) {
       pixelGridEl.parentNode.removeChild(pixelGridEl);
