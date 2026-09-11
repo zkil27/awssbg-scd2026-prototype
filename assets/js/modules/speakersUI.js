@@ -6,6 +6,7 @@
 
 import { speakers } from '../data/speakers.js';
 import { getLenis } from './smoothScroll.js';
+import { Masonry } from './masonry.js';
 
 const colors = ['blue', 'green', 'pink'];
 
@@ -288,6 +289,12 @@ export function initSpeakers() {
     // list + single spotlight (that block below is now dormant — its ids no
     // longer exist in the DOM).
     // ---------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // React Bits Masonry Wall (About page "The Lineup").
+    // Upgraded from static CSS-grid to GSAP-driven responsive multi-column
+    // masonry layout with image preloading, directional entrance animation,
+    // blur-to-focus resolution, and hover scaling.
+    // ---------------------------------------------------------------------
     if (aboutRosterStage && aboutRosterStage.classList.contains('lineup-wall')) {
         let wallCategory = 'all';
 
@@ -295,16 +302,10 @@ export function initSpeakers() {
             if (wallCategory === 'panels') return panels;
             if (wallCategory === 'keynotes') return keynotes;
             if (wallCategory === 'builders' || wallCategory === 'sessions') return builders;
-            // 'all' → Panels, then Keynotes, then Builders (matches pill order)
-            return [...panels, ...keynotes, ...builders];
+            return [...keynotes, ...panels, ...builders];
         }
 
-        const prefersReduced = () =>
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const finePointer = () =>
-            window.matchMedia('(pointer: fine)').matches;
-
-        function tileHTML(s) {
+        function speakerToMasonryItem(s, index) {
             const color = getSpeakerColor(s);
             const isKeynote = s.status === 'KEYNOTE';
             const name = s.name || 'Speaker';
@@ -313,46 +314,76 @@ export function initSpeakers() {
             const avatar = s.picUrl || FALLBACK_AVATAR;
             const linkedin = s.linkedInUrl
                 || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`;
+
+            // Varied heights (child.height / 2 in layout) for dynamic masonry rhythm
+            let h = 500;
+            if (isKeynote) {
+                h = (index % 3 === 0) ? 660 : (index % 3 === 1 ? 600 : 560);
+            } else if (s.status === 'PANEL') {
+                h = (index % 3 === 0) ? 520 : (index % 3 === 1 ? 480 : 500);
+            } else {
+                h = (index % 2 === 0) ? 440 : 390;
+            }
+
+            return {
+                id: s.id || `speaker-${s.originalIndex ?? index}`,
+                img: avatar,
+                url: linkedin,
+                height: h,
+                speaker: s,
+                color,
+                isKeynote,
+                status,
+                name,
+                role,
+                linkedin,
+                originalIndex: s.originalIndex,
+                tileTheme: `bg-tile-${color}`,
+                extraClasses: isKeynote ? 'is-keynote' : ''
+            };
+        }
+
+        function renderLineupItem(item) {
             return `
-            <button type="button" class="lineup-tile bg-tile-${color}${isKeynote ? ' is-feature' : ''}"
-                    data-speaker-index="${s.originalIndex}"
-                    style="--tile-accent: var(--${color});"
-                    aria-label="${name}, ${status}. View bio.">
-              <img class="lt-photo" src="${avatar}" alt="${name}" loading="lazy" decoding="async"
+            <div class="item-img" style="--tile-accent: var(--${item.color});">
+              <img class="lt-photo" src="${item.img}" alt="${item.name}" loading="lazy" decoding="async"
                    onerror="this.onerror=null;this.src='${FALLBACK_AVATAR}';this.classList.add('lt-photo-fallback')">
               <span class="lt-scrim" aria-hidden="true"></span>
-              <span class="sc-status-badge ${status.toLowerCase()}">${status}</span>
-              <a class="lt-li" href="${linkedin}" target="_blank" rel="noopener"
-                 onclick="event.stopPropagation()" title="LinkedIn Profile" aria-label="${name} on LinkedIn">
+              <span class="sc-status-badge ${item.status.toLowerCase()}">${item.status}</span>
+              <a class="lt-li" href="${item.linkedin}" target="_blank" rel="noopener"
+                 onclick="event.stopPropagation()" title="LinkedIn Profile" aria-label="${item.name} on LinkedIn">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.67a1.64 1.64 0 0 0-1.64 1.63c0 .91.73 1.64 1.64 1.64s1.64-.73 1.64-1.64c0-.9-.73-1.63-1.64-1.63Z"/>
                 </svg>
               </a>
               <span class="lt-info">
-                <h3 class="lt-name">${name}</h3>
-                <span class="lt-role">${role}</span>
+                <h3 class="lt-name">${item.name}</h3>
+                <span class="lt-role">${item.role}</span>
               </span>
-            </button>`;
+              <div class="color-overlay"></div>
+            </div>`;
         }
 
-        function playWallEntrance() {
-            if (prefersReduced() || !finePointer()) return;
-            const tiles = aboutRosterStage.querySelectorAll('.lineup-tile');
-            tiles.forEach((el, i) => {
-                el.style.setProperty('--lt-reveal-i', String(Math.min(i, 10)));
-                el.classList.add('tile-reveal');
-                el.addEventListener('animationend', () => {
-                    el.classList.remove('tile-reveal');
-                    el.style.removeProperty('--lt-reveal-i');
-                }, { once: true });
-            });
-        }
+        const initialItems = getWallList().map(speakerToMasonryItem);
 
-        function renderWall() {
-            const list = getWallList();
-            aboutRosterStage.innerHTML = list.map(tileHTML).join('');
-            playWallEntrance();
-        }
+        const lineupMasonry = new Masonry(aboutRosterStage, {
+            items: initialItems,
+            ease: 'power3.out',
+            duration: 0.6,
+            stagger: 0.05,
+            animateFrom: 'bottom',
+            scaleOnHover: true,
+            hoverScale: 0.95,
+            blurToFocus: true,
+            colorShiftOnHover: false,
+            renderItem: renderLineupItem,
+            onItemClick: (e, item) => {
+                if (e.target.closest('.lt-li') || e.target.closest('a')) return;
+                openSpeakerModal(item.speaker, item.tileTheme);
+            }
+        });
+
+        window.lineupMasonry = lineupMasonry;
 
         function setWallCategory(cat) {
             wallCategory = cat;
@@ -363,15 +394,15 @@ export function initSpeakers() {
                         && (p.dataset.target === 'sessions' || p.dataset.target === 'builders'));
                 p.classList.toggle('active', isMatch);
             });
-            renderWall();
+            const updatedItems = getWallList().map(speakerToMasonryItem);
+            lineupMasonry.setItems(updatedItems);
+            lineupMasonry.playEntranceAnimation(0.04);
         }
 
         if (pillAll) pillAll.addEventListener('click', () => setWallCategory('all'));
         if (pillPanels) pillPanels.addEventListener('click', () => setWallCategory('panels'));
         if (pillKeynotes) pillKeynotes.addEventListener('click', () => setWallCategory('keynotes'));
         if (pillBuilders) pillBuilders.addEventListener('click', () => setWallCategory(pillBuilders.dataset.target || 'sessions'));
-
-        renderWall();
     }
 
     if (rosterList && spotlightCard) {
@@ -741,7 +772,7 @@ export function initSpeakers() {
         // Let the LinkedIn links do their thing without opening the modal
         if (e.target.closest('a') || e.target.closest('.spk-li') || e.target.closest('.sp-li-btn')) return;
 
-        const card = e.target.closest('.lineup-tile, .sp-btn-bio, .roster-spotlight-card, .ri-bloom-card, .asym-speaker-card, .speaker-card, .asym-hero-card, .asym-mini-card, .asym-poster-card, .speaker-inline-card');
+        const card = e.target.closest('.lineup-tile, .item-wrapper, .sp-btn-bio, .roster-spotlight-card, .ri-bloom-card, .asym-speaker-card, .speaker-card, .asym-hero-card, .asym-mini-card, .asym-poster-card, .speaker-inline-card');
         if (!card) return;
 
         const index = Number(card.dataset.speakerIndex);

@@ -7242,11 +7242,9 @@ footer {
    both light and dark; per-track accent comes from --tile-accent (set in JS).
    ========================================================================== */
 .lineup-wall {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  grid-auto-rows: 200px;
-  grid-auto-flow: dense;
-  gap: 16px;
+  position: relative;
+  display: block;
+  width: 100%;
 }
 
 .lineup-tile {
@@ -7408,17 +7406,8 @@ footer {
 
 /* Responsive: shrink columns, then drop feature spans so tiles stack cleanly. */
 @media (max-width: 860px) {
-  .lineup-wall {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    grid-auto-rows: 150px;
-    gap: 10px;
-  }
 }
 @media (max-width: 560px) {
-  .lineup-wall {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 150px;
-  }
   /* No oversized feature spans on small screens — every tile equal so nothing
      overflows or dominates the narrow viewport. */
   .lineup-tile.is-feature {

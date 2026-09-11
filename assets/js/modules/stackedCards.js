@@ -117,6 +117,9 @@ export function activateCard(targetIdx, animate = true) {
   if (animTimer) clearTimeout(animTimer);
 
   const targetCard = cList[targetIdx];
+  if (window.lineupMasonry && targetCard.querySelector('#aboutRosterStage')) {
+    window.lineupMasonry.relayout();
+  }
   const targetBody = targetCard.querySelector('.sb-card-body');
   const naturalBodyH = getNaturalBodyHeight(targetCard);
   const targetActiveH = TAB_H + naturalBodyH;
@@ -146,6 +149,9 @@ export function activateCard(targetIdx, animate = true) {
         body.style.opacity = isActive ? '1' : '0';
         body.style.overflow = isActive ? 'visible' : 'hidden';
         body.style.pointerEvents = isActive ? 'auto' : 'none';
+      }
+      if (isActive && window.lineupMasonry && c.querySelector('#aboutRosterStage')) {
+        window.lineupMasonry.playEntranceAnimation(0.04);
       }
     });
 
@@ -219,6 +225,9 @@ export function activateCard(targetIdx, animate = true) {
         b.style.height = `${naturalBodyH}px`;
         b.style.opacity = '1';
         b.style.pointerEvents = 'auto';
+      }
+      if (window.lineupMasonry && c.querySelector('#aboutRosterStage')) {
+        window.lineupMasonry.playEntranceAnimation(0.12);
       }
     } else {
       c.style.height = `${TAB_H}px`;
