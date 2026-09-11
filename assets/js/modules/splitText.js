@@ -199,6 +199,71 @@ function isRendered(el) {
   return Boolean(el.offsetParent !== null || el.getClientRects().length > 0);
 }
 
+let pendingSplashAnimations = [];
+let splashDoneListenerAttached = false;
+let splashDoneExecuted = false;
+
+/**
+ * Checks if the branded splash screen is currently active and visible.
+ */
+function isSplashActive() {
+  if (window.__splashDismissed || splashDoneExecuted) return false;
+  const splash = document.getElementById('splashScreen');
+  return Boolean(
+    splash &&
+    !splash.hidden &&
+    !splash.classList.contains('is-hidden') &&
+    splash.style.display !== 'none'
+  );
+}
+
+/**
+ * Flushes all pending text animations once the splash screen is fully dismissed.
+ */
+function onSplashDone() {
+  if (splashDoneExecuted) return;
+  splashDoneExecuted = true;
+  window.__splashDismissed = true;
+
+  requestAnimationFrame(() => {
+    const toRun = pendingSplashAnimations.slice();
+    pendingSplashAnimations = [];
+
+    toRun.forEach(fn => {
+      try {
+        fn();
+      } catch (err) {
+        console.warn('[SplitText] Error executing pending animation:', err);
+      }
+    });
+
+    if (ScrollTrigger) {
+      ScrollTrigger.refresh();
+    }
+  });
+}
+
+/**
+ * Queues an animation trigger function until the splash screen is dismissed.
+ */
+function queueAnimationUntilSplashDone(fn) {
+  pendingSplashAnimations.push(fn);
+
+  if (!splashDoneListenerAttached) {
+    splashDoneListenerAttached = true;
+
+    window.addEventListener('splash:dismissed', onSplashDone, { once: true });
+
+    const splash = document.getElementById('splashScreen');
+    if (splash) {
+      splash.addEventListener('transitionend', onSplashDone, { once: true });
+    }
+
+    // Safety fallback: ensure text animations play even if splash dismissal events fail
+    setTimeout(onSplashDone, 3000);
+  }
+}
+
 /**
  * Animate a single element using the SplitText configuration.
  */
@@ -226,44 +291,59 @@ export function animateElement(el, options = {}) {
 
   if (!targets.length) return null;
 
-  const startPct = (1 - threshold) * 100;
-  const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
-  const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
-  const marginUnit = marginMatch ? marginMatch[2] || 'px' : 'px';
-  const sign =
-    marginValue === 0
-      ? ''
-      : marginValue < 0
-        ? `-=${Math.abs(marginValue)}${marginUnit}`
-        : `+=${marginValue}${marginUnit}`;
-  const start = `top ${startPct}%${sign}`;
+  // Set initial state immediately to avoid any flash of unstyled content
+  gsap.set(targets, { ...from, willChange: 'transform, opacity', force3D: true });
 
-  const tween = gsap.fromTo(
-    targets,
-    { ...from },
-    {
-      ...to,
-      duration,
-      ease,
-      stagger: delay / 1000,
-      scrollTrigger: {
-        trigger: el,
-        start,
-        once: true,
-        fastScrollEnd: true,
-        anticipatePin: 0.4
-      },
-      onComplete: () => {
-        el._animationCompleted = true;
-        if (typeof onComplete === 'function') onComplete();
-      },
-      willChange: 'transform, opacity',
-      force3D: true
-    }
-  );
+  const startAnimation = () => {
+    if (el._animationStarted) return el._splitTween || null;
+    el._animationStarted = true;
 
-  el._splitTween = tween;
-  return tween;
+    const startPct = (1 - threshold) * 100;
+    const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
+    const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
+    const marginUnit = marginMatch ? marginMatch[2] || 'px' : 'px';
+    const sign =
+      marginValue === 0
+        ? ''
+        : marginValue < 0
+          ? `-=${Math.abs(marginValue)}${marginUnit}`
+          : `+=${marginValue}${marginUnit}`;
+    const start = `top ${startPct}%${sign}`;
+
+    const tween = gsap.fromTo(
+      targets,
+      { ...from },
+      {
+        ...to,
+        duration,
+        ease,
+        stagger: delay / 1000,
+        scrollTrigger: {
+          trigger: el,
+          start,
+          once: true,
+          fastScrollEnd: true,
+          anticipatePin: 0.4
+        },
+        onComplete: () => {
+          el._animationCompleted = true;
+          if (typeof onComplete === 'function') onComplete();
+        },
+        willChange: 'transform, opacity',
+        force3D: true
+      }
+    );
+
+    el._splitTween = tween;
+    return tween;
+  };
+
+  if (isSplashActive()) {
+    queueAnimationUntilSplashDone(startAnimation);
+    return null;
+  }
+
+  return startAnimation();
 }
 
 let showPageWrapped = false;
@@ -327,6 +407,13 @@ export async function initSplitText(config = {}) {
     return;
   }
 
+  // Ensure fonts are loaded before splitting lines to guarantee precise line wrapping
+  if (document.fonts && document.fonts.ready) {
+    try {
+      await document.fonts.ready;
+    } catch (_) {}
+  }
+
   if (window.__lenis) {
     window.__lenis.on('scroll', ScrollTrigger.update);
   }
@@ -345,17 +432,6 @@ export async function initSplitText(config = {}) {
 
   scanAndAnimate(savedOptions);
   wrapShowPage();
-
-  const splash = document.getElementById('splashScreen');
-  if (splash && !splash.hidden && !splash.classList.contains('is-hidden')) {
-    const onSplashDismiss = () => {
-      requestAnimationFrame(() => {
-        if (ScrollTrigger) ScrollTrigger.refresh();
-      });
-    };
-    splash.addEventListener('transitionend', onSplashDismiss, { once: true });
-    setTimeout(onSplashDismiss, 1800);
-  }
 }
 
 /**
