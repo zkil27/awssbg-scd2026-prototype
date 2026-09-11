@@ -20,7 +20,7 @@ export const speakers = [
     "sessionTitle": "Student Success Story",
     "abstract": "Isaeus (Asi) Guiang is a Junior Solutions Architect at Appficiency Inc., Build Club Manila City Lead, and the <b>former Country Lead of AWS Cloud Club Philippines</b>. He specializes in enterprise cloud solutions and AI, helping students accelerate their tech careers.",
     "status": "BUILDER",
-    "picUrl": "assets/images/speakers/isaeus-asi-guiang.webp",
+    "picUrl": "assets/images/speakers/isaeus-asi-guiang.png",
     "linkedInUrl": "https://www.linkedin.com/in/isaeus-guiang/"
   },
   {
@@ -30,7 +30,7 @@ export const speakers = [
     "sessionTitle": "Women in Tech Keynote",
     "abstract": "Trisha Pelagio is a Solutions Architect at Amazon Web Services (AWS) and recipient of the prestigious <b>AWS Golden Jacket</b>. She is passionate about designing scalable cloud solutions and championing women in cloud technology.",
     "status": "KEYNOTE",
-    "picUrl": "assets/images/speakers/trisha-pelagio.webp",
+    "picUrl": "assets/images/speakers/trisha-pelagio.jpg",
     "linkedInUrl": "https://www.linkedin.com/in/trishapelagio/"
   },
   {
@@ -90,7 +90,7 @@ export const speakers = [
     "sessionTitle": "Student Success Story · Panel Discussion",
     "abstract": "Mark Achiles Flores Jr. is a Cloud Engineer at Elevate Innovations Corp. and the <b>former Executive Director & Captain of AWS Cloud Club PUP Manila</b>, passionate about cloud solutions and student community leadership.",
     "status": "PANEL",
-    "picUrl": "assets/images/speakers/mark-achiles-flores-jr.webp",
+    "picUrl": "assets/images/speakers/mark-achiles-flores-jr.jpg",
     "linkedInUrl": "https://www.linkedin.com/in/heyitsakidev/"
   },
   {
@@ -100,7 +100,7 @@ export const speakers = [
     "sessionTitle": "Student Success Story",
     "abstract": "John Danmel Laranga is a Cloud Engineer, <b>President of DEVCON Laguna</b>, and Director of Resources at AWS Cloud Club Philippines. He founded AWS Cloud Club – University of Cabuyao to nurture local tech builders.",
     "status": "BUILDER",
-    "picUrl": "assets/images/speakers/john-danmel-laranga.webp",
+    "picUrl": "assets/images/speakers/john-danmel-laranga.jpg",
     "linkedInUrl": "https://www.linkedin.com/in/johndanmellaranga/"
   },
   {
@@ -110,7 +110,7 @@ export const speakers = [
     "sessionTitle": "Women in Tech Keynote",
     "abstract": "Kimi Annika Villareal is a Learning Program Associate at eCloudvalley and the <b>former Project Manager of AWS SCD Mega Manila 2025</b>. She has extensive experience organizing large-scale student tech initiatives and cloud communities.",
     "status": "KEYNOTE",
-    "picUrl": "assets/images/speakers/kimi-annika-villareal.webp",
+    "picUrl": "assets/images/speakers/kimi-annika-villareal.jpg",
     "linkedInUrl": "https://www.linkedin.com/in/kimi-villareal/"
   },
   {
@@ -170,7 +170,7 @@ export const speakers = [
     "sessionTitle": "Panel Discussion",
     "abstract": "David Marquez is the <b>CodeX Philippines Ambassador</b> and serial tech entrepreneur who co-founded and served as CTO of Shipmates, xpanse, and shirt.ly, dedicated to mentoring startup founders.",
     "status": "PANEL",
-    "picUrl": "assets/images/speakers/david-marquez.webp",
+    "picUrl": "assets/images/speakers/david-marquez.jpg",
     "linkedInUrl": "https://www.linkedin.com/in/dayvough/"
   }
 ];

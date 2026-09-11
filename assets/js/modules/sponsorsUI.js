@@ -1,7 +1,7 @@
 /**
  * Sponsors UI Module
  * AWS Student Community Day: South Summit 2026
- * Pure editorial layout: Quantum, Pro, and Lite Partner tiers
+ * Option 3: Hero Showcase (Spotlight Keystone Cards) + Infinite Marquee Stream
  */
 import { sponsors } from '../data/sponsors.js';
 
@@ -11,115 +11,74 @@ function escapeHTML(value) {
   }[c]));
 }
 
-function renderQuantumSlot(s) {
-  const name = escapeHTML(s.name || 'AWS Cloud Clubs Philippines');
-  const role = escapeHTML(s.role || 'Official Organizing Partner');
-  const desc = escapeHTML(s.description || '');
-  const metaRows = (s.meta || []).map(m => `
-    <div class="organizer-meta-row">
-      <span class="meta-label">${escapeHTML(m.label)}</span>
-      <span class="meta-value">${escapeHTML(m.value)}</span>
-    </div>
-  `).join('');
-
-  const urlLink = s.url
-    ? `<a href="${escapeHTML(s.url)}" target="_blank" rel="noopener" class="editorial-link">
-         <span>Learn about AWS Cloud Clubs</span>
-         <svg class="editorial-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-           <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-         </svg>
-       </a>`
-    : '';
+function renderHeroCard(s) {
+  const name = escapeHTML(s.name || '');
+  const color = s.color || 'purple';
+  const logoSrc = escapeHTML(s.imgUrl || 'assets/images/south-summit-logo.svg');
+  const tierTagLabel = s.tier === 'quantum' ? 'QUANTUM SPONSOR' : 'VENUE PARTNER';
 
   return `
-    <div class="organizer-feature-card color-purple" data-reveal>
-      <div class="organizer-media">
-        <div class="organizer-logo-frame">
-          <img src="${escapeHTML(s.imgUrl || 'assets/images/south-summit-logo.svg')}"
+    <article class="sponsors-hero-card color-${color}" data-card-color="${color}" data-reveal>
+      <div class="hero-card-spotlight" aria-hidden="true"></div>
+      <div class="hero-card-top">
+        <span class="hero-tier-tag ${s.tier}">${tierTagLabel}</span>
+      </div>
+      <div class="hero-card-media">
+        <div class="hero-logo-frame ${s.tier === 'venue' ? 'emblem' : ''}">
+          <img class="hero-logo"
+               src="${logoSrc}"
                alt="${name}"
-               data-fallback="${name}"
-               class="organizer-logo">
+               loading="lazy"
+               onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
         </div>
       </div>
-      <div class="organizer-content">
-        <div class="organizer-label-row">
-          <span class="editorial-mono-tag">${role}</span>
-          <span class="editorial-mono-num">01</span>
-        </div>
-        <h3 class="organizer-title">${name}</h3>
-        <p class="organizer-bio">${desc}</p>
-        ${metaRows ? `<div class="organizer-meta-table">${metaRows}</div>` : ''}
-        ${urlLink ? `<div class="organizer-action">${urlLink}</div>` : ''}
+      <div class="hero-card-body">
+        <h3 class="hero-card-title">${name}</h3>
+      </div>
+    </article>`;
+}
+
+function renderMarqueeChip(partner) {
+  const name = escapeHTML(partner.name || '');
+  const color = partner.color || 'blue';
+  const logoSrc = escapeHTML(partner.imgUrl || 'assets/images/south-summit-logo.svg');
+
+  return `
+    <div class="marquee-chip chip-${color}" tabindex="0" role="listitem">
+      <div class="marquee-chip-logo-wrap">
+        <img class="marquee-chip-logo"
+             src="${logoSrc}"
+             alt="${name}"
+             loading="lazy"
+             onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
+      </div>
+      <div class="marquee-chip-meta">
+        <span class="marquee-chip-name">${name}</span>
       </div>
     </div>`;
 }
 
-function renderProSlot(s, i) {
-  const name = escapeHTML(s.name || '');
-  const role = escapeHTML(s.role || 'Pro Partner');
-  const institution = escapeHTML(s.institution || '');
-  const desc = escapeHTML(s.description || '');
-  const track = escapeHTML(s.track || '');
-  const location = escapeHTML(s.location || '');
-  const color = s.color || 'green';
-  const indexNum = String(i + 1).padStart(2, '0');
+function initSpotlightEffect() {
+  const cards = document.querySelectorAll('.sponsors-hero-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
 
-  const urlLink = s.url
-    ? `<a href="${escapeHTML(s.url)}" target="_blank" rel="noopener" class="pro-card-link" aria-label="Visit ${name}">
-         <svg class="editorial-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-           <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-         </svg>
-       </a>`
-    : '';
-
-  return `
-    <article class="pro-card-editorial color-${color}" data-reveal>
-      <div class="pro-card-masthead">
-        <div class="pro-card-tags">
-          <span class="pro-card-index">${indexNum}</span>
-          <span class="pro-card-badge">${role}</span>
-        </div>
-        ${urlLink}
-      </div>
-      <div class="pro-card-main">
-        <h4 class="pro-card-name">${name}</h4>
-        ${institution ? `<span class="pro-card-institution">${institution}</span>` : ''}
-        ${desc ? `<p class="pro-card-desc">${desc}</p>` : ''}
-      </div>
-      <div class="pro-card-foot">
-        ${track ? `<span class="pro-card-track">${track}</span>` : ''}
-        ${location ? `<span class="pro-card-location">${location}</span>` : ''}
-      </div>
-    </article>`;
-}
-
-function renderLiteSlot(s, i) {
-  const name = escapeHTML(s.name || '');
-  const role = escapeHTML(s.role || 'Student Chapter');
-  const institution = escapeHTML(s.institution || s.description || '');
-  const location = escapeHTML(s.location || '');
-  const color = s.color || 'blue';
-  const indexNum = String(i + 1).padStart(2, '0');
-
-  return `
-    <article class="chapter-ledger-card color-${color}" data-reveal>
-      <div class="chapter-card-masthead">
-        <span class="chapter-index">${indexNum}</span>
-        <span class="chapter-badge">${role}</span>
-      </div>
-      <div class="chapter-card-main">
-        <h4 class="chapter-name">${name}</h4>
-        <p class="chapter-institution">${institution}</p>
-      </div>
-      <div class="chapter-card-meta">
-        <span class="chapter-accent-indicator" aria-hidden="true"></span>
-        <span class="chapter-location">${location}</span>
-      </div>
-    </article>`;
+    card.addEventListener('mouseleave', () => {
+      card.style.removeProperty('--mouse-x');
+      card.style.removeProperty('--mouse-y');
+    });
+  });
 }
 
 function wireLogoFallbacks(container) {
-  container.querySelectorAll('img[data-fallback]').forEach(img => {
+  if (!container) return;
+  container.querySelectorAll('img').forEach(img => {
     img.addEventListener('error', () => {
       img.src = 'assets/images/south-summit-logo.svg';
     }, { once: true });
@@ -127,26 +86,35 @@ function wireLogoFallbacks(container) {
 }
 
 export function initSponsors() {
-  const quantumStage = document.querySelector('.tier-stage.quantum');
-  const proStage = document.querySelector('.tier-stage.pro, .pro-cards-grid');
-  const liteStage = document.querySelector('.tier-stage.lite, .chapter-ledger-grid');
+  const heroGrid = document.getElementById('sponsorsHeroGrid');
+  const track1 = document.getElementById('marqueeTrack1');
+  const track2 = document.getElementById('marqueeTrack2');
 
-  const quantumSponsors = sponsors.filter(s => s.tier === 'quantum');
-  const proSponsors = sponsors.filter(s => s.tier === 'pro');
-  const liteSponsors = sponsors.filter(s => s.tier === 'lite');
+  const headlineSponsors = sponsors.filter(s => s.tier === 'quantum' || s.tier === 'venue');
+  const networkPartners = sponsors.filter(s => s.tier === 'pro' || s.tier === 'lite');
 
-  if (quantumStage && quantumSponsors.length > 0) {
-    quantumStage.innerHTML = quantumSponsors.map(renderQuantumSlot).join('');
-    wireLogoFallbacks(quantumStage);
+  // 1. Render Hero Showcase Cards if container exists
+  if (heroGrid && headlineSponsors.length > 0) {
+    heroGrid.innerHTML = headlineSponsors.map(renderHeroCard).join('');
+    wireLogoFallbacks(heroGrid);
+    initSpotlightEffect();
   }
 
-  if (proStage && proSponsors.length > 0) {
-    proStage.innerHTML = proSponsors.map((s, idx) => renderProSlot(s, idx)).join('');
-    wireLogoFallbacks(proStage);
-  }
+  // 2. Populate and duplicate Marquee tracks for seamless loop
+  if (track1 && track2 && networkPartners.length > 0) {
+    const half = Math.ceil(networkPartners.length / 2);
+    const track1List = networkPartners.slice(0, half);
+    const track2List = networkPartners.slice(half);
 
-  if (liteStage && liteSponsors.length > 0) {
-    liteStage.innerHTML = liteSponsors.map((s, idx) => renderLiteSlot(s, idx)).join('');
-    wireLogoFallbacks(liteStage);
+    // Render items and duplicate once to enable seamless 50% translation infinite loop
+    const track1HTML = track1List.map(renderMarqueeChip).join('');
+    const track2HTML = track2List.map(renderMarqueeChip).join('');
+
+    track1.innerHTML = track1HTML + track1HTML;
+    track2.innerHTML = track2HTML + track2HTML;
+
+    wireLogoFallbacks(track1);
+    wireLogoFallbacks(track2);
   }
 }
+

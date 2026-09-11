@@ -9,6 +9,9 @@ served**. There is no React runtime in this project.
 | -------------------- | ------------------------------------------ |
 | `Grainient.jsx`      | `assets/js/modules/grainient.js` (uses `assets/js/vendor/ogl.js`) |
 | `StaggeredMenu.jsx`  | `assets/js/modules/staggeredMenu.js` + `assets/css/staggeredMenu.css` |
+| `Masonry.jsx`        | `assets/js/modules/masonry.js` + `assets/css/masonry.css` |
+| `SplitText.jsx`      | `assets/js/modules/splitText.js` + `assets/css/splitText.css` |
+| `PixelTransition.jsx`| `assets/js/modules/pixelTransition.js` + `assets/css/pixelTransition.css` |
 
 If you change behavior, edit the **vanilla port**, not the `.jsx` here. This folder lives under
 `docs/` (not `assets/`) specifically so it never reads as shipped code.

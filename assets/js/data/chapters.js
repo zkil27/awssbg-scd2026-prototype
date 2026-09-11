@@ -19,7 +19,7 @@ export const chapters = [
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
-    imgUrl: null
+    imgUrl: 'assets/images/organizations/AWS SBG - PCU Cavite.png'
   },
   {
     name: 'AWS SBG – Mapúa Malayan Digital College',
@@ -27,7 +27,7 @@ export const chapters = [
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
-    imgUrl: null
+    imgUrl: 'assets/images/organizations/AWS SBG - MMDC.png'
   },
   {
     name: 'AWS SBG – University of Perpetual Help System Laguna – Biñan',
@@ -35,7 +35,7 @@ export const chapters = [
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
-    imgUrl: null
+    imgUrl: 'assets/images/organizations/AWS SBG - UPHSL.png'
   },
   {
     name: 'AWS SBG – Cavite State University – Main',
@@ -43,7 +43,7 @@ export const chapters = [
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
-    imgUrl: null
+    imgUrl: 'assets/images/organizations/AWS SBG - Spade.png'
   },
   {
     name: 'AWS SBG – Pamantasan ng Cabuyao',
@@ -51,7 +51,7 @@ export const chapters = [
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
-    imgUrl: null
+    imgUrl: 'assets/images/organizations/AWS SBG - UC.png'
   },
   {
     name: 'AWS SBG – Polytechnic University of the Philippines – Biñan',
@@ -59,7 +59,7 @@ export const chapters = [
     facebookUrl: 'https://www.facebook.com/share/1F7y2K5yxg/',
     linkedInUrl: '#',
     email: 'sbg.pupbinan@gmail.com',
-    imgUrl: null
+    imgUrl: 'assets/images/organizations/AWS SBG - PUP Biñan.svg'
   },
   {
     name: 'AWS Learning Club – Polar',
@@ -67,7 +67,7 @@ export const chapters = [
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
-    imgUrl: null
+    imgUrl: 'assets/images/organizations/AWSLC - Polar.png'
   },
   {
     name: 'AWS SBG – Aeris',
@@ -75,14 +75,6 @@ export const chapters = [
     facebookUrl: '#',
     linkedInUrl: '#',
     email: '',
-    imgUrl: null
-  },
-  {
-    name: 'AWS SBG – University of Batangas',
-    university: 'UB Batangas Campus',
-    facebookUrl: '#',
-    linkedInUrl: '#',
-    email: '',
-    imgUrl: null
+    imgUrl: 'assets/images/organizations/AWS SBG - Aeris.png'
   }
 ];
