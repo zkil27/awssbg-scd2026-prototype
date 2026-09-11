@@ -329,6 +329,13 @@ export async function initStaggeredMenu(config = {}) {
     }
   });
 
+  // Auto-close desktop menu if resized to mobile
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 980 && open) {
+      closeMenu();
+    }
+  }, { passive: true });
+
   // Intercept navigation link clicks inside the panel
   panel.addEventListener('click', (e) => {
     // 1. External social links: stop propagation so document handlers never intercept

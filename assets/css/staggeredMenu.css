@@ -513,8 +513,7 @@ html[data-theme="dark"] .sm-socials-link {
     padding: 0 20px;
   }
 
-  .header-right .nav-cta-btn,
-  .header-right .header-divider {
+  .header-right {
     display: none !important;
   }
   

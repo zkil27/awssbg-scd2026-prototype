@@ -1247,95 +1247,69 @@
     <!-- Backdrop overlay when HUD is open -->
     <div class="assistive-backdrop" id="assistiveBackdrop" aria-hidden="true"></div>
 
-    <!-- AssistiveTouch HUD Popup Menu -->
+    <!-- AssistiveTouch HUD Popup Menu (Themed modal matching desktop menu design) -->
     <div class="assistive-hud" id="assistiveHUD" role="dialog" aria-modal="true" aria-label="Navigation Menu" aria-hidden="true">
-      <div class="assistive-hud-card">
-        <div class="assistive-hud-header">
-          <div class="assistive-hud-title">
-            <span class="assistive-brand-chip"></span>
-            <span>AWS SCD 2026</span>
-          </div>
-          <button class="assistive-hud-close" id="assistiveHUDClose" type="button" aria-label="Close navigation menu">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+      <div class="assistive-hud-modal" id="assistiveHUDModal">
+        <!-- 5 Summit Brand Color Prelayers (Matching desktop StaggeredMenu signature effect) -->
+        <div class="assistive-hud-prelayers" id="assistiveHUDPrelayers" aria-hidden="true">
+          <div class="hud-prelayer hud-prelayer--blue"></div>
+          <div class="hud-prelayer hud-prelayer--green"></div>
+          <div class="hud-prelayer hud-prelayer--pink"></div>
+          <div class="hud-prelayer hud-prelayer--orange"></div>
+          <div class="hud-prelayer hud-prelayer--purple"></div>
         </div>
 
-        <div class="assistive-hud-grid">
-          <!-- Home -->
-          <button class="assistive-hud-item active" data-page="home" type="button">
-            <div class="assistive-hud-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
-            </div>
-            <span class="assistive-hud-label">Home</span>
-          </button>
+        <!-- Main Modal Card Content -->
+        <div class="assistive-hud-card" id="assistiveHUDCard">
+          <!-- Header: Theme Toggle -->
+          <div class="assistive-hud-header">
+            <button class="assistive-theme-toggle" id="assistiveThemeToggle" type="button" aria-label="Toggle light and dark mode" title="Toggle theme">
+              <span class="assistive-theme-icon-wrap" aria-hidden="true">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="4.2"></circle>
+                  <path d="M12 2v2.5M12 19.5v2.5M2 12h2.5M19.5 12h2.5M4.93 4.93l1.8 1.8M17.27 17.27l1.8 1.8M4.93 19.07l1.8-1.8M17.27 6.73l1.8-1.8"></path>
+                </svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                </svg>
+              </span>
+              <span class="assistive-theme-label" id="assistiveThemeLabel">Dark</span>
+            </button>
+          </div>
 
-          <!-- About -->
-          <button class="assistive-hud-item" data-page="about" type="button">
-            <div class="assistive-hud-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-            </div>
-            <span class="assistive-hud-label">About</span>
-          </button>
-
-          <!-- Merch -->
-          <button class="assistive-hud-item" data-page="merch" type="button">
-            <div class="assistive-hud-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <path d="M16 10a4 4 0 0 1-8 0"></path>
-              </svg>
-            </div>
-            <span class="assistive-hud-label">Merch</span>
-          </button>
-
-          <!-- Theme Toggle -->
-          <button class="assistive-hud-item" id="assistiveThemeToggle" type="button" data-theme-toggle>
-            <div class="assistive-hud-icon-box">
-              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="4.2"></circle>
-                <path d="M12 2v2.5M12 19.5v2.5M2 12h2.5M19.5 12h2.5M4.93 4.93l1.8 1.8M17.27 17.27l1.8 1.8M4.93 19.07l1.8-1.8M17.27 6.73l1.8-1.8"></path>
-              </svg>
-              <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
-              </svg>
-            </div>
-            <span class="assistive-hud-label" id="assistiveThemeLabel">Theme</span>
-          </button>
-
-          <!-- Scroll to Top -->
-          <button class="assistive-hud-item" id="assistiveScrollTop" type="button">
-            <div class="assistive-hud-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="19" x2="12" y2="5"></line>
-                <polyline points="5 12 12 5 19 12"></polyline>
-              </svg>
-            </div>
-            <span class="assistive-hud-label">Top</span>
-          </button>
-
-          <!-- Register Action -->
-          <a class="assistive-hud-item assistive-hud-register" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">
-            <div class="assistive-hud-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </div>
-            <span class="assistive-hud-label">Register</span>
-          </a>
+          <!-- Vertical Navigation List (matching desktop staggered menu) -->
+          <ul class="assistive-hud-list" role="list" data-numbering="true">
+            <li class="assistive-hud-itemWrap">
+              <button class="assistive-hud-item active" data-page="home" data-brand="blue" type="button" aria-label="Go to Home">
+                <span class="assistive-hud-itemLabel">Home</span>
+              </button>
+            </li>
+            <li class="assistive-hud-itemWrap">
+              <button class="assistive-hud-item" data-page="about" data-brand="green" type="button" aria-label="Learn About the summit">
+                <span class="assistive-hud-itemLabel">About</span>
+              </button>
+            </li>
+            <li class="assistive-hud-itemWrap">
+              <button class="assistive-hud-item" data-page="merch" data-brand="pink" type="button" aria-label="View Merch">
+                <span class="assistive-hud-itemLabel">Merch</span>
+              </button>
+            </li>
+            <li class="assistive-hud-itemWrap">
+              <button class="assistive-hud-item" data-section="program" data-brand="orange" type="button" aria-label="View Schedule">
+                <span class="assistive-hud-itemLabel">Schedule</span>
+              </button>
+            </li>
+            <li class="assistive-hud-itemWrap">
+              <button class="assistive-hud-item" data-section="venue" data-brand="purple" type="button" aria-label="View Twin Venues">
+                <span class="assistive-hud-itemLabel">Venue</span>
+              </button>
+            </li>
+            <li class="assistive-hud-itemWrap">
+              <a class="assistive-hud-item assistive-hud-item--register" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener" data-brand="blue" aria-label="Register on Luma">
+                <span class="assistive-hud-itemLabel">Register</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

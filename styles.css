@@ -517,7 +517,13 @@ nav.links button.active::after {
 
 /* ===== IPHONE ASSISTIVETOUCH MOBILE NAVBAR ===== */
 .assistive-nav {
-  display: none;
+  display: block;
+}
+
+@media (min-width: 981px) {
+  .assistive-nav {
+    display: none !important;
+  }
 }
 
 /* Floating AssistiveTouch Pod Button */
@@ -525,7 +531,7 @@ nav.links button.active::after {
   position: fixed;
   bottom: calc(24px + env(safe-area-inset-bottom));
   right: 18px;
-  z-index: 300;
+  z-index: 500;
   width: 58px;
   height: 58px;
   border-radius: 18px;
@@ -608,14 +614,14 @@ html[data-theme="dark"] .assistive-pod {
 .assistive-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 310;
-  background: rgba(0, 0, 0, 0.42);
+  z-index: 480;
+  background: rgba(0, 0, 0, 0.48);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
-  transition: opacity 0.25s ease, visibility 0.25s ease;
+  transition: opacity 0.28s ease, visibility 0.28s ease;
 }
 
 .assistive-backdrop.is-open {
@@ -628,14 +634,14 @@ html[data-theme="dark"] .assistive-pod {
 .assistive-hud {
   position: fixed;
   inset: 0;
-  z-index: 320;
+  z-index: 490;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   pointer-events: none;
   visibility: hidden;
-  transition: visibility 0.22s ease;
+  transition: visibility 0.25s ease;
 }
 
 .assistive-hud.is-open {
@@ -643,200 +649,241 @@ html[data-theme="dark"] .assistive-pod {
   visibility: visible;
 }
 
-.assistive-hud-card {
-  width: min(324px, calc(100vw - 36px));
-  background: var(--nav-bg, rgba(255, 255, 255, 0.92));
-  backdrop-filter: blur(32px) saturate(190%);
-  -webkit-backdrop-filter: blur(32px) saturate(190%);
-  border: 1px solid var(--line-strong, rgba(0, 0, 0, 0.12));
-  border-radius: 28px;
-  padding: 18px 18px 22px 18px;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
-  transform: scale(0.85);
+/* AssistiveTouch HUD Modal Shell (Preserves the centered modal format) */
+.assistive-hud-modal {
+  position: relative;
+  width: min(420px, calc(100vw - 28px));
+  max-height: calc(100dvh - 48px);
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+  transform: scale(0.94);
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s ease;
+  will-change: transform, opacity;
+}
+
+html[data-theme="dark"] .assistive-hud-modal {
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+.assistive-hud.is-open .assistive-hud-modal {
+  pointer-events: auto;
+}
+
+/* 5 Staggered Brand Color Prelayers (Matching desktop StaggeredMenu signature effect) */
+.assistive-hud-prelayers {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 26px;
+}
+
+.hud-prelayer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+}
+
+.hud-prelayer--blue   { background: var(--blue); }
+.hud-prelayer--green  { background: var(--green); }
+.hud-prelayer--pink   { background: var(--pink); }
+.hud-prelayer--orange { background: var(--orange); }
+.hud-prelayer--purple { background: var(--purple); }
+
+/* Main Modal Card Content (Slides in over the prelayers) */
+.assistive-hud-card {
+  position: relative;
+  width: 100%;
+  max-height: calc(100dvh - 48px);
+  background: var(--nav-bg, rgba(255, 255, 255, 0.96));
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid var(--line-strong, rgba(0, 0, 0, 0.12));
+  border-radius: 26px;
+  padding: 22px 26px 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  z-index: 2;
+  will-change: transform;
 }
 
 html[data-theme="dark"] .assistive-hud-card {
-  background: rgba(22, 28, 36, 0.92);
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  background: rgba(14, 18, 24, 0.96);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
-.assistive-hud.is-open {
-  pointer-events: auto;
-}
-
-.assistive-hud.is-open .assistive-hud-card {
-  transform: scale(1);
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* HUD Header */
+/* HUD Header: Minimal Theme Toggle */
 .assistive-hud-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4px 12px 4px;
+  padding: 0 0 14px 0;
   border-bottom: 1px solid var(--line, rgba(0, 0, 0, 0.08));
 }
 
-.assistive-hud-title {
-  display: flex;
+/* Theme Toggle Button */
+.assistive-theme-toggle {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  text-transform: uppercase;
-}
-
-.assistive-brand-chip {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--orange);
-}
-
-.assistive-hud-close {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--bg-2, rgba(0, 0, 0, 0.05));
-  border: 1px solid var(--line, rgba(0, 0, 0, 0.08));
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, color 0.2s ease;
-}
-
-.assistive-hud-close:hover {
-  color: var(--text-strong);
-  background: var(--bg-3, rgba(0, 0, 0, 0.1));
-  transform: scale(1.08);
-}
-
-.assistive-hud-close:active {
-  transform: scale(0.9);
-}
-
-/* HUD Grid & Items */
-.assistive-hud-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px 8px;
-  margin-top: 14px;
-}
-
-.assistive-hud-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 4px;
-  border-radius: 16px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: var(--text);
-  user-select: none;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.assistive-hud-item:hover {
-  transform: translateY(-2px);
-}
-
-.assistive-hud-item:active {
-  transform: scale(0.9);
-}
-
-.assistive-hud-icon-box {
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
   background: var(--bg-2, rgba(0, 0, 0, 0.04));
-  border: 1px solid var(--line, rgba(0, 0, 0, 0.08));
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.1));
+  border-radius: 22px;
+  padding: 6px 14px;
+  min-height: 36px;
   color: var(--text-strong);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-html[data-theme="dark"] .assistive-hud-icon-box {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-.assistive-hud-icon-box svg {
-  width: 22px;
-  height: 22px;
-  transition: transform 0.2s ease, stroke 0.2s ease;
-}
-
-.assistive-hud-label {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--muted);
-  transition: color 0.2s ease, font-weight 0.2s ease;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* Active Page State */
-.assistive-hud-item.active .assistive-hud-icon-box {
-  background: rgba(252, 153, 7, 0.16);
-  border-color: var(--orange);
-  color: var(--orange-text, var(--orange));
-  transform: scale(1.05);
+html[data-theme="dark"] .assistive-theme-toggle {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
-.assistive-hud-item.active .assistive-hud-label {
-  color: var(--orange-text, var(--orange));
-  font-weight: 700;
+.assistive-theme-toggle:hover {
+  border-color: var(--blue);
+  transform: translateY(-1px);
 }
 
-/* Register Action Highlighting */
-.assistive-hud-register .assistive-hud-icon-box {
-  background: var(--btn-contrast-bg);
-  color: var(--btn-contrast-text);
-  border-color: transparent;
-  box-shadow: 0 4px 14px var(--btn-primary-shadow, rgba(0, 0, 0, 0.25));
+.assistive-theme-icon-wrap {
+  display: inline-flex;
+  align-items: center;
 }
 
-html[data-theme="dark"] .assistive-hud-register .assistive-hud-icon-box {
-  background: var(--btn-contrast-bg);
-  color: var(--btn-contrast-text);
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.25);
-}
-
-.assistive-hud-register .assistive-hud-label {
-  font-weight: 700;
-  color: var(--text-strong);
-}
-
-/* Theme Toggle Sun / Moon in HUD */
-.assistive-hud-item .icon-sun,
-.assistive-hud-item .icon-moon {
+.assistive-theme-icon-wrap svg {
+  width: 14px;
+  height: 14px;
   display: none;
 }
 
-html[data-theme="light"] .assistive-hud-item .icon-moon {
+html[data-theme="dark"] .assistive-theme-icon-wrap .icon-sun {
   display: block;
+  color: var(--orange);
 }
 
-html[data-theme="dark"] .assistive-hud-item .icon-sun {
+html[data-theme="light"] .assistive-theme-icon-wrap .icon-moon,
+html:not([data-theme="dark"]) .assistive-theme-icon-wrap .icon-moon {
   display: block;
+  color: var(--blue);
+}
+
+.assistive-theme-label {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Navigation List (matches desktop staggered menu) */
+.assistive-hud-list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0 4px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.assistive-hud-itemWrap {
+  position: relative;
+  overflow: hidden;
+  line-height: 1;
+}
+
+/* Per-item brand accents */
+.assistive-hud-item[data-brand="blue"]   { --item-accent: var(--blue); }
+.assistive-hud-item[data-brand="green"]  { --item-accent: var(--green); }
+.assistive-hud-item[data-brand="pink"]   { --item-accent: var(--pink); }
+.assistive-hud-item[data-brand="orange"] { --item-accent: var(--orange); }
+.assistive-hud-item[data-brand="purple"] { --item-accent: var(--purple); }
+
+.assistive-hud-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 0;
+  padding-right: 2.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 800;
+  font-size: clamp(2.2rem, 8vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+  transition: color 0.25s ease, transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+.assistive-hud-itemLabel {
+  display: inline-block;
+  will-change: transform;
+  transform-origin: 0% 100%;
+  transition: color 0.25s ease, transform 0.2s ease;
+}
+
+.assistive-hud-item:hover .assistive-hud-itemLabel,
+.assistive-hud-item.active .assistive-hud-itemLabel {
+  color: var(--item-accent);
+  transform: translateX(4px);
+}
+
+/* CSS counter numbering on the right (matches desktop) */
+.assistive-hud-list[data-numbering] {
+  counter-reset: hudItem;
+}
+
+.assistive-hud-list[data-numbering] .assistive-hud-item::after {
+  counter-increment: hudItem;
+  content: counter(hudItem, decimal-leading-zero);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0.15em;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--item-accent);
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  user-select: none;
+  opacity: var(--hud-num-opacity, 0);
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.assistive-hud-item:hover::after {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Register link gradient text */
+.assistive-hud-item--register .assistive-hud-itemLabel {
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.assistive-hud-item--register:hover .assistive-hud-itemLabel {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero {
@@ -4927,10 +4974,22 @@ html[data-theme="dark"] .speaker-section-divider {
   justify-content: center;
   position: relative;
   z-index: 3;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+#sponsors .wrap {
+  width: 100%;
+  max-width: var(--container);
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 #sponsors .section-head.sponsors-section-head {
+  width: 100%;
   max-width: 1120px;
+  box-sizing: border-box;
   margin: 0 auto 40px auto;
 }
 
@@ -4941,7 +5000,10 @@ html[data-theme="dark"] .speaker-section-divider {
   gap: 52px;
   position: relative;
   z-index: 2;
+  width: 100%;
   max-width: 1120px;
+  min-width: 0;
+  box-sizing: border-box;
   margin: 0 auto;
 }
 
@@ -4950,6 +5012,9 @@ html[data-theme="dark"] .speaker-section-divider {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* Editorial Tier Header */
@@ -5037,12 +5102,17 @@ html[data-theme="dark"] .tier-badge.chapters {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @media (max-width: 960px) {
   .sponsors-hero-grid {
     grid-template-columns: 1fr;
     gap: 20px;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -5058,6 +5128,9 @@ html[data-theme="dark"] .tier-badge.chapters {
   align-items: center;
   text-align: center;
   gap: 14px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
 }
@@ -5223,6 +5296,9 @@ html[data-theme="dark"] .hero-logo-frame {
   position: relative;
   overflow: hidden;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 8px 0;
   mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
@@ -5234,6 +5310,9 @@ html[data-theme="dark"] .hero-logo-frame {
 .marquee-row {
   display: flex;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
@@ -5958,8 +6037,11 @@ footer {
 
 @media (max-width: 980px) {
   .nav-inner { justify-content: space-between; padding: 0 20px; }
-  .brand-text { white-space: normal; }
-  .brand-text span { white-space: normal; overflow: visible; text-overflow: clip; }
+  .header-left { min-width: 0; flex-shrink: 1; }
+  .brand { min-width: 0; }
+  .brand-text { min-width: 0; }
+  .brand-text span { display: none; }
+  .header-right { display: none !important; }
   
   nav.links, .nav-cta-btn { display: none !important; }
   .nav-cta { display: flex; gap: 8px; }
@@ -5999,8 +6081,8 @@ footer {
   }
 }
 
-/* Never show the mobile AssistiveTouch pod on desktop PC monitors or devices with mouse cursors */
-@media (pointer: fine) and (min-width: 769px) {
+/* Never show the mobile AssistiveTouch pod on desktop viewports (> 980px) */
+@media (min-width: 981px) {
   .assistive-nav {
     display: none !important;
   }
@@ -6048,6 +6130,8 @@ footer {
   .marquee-chip { padding: 8px 14px; }
   .venue-photo-dossier, .venue-transit-guide, .venue-actions { padding: 18px 20px; }
   .nav-inner { padding: 0 16px; }
+  .brand-text { font-size: 12px; }
+  .brand .chip { width: 32px; height: 32px; }
 
   /* Single column footer + no space-between gaps on the tiniest screens. */
   .foot-grid { grid-template-columns: 1fr; gap: 22px; }

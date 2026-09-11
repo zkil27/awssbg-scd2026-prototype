@@ -261,6 +261,8 @@ html[data-theme="dark"] {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
@@ -301,6 +303,8 @@ body {
   font-size: 17px;
   line-height: 1.6;
   overflow-x: clip;
+  max-width: 100%;
+  width: 100%;
   padding-bottom: 0;
   margin-bottom: 0;
   transition: var(--theme-ease);
@@ -329,9 +333,11 @@ button {
 }
 
 .wrap {
+  width: 100%;
   max-width: var(--container);
   margin: 0 auto;
   padding: 0 calc(var(--grid-size) * 2);
+  box-sizing: border-box;
 }
 
 /* ---------- Grid background (event primer) — body carries the scroll grid ---------- */
