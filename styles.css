@@ -5921,6 +5921,7 @@ footer {
   color: var(--footer-link);
   margin-bottom: 10px;
   text-align: left;
+  transition: color .2s ease;
 }
 
 /* no page yet, so not clickable */
@@ -5931,7 +5932,27 @@ footer {
 
 .foot-col button:hover,
 .foot-col a:hover {
-  color: var(--orange);
+  color: var(--blue-text, var(--blue));
+}
+
+.foot-col button:nth-of-type(4n+1):hover,
+.foot-col a:nth-of-type(4n+1):hover {
+  color: var(--blue-text, var(--blue));
+}
+
+.foot-col button:nth-of-type(4n+2):hover,
+.foot-col a:nth-of-type(4n+2):hover {
+  color: var(--purple-text, var(--purple));
+}
+
+.foot-col button:nth-of-type(4n+3):hover,
+.foot-col a:nth-of-type(4n+3):hover {
+  color: var(--pink-text, var(--pink));
+}
+
+.foot-col button:nth-of-type(4n+4):hover,
+.foot-col a:nth-of-type(4n+4):hover {
+  color: var(--green-text, var(--green));
 }
 
 .foot-bottom {
