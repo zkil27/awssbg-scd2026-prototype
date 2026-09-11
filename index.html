@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="theme.css?v=20260911-rect">
-  <link rel="stylesheet" href="styles.css?v=20260911-clean-v6">
+  <link rel="stylesheet" href="styles.css?v=20260911-sponsors-v3">
   <link rel="stylesheet" href="assets/css/staggeredMenu.css?v=20260911-rect">
   <link rel="stylesheet" href="assets/css/grainient.css">
   <link rel="stylesheet" href="assets/css/masonry.css">
@@ -286,174 +286,105 @@
           <p class="section-p">AWS Student Community Day: South Summit 2026 brings together cloud platforms, developer networks, and university chapters across South Luzon and Greater Manila.</p>
         </div>
 
-        <div class="sponsors-wrapper sponsors-editorial">
-          <!-- 01 // QUANTUM TIER -->
-          <div class="tier-editorial tier-quantum">
-            <div class="tier-dossier">
+        <div class="sponsors-wrapper sponsors-v3">
+          <!-- 01 // KEYSTONE SHOWCASE (HERO CARDS) -->
+          <div class="sponsors-tier-block">
+            <div class="tier-editorial-header">
               <div class="tier-index-lockup">
                 <span class="tier-num">01</span>
-                <span class="tier-badge quantum">QUANTUM</span>
+                <span class="tier-badge quantum">QUANTUM &amp; VENUE</span>
               </div>
-              <h3 class="tier-title">Quantum Sponsors</h3>
+              <h3 class="tier-headline">Quantum Sponsors &amp; Venue Partner</h3>
             </div>
-            <div class="tier-stage quantum sponsor-cards-grid quantum-grid">
-              <article class="sponsor-card sponsor-card-quantum color-purple" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/sponsors and partners/aws-dark-logo.webp" alt="Amazon Web Services" loading="lazy">
+            
+            <div class="sponsors-hero-grid" id="sponsorsHeroGrid">
+              <!-- AWS (Quantum Sponsor) -->
+              <article class="sponsors-hero-card color-purple" data-card-color="purple" data-reveal>
+                <div class="hero-card-spotlight" aria-hidden="true"></div>
+                <div class="hero-card-top">
+                  <span class="hero-tier-tag quantum">QUANTUM SPONSOR</span>
                 </div>
-                <h3 class="sponsor-name">Amazon Web Services</h3>
+                <div class="hero-card-media">
+                  <div class="hero-logo-frame">
+                    <img class="hero-logo" src="assets/images/sponsors and partners/aws-dark-logo.webp" alt="Amazon Web Services" loading="lazy">
+                  </div>
+                </div>
+                <div class="hero-card-body">
+                  <h3 class="hero-card-title">Amazon Web Services</h3>
+                </div>
               </article>
-              <article class="sponsor-card sponsor-card-quantum color-blue" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/sponsors and partners/tutorialsdojo_transparent_background.png" alt="Tutorials Dojo" loading="lazy">
+
+              <!-- Tutorials Dojo (Quantum Sponsor) -->
+              <article class="sponsors-hero-card color-blue" data-card-color="blue" data-reveal>
+                <div class="hero-card-spotlight" aria-hidden="true"></div>
+                <div class="hero-card-top">
+                  <span class="hero-tier-tag learning">QUANTUM SPONSOR</span>
                 </div>
-                <h3 class="sponsor-name">Tutorials Dojo</h3>
+                <div class="hero-card-media">
+                  <div class="hero-logo-frame">
+                    <img class="hero-logo" src="assets/images/sponsors and partners/tutorialsdojo_transparent_background.png" alt="Tutorials Dojo" loading="lazy">
+                  </div>
+                </div>
+                <div class="hero-card-body">
+                  <h3 class="hero-card-title">Tutorials Dojo</h3>
+                </div>
+              </article>
+
+              <!-- City Government of Biñan (Venue Partner) -->
+              <article class="sponsors-hero-card color-orange" data-card-color="orange" data-reveal>
+                <div class="hero-card-spotlight" aria-hidden="true"></div>
+                <div class="hero-card-top">
+                  <span class="hero-tier-tag venue">VENUE PARTNER</span>
+                </div>
+                <div class="hero-card-media">
+                  <div class="hero-logo-frame emblem">
+                    <img class="hero-logo" src="assets/images/south-summit-logo.svg" alt="City Government of Biñan (Biñan LGU)" loading="lazy">
+                  </div>
+                </div>
+                <div class="hero-card-body">
+                  <h3 class="hero-card-title">City Government of Biñan (Biñan LGU)</h3>
+                </div>
               </article>
             </div>
           </div>
 
-          <!-- 02 // VENUE PARTNER TIER -->
-          <div class="tier-editorial tier-venue">
-            <div class="tier-dossier">
+          <!-- 02 // UNIVERSITY BUILDER CHAPTERS & ECOSYSTEM NETWORK (INFINITE MARQUEE) -->
+          <div class="sponsors-tier-block sponsors-marquee-block">
+            <div class="tier-editorial-header">
               <div class="tier-index-lockup">
                 <span class="tier-num">02</span>
-                <span class="tier-badge venue">VENUE</span>
+                <span class="tier-badge chapters">PARTNERS &amp; CHAPTERS</span>
               </div>
-              <h3 class="tier-title">Venue Partner</h3>
+              <h3 class="tier-headline">Pro &amp; Lite Partners</h3>
             </div>
-            <div class="tier-stage venue sponsor-cards-grid venue-grid">
-              <article class="sponsor-card sponsor-card-venue color-orange" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="City Government of Biñan (Biñan LGU)" loading="lazy">
+
+            <!-- Dual-Track Marquee Wrapper with Gradient Masks -->
+            <div class="sponsors-marquee-shell" aria-label="Partner and University Chapter Stream">
+              <!-- Track 1: Marquee Left -->
+              <div class="marquee-row marquee-row--left">
+                <div class="marquee-track" id="marqueeTrack1">
+                  <!-- Populated dynamically by sponsorsUI.js -->
                 </div>
-                <h3 class="sponsor-name">City Government of Biñan (Biñan LGU)</h3>
-              </article>
+              </div>
+
+              <!-- Track 2: Marquee Right -->
+              <div class="marquee-row marquee-row--right">
+                <div class="marquee-track" id="marqueeTrack2">
+                  <!-- Populated dynamically by sponsorsUI.js -->
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- 03 // PRO TIER -->
-          <div class="tier-editorial tier-pro">
-            <div class="tier-dossier">
-              <div class="tier-index-lockup">
-                <span class="tier-num">03</span>
-                <span class="tier-badge pro">PRO</span>
-              </div>
-              <h3 class="tier-title">Pro Partners</h3>
-            </div>
-            <div class="tier-stage pro pro-cards-grid">
-              <article class="sponsor-card sponsor-card-pro color-green" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS Student Body Group - Alpha" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS Student Body Group - Alpha</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-pro color-teal" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS Student Body Group - Colegio de abogados" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS Student Body Group - Colegio de abogados</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-pro color-blue" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS Student Body Group - Colegio de Muntinlupa" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS Student Body Group - Colegio de Muntinlupa</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-pro color-purple" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS Student Body Group - Tempest" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS Student Body Group - Tempest</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-pro color-green" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS Student Learning Club - NU Dasmariñas" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS Student Learning Club - NU Dasmariñas</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-pro color-teal" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS Student User Group Philippines" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS Student User Group Philippines</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-pro color-blue" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS User Group e:Novators Philippines" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS User Group e:Novators Philippines</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-pro color-purple" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="CCC - Department of Computing and Informatics" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">CCC - Department of Computing and Informatics</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-pro color-green" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="CvSU Elite Leage of Information Technology Students" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">CvSU Elite Leage of Information Technology Students</h4>
-              </article>
-            </div>
-          </div>
-
-          <!-- 04 // LITE TIER -->
-          <div class="tier-editorial tier-lite">
-            <div class="tier-dossier">
-              <div class="tier-index-lockup">
-                <span class="tier-num">04</span>
-                <span class="tier-badge lite">LITE</span>
-              </div>
-              <h3 class="tier-title">Lite Partners</h3>
-            </div>
-            <div class="tier-stage lite chapter-ledger-grid">
-              <article class="sponsor-card sponsor-card-lite color-blue" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="Association of Committed Computer Science Students" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">Association of Committed Computer Science Students</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-lite color-pink" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="Association of Computer Science Students" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">Association of Computer Science Students</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-lite color-green" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS Student Body Group - BULSU" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS Student Body Group - BULSU</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-lite color-purple" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="AWS Student Body Group - Beradove" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">AWS Student Body Group - Beradove</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-lite color-blue" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="FEU Alabang ACM Student Chapter" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">FEU Alabang ACM Student Chapter</h4>
-              </article>
-              <article class="sponsor-card sponsor-card-lite color-pink" data-reveal>
-                <div class="sponsor-logo-frame">
-                  <img class="sponsor-logo" src="assets/images/south-summit-logo.svg" alt="SLU AWS Learning Club" loading="lazy">
-                </div>
-                <h4 class="sponsor-name">SLU AWS Learning Club</h4>
-              </article>
-            </div>
-          </div>
-
-          <!-- PROSPECTIVE SPONSOR CTA BANNER -->
+          <!-- 03 // PROSPECTUS CTA BANNER -->
           <div class="sponsor-cta-banner" data-reveal>
             <div class="sponsor-cta-copy">
               <h4>Want to partner with South Summit 2026?</h4>
               <p>Connect with 500+ passionate student builders, cloud engineers, and future tech leaders in CALABARZON.</p>
             </div>
-            <a class="btn btn-primary" href="mailto:partners@awsscd2026.org" target="_blank" rel="noopener">Inquire Sponsorship</a>
+            <div class="sponsor-cta-actions">
+              <a class="btn btn-primary" href="mailto:partners@awsscd2026.org" target="_blank" rel="noopener">Inquire Sponsorship</a>
+            </div>
           </div>
         </div>
       </div>

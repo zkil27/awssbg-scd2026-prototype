@@ -1,7 +1,7 @@
 /**
  * Sponsors UI Module
  * AWS Student Community Day: South Summit 2026
- * Pure editorial layout: Quantum, Pro, and Lite Partner tiers
+ * Option 3: Hero Showcase (Spotlight Keystone Cards) + Infinite Marquee Stream
  */
 import { sponsors } from '../data/sponsors.js';
 
@@ -11,79 +11,73 @@ function escapeHTML(value) {
   }[c]));
 }
 
-function renderQuantumSlot(s) {
+function renderHeroCard(s) {
   const name = escapeHTML(s.name || '');
   const color = s.color || 'purple';
   const logoSrc = escapeHTML(s.imgUrl || 'assets/images/south-summit-logo.svg');
+  const tierTagLabel = s.tier === 'quantum' ? 'QUANTUM SPONSOR' : 'VENUE PARTNER';
 
   return `
-    <article class="sponsor-card sponsor-card-quantum color-${color}" data-reveal>
-      <div class="sponsor-logo-frame">
-        <img class="sponsor-logo"
-             src="${logoSrc}"
-             alt="${name}"
-             loading="lazy"
-             onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
+    <article class="sponsors-hero-card color-${color}" data-card-color="${color}" data-reveal>
+      <div class="hero-card-spotlight" aria-hidden="true"></div>
+      <div class="hero-card-top">
+        <span class="hero-tier-tag ${s.tier}">${tierTagLabel}</span>
       </div>
-      <h3 class="sponsor-name">${name}</h3>
+      <div class="hero-card-media">
+        <div class="hero-logo-frame ${s.tier === 'venue' ? 'emblem' : ''}">
+          <img class="hero-logo"
+               src="${logoSrc}"
+               alt="${name}"
+               loading="lazy"
+               onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
+        </div>
+      </div>
+      <div class="hero-card-body">
+        <h3 class="hero-card-title">${name}</h3>
+      </div>
     </article>`;
 }
 
-function renderVenueSlot(s) {
-  const name = escapeHTML(s.name || '');
-  const color = s.color || 'orange';
-  const logoSrc = escapeHTML(s.imgUrl || 'assets/images/south-summit-logo.svg');
+function renderMarqueeChip(partner) {
+  const name = escapeHTML(partner.name || '');
+  const color = partner.color || 'blue';
+  const logoSrc = escapeHTML(partner.imgUrl || 'assets/images/south-summit-logo.svg');
 
   return `
-    <article class="sponsor-card sponsor-card-venue color-${color}" data-reveal>
-      <div class="sponsor-logo-frame">
-        <img class="sponsor-logo"
+    <div class="marquee-chip chip-${color}" tabindex="0" role="listitem">
+      <div class="marquee-chip-logo-wrap">
+        <img class="marquee-chip-logo"
              src="${logoSrc}"
              alt="${name}"
              loading="lazy"
              onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
       </div>
-      <h3 class="sponsor-name">${name}</h3>
-    </article>`;
+      <div class="marquee-chip-meta">
+        <span class="marquee-chip-name">${name}</span>
+      </div>
+    </div>`;
 }
 
-function renderProSlot(s) {
-  const name = escapeHTML(s.name || '');
-  const color = s.color || 'green';
-  const logoSrc = escapeHTML(s.imgUrl || 'assets/images/south-summit-logo.svg');
+function initSpotlightEffect() {
+  const cards = document.querySelectorAll('.sponsors-hero-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
 
-  return `
-    <article class="sponsor-card sponsor-card-pro color-${color}" data-reveal>
-      <div class="sponsor-logo-frame">
-        <img class="sponsor-logo"
-             src="${logoSrc}"
-             alt="${name}"
-             loading="lazy"
-             onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
-      </div>
-      <h4 class="sponsor-name">${name}</h4>
-    </article>`;
-}
-
-function renderLiteSlot(s) {
-  const name = escapeHTML(s.name || '');
-  const color = s.color || 'blue';
-  const logoSrc = escapeHTML(s.imgUrl || 'assets/images/south-summit-logo.svg');
-
-  return `
-    <article class="sponsor-card sponsor-card-lite color-${color}" data-reveal>
-      <div class="sponsor-logo-frame">
-        <img class="sponsor-logo"
-             src="${logoSrc}"
-             alt="${name}"
-             loading="lazy"
-             onerror="this.onerror=null;this.src='assets/images/south-summit-logo.svg';">
-      </div>
-      <h4 class="sponsor-name">${name}</h4>
-    </article>`;
+    card.addEventListener('mouseleave', () => {
+      card.style.removeProperty('--mouse-x');
+      card.style.removeProperty('--mouse-y');
+    });
+  });
 }
 
 function wireLogoFallbacks(container) {
+  if (!container) return;
   container.querySelectorAll('img').forEach(img => {
     img.addEventListener('error', () => {
       img.src = 'assets/images/south-summit-logo.svg';
@@ -92,33 +86,35 @@ function wireLogoFallbacks(container) {
 }
 
 export function initSponsors() {
-  const quantumStage = document.querySelector('.tier-stage.quantum');
-  const venueStage = document.querySelector('.tier-stage.venue');
-  const proStage = document.querySelector('.tier-stage.pro, .pro-cards-grid');
-  const liteStage = document.querySelector('.tier-stage.lite, .chapter-ledger-grid');
+  const heroGrid = document.getElementById('sponsorsHeroGrid');
+  const track1 = document.getElementById('marqueeTrack1');
+  const track2 = document.getElementById('marqueeTrack2');
 
-  const quantumSponsors = sponsors.filter(s => s.tier === 'quantum');
-  const venueSponsors = sponsors.filter(s => s.tier === 'venue');
-  const proSponsors = sponsors.filter(s => s.tier === 'pro');
-  const liteSponsors = sponsors.filter(s => s.tier === 'lite');
+  const headlineSponsors = sponsors.filter(s => s.tier === 'quantum' || s.tier === 'venue');
+  const networkPartners = sponsors.filter(s => s.tier === 'pro' || s.tier === 'lite');
 
-  if (quantumStage && quantumSponsors.length > 0) {
-    quantumStage.innerHTML = quantumSponsors.map(renderQuantumSlot).join('');
-    wireLogoFallbacks(quantumStage);
+  // 1. Render Hero Showcase Cards if container exists
+  if (heroGrid && headlineSponsors.length > 0) {
+    heroGrid.innerHTML = headlineSponsors.map(renderHeroCard).join('');
+    wireLogoFallbacks(heroGrid);
+    initSpotlightEffect();
   }
 
-  if (venueStage && venueSponsors.length > 0) {
-    venueStage.innerHTML = venueSponsors.map(renderVenueSlot).join('');
-    wireLogoFallbacks(venueStage);
-  }
+  // 2. Populate and duplicate Marquee tracks for seamless loop
+  if (track1 && track2 && networkPartners.length > 0) {
+    const half = Math.ceil(networkPartners.length / 2);
+    const track1List = networkPartners.slice(0, half);
+    const track2List = networkPartners.slice(half);
 
-  if (proStage && proSponsors.length > 0) {
-    proStage.innerHTML = proSponsors.map(renderProSlot).join('');
-    wireLogoFallbacks(proStage);
-  }
+    // Render items and duplicate once to enable seamless 50% translation infinite loop
+    const track1HTML = track1List.map(renderMarqueeChip).join('');
+    const track2HTML = track2List.map(renderMarqueeChip).join('');
 
-  if (liteStage && liteSponsors.length > 0) {
-    liteStage.innerHTML = liteSponsors.map(renderLiteSlot).join('');
-    wireLogoFallbacks(liteStage);
+    track1.innerHTML = track1HTML + track1HTML;
+    track2.innerHTML = track2HTML + track2HTML;
+
+    wireLogoFallbacks(track1);
+    wireLogoFallbacks(track2);
   }
 }
+
