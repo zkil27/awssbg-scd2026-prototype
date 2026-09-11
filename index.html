@@ -10,8 +10,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="theme.css?v=20260911-vt-theme">
-  <link rel="stylesheet" href="styles.css?v=20260911-vt-theme">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="assets/css/staggeredMenu.css">
+  <link rel="stylesheet" href="assets/css/grainient.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script>
     /* Apply saved theme before paint to avoid flash */
     (function () {
@@ -43,18 +46,22 @@
     </div>
   </div>
 
-  <header class="nav nav-in-hero" id="siteNav">
+  <!-- Navigation Header Bar -->
+  <header class="nav nav-in-hero" id="siteNav" aria-label="Main navigation header">
     <div class="nav-inner">
-      <button class="brand" data-page="home">
-        <img class="chip" src="assets/images/south-summit-logo.svg" alt="AWS Student Community Day: South Summit 2026">
-        <div class="brand-text">AWS SCD: SOUTH SUMMIT 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
-      </button>
-      <nav class="links">
-        <button class="navbtn active" data-page="home">Home</button>
-        <button class="navbtn" data-page="about">About</button>
-        <button class="navbtn" data-page="merch">Merch</button>
-      </nav>
-      <div class="nav-cta">
+      <div class="header-left">
+        <button class="brand" data-page="home" aria-label="Go to home page">
+          <img class="chip" src="assets/images/south-summit-logo.svg" alt="AWS Student Community Day: South Summit 2026">
+          <div class="brand-text">AWS SCD: SOUTH SUMMIT 2026<span>AWS STUDENT BUILDER GROUPS</span></div>
+        </button>
+      </div>
+
+      <div class="header-right">
+        <a class="btn btn-primary nav-cta-btn" href="https://lu.ma/f8knjt7n" target="_blank"
+          rel="noopener">Register Now</a>
+
+        <div class="header-divider" aria-hidden="true"></div>
+
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode"
           title="Toggle theme">
           <span class="theme-toggle-track">
@@ -67,11 +74,102 @@
           </span>
           <span class="theme-toggle-thumb"></span>
         </button>
-        <a class="btn btn-primary nav-cta-btn" href="https://lu.ma/f8knjt7n" target="_blank"
-          rel="noopener">Register Now</a>
+
+        <!-- React Bits StaggeredMenu Animated Toggle Button -->
+        <button
+          class="sm-toggle"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="staggered-menu-panel"
+          type="button"
+        >
+          <span class="sm-toggle-textWrap" aria-hidden="true">
+            <span class="sm-toggle-textInner">
+              <span class="sm-toggle-line">Menu</span>
+            </span>
+          </span>
+          <span class="sm-icon" aria-hidden="true">
+            <span class="sm-icon-line"></span>
+            <span class="sm-icon-line sm-icon-line-v"></span>
+          </span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- REACT BITS: STAGGERED MENU DRAWER & PRELAYERS OVERLAY -->
+  <div class="staggered-menu-wrapper" id="staggeredMenuWrapper" data-position="right">
+    <!-- Click-away backdrop -->
+    <div class="sm-backdrop" aria-hidden="true"></div>
+
+    <!-- Staggered Accent Color Prelayers (AWS SCD Brand Colors) -->
+    <div class="sm-prelayers" aria-hidden="true">
+      <div class="sm-prelayer sm-prelayer--blue"></div>
+      <div class="sm-prelayer sm-prelayer--green"></div>
+      <div class="sm-prelayer sm-prelayer--pink"></div>
+      <div class="sm-prelayer sm-prelayer--orange"></div>
+      <div class="sm-prelayer sm-prelayer--purple"></div>
+    </div>
+
+    <!-- Staggered Side Drawer Panel -->
+    <aside id="staggered-menu-panel" class="staggered-menu-panel" aria-hidden="true">
+      <div class="sm-panel-inner">
+        <ul class="sm-panel-list" role="list" data-numbering="true">
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item active" href="#home" data-page="home" data-brand="blue" aria-label="Go to home page" data-index="1">
+              <span class="sm-panel-itemLabel">Home</span>
+            </a>
+          </li>
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item" href="#about" data-page="about" data-brand="green" aria-label="Learn about the summit" data-index="2">
+              <span class="sm-panel-itemLabel">About</span>
+            </a>
+          </li>
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item" href="#merch" data-page="merch" data-brand="pink" aria-label="View summit merchandise" data-index="3">
+              <span class="sm-panel-itemLabel">Merch</span>
+            </a>
+          </li>
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item" href="#program" data-brand="orange" aria-label="View event schedule" data-index="4">
+              <span class="sm-panel-itemLabel">Schedule</span>
+            </a>
+          </li>
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item" href="#venue" data-brand="purple" aria-label="View twin venue details" data-index="5">
+              <span class="sm-panel-itemLabel">Venue</span>
+            </a>
+          </li>
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item sm-panel-item--register" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener" data-brand="blue" aria-label="Register on Luma" data-index="6">
+              <span class="sm-panel-itemLabel">Register</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="sm-socials" aria-label="Social links">
+          <h3 class="sm-socials-title">Connect</h3>
+          <ul class="sm-socials-list" role="list">
+            <li class="sm-socials-item">
+              <a href="https://www.facebook.com/awsscdsouth" target="_blank" rel="noopener noreferrer" class="sm-socials-link sm-socials-link--facebook" data-network="facebook">
+                Facebook
+              </a>
+            </li>
+            <li class="sm-socials-item">
+              <a href="https://www.linkedin.com/company/awsscdsouth" target="_blank" rel="noopener noreferrer" class="sm-socials-link sm-socials-link--linkedin" data-network="linkedin">
+                LinkedIn
+              </a>
+            </li>
+            <li class="sm-socials-item">
+              <a href="https://www.instagram.com/awsscd_southsummit/" target="_blank" rel="noopener noreferrer" class="sm-socials-link sm-socials-link--instagram" data-network="instagram">
+                Instagram
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
 
   <svg class="defs" aria-hidden="true">
     <symbol id="chip-icon" viewBox="0 0 70 70">
@@ -403,8 +501,8 @@
         </svg>
 
         <div class="blueprint-pin">
-          <!-- WebGL Procedural Noise Gradient Canvas (Shader-projected Simplex domain warping) -->
-          <canvas class="bp-shader-canvas" aria-hidden="true"></canvas>
+          <!-- React Bits <Grainient /> WebGL Procedural Noise Gradient Container -->
+          <div class="grainient-container bp-shader-canvas" id="agendaGrainient" aria-hidden="true"></div>
 
           <!-- Dynamic Curved Arch Top Border Stroke -->
           <div class="bp-curve-stroke-wrap" aria-hidden="true">
@@ -490,7 +588,14 @@
                 <button type="button" class="bp-focus-btn" id="btnFocusSchedule" aria-label="Open full program flow in focus mode">
                   <span class="bp-focus-dot" aria-hidden="true"></span>
                   <span class="bp-focus-text">Full Screen Focus</span>
-                  <span class="bp-focus-icon" aria-hidden="true">â¤¢</span>
+                  <span class="bp-focus-icon" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;">
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                      <polyline points="9 21 3 21 3 15"></polyline>
+                      <line x1="21" y1="3" x2="14" y2="10"></line>
+                      <line x1="3" y1="21" x2="10" y2="14"></line>
+                    </svg>
+                  </span>
                 </button>
               </header>
 
@@ -629,7 +734,7 @@
                      data-tag="MAIN AUDITORIUM"
                      data-tag-class="chip-primary"
                      data-capacity="500+ CAPACITY"
-                     data-coords="14Â°18'46.9&quot;N · 121Â°04'44.6&quot;E"
+                     data-coords="14&deg;18'46.9&quot;N &middot; 121&deg;04'44.6&quot;E"
                      data-label="Auditorium">
                   <img src="assets/images/venue-placeholder.jpg" 
                        alt="PUP – Biñan People's Center Auditorium interior" 
@@ -656,7 +761,7 @@
                      data-tag="CIVIC COMPLEX"
                      data-tag-class="chip-green"
                      data-capacity="EVENT GROUNDS"
-                     data-coords="BIÃ‘AN · LAGUNA"
+                     data-coords="BI&Ntilde;AN &middot; LAGUNA"
                      data-label="Civic Grounds">
                   <img src="assets/images/venue-exterior.jpg" 
                        alt="Biñan People's Center Auditorium Civic Complex Grounds" 
@@ -698,7 +803,7 @@
                     <button type="button" class="venue-tab-btn" data-index="1" role="tab" aria-selected="false">Expo Hub</button>
                     <button type="button" class="venue-tab-btn" data-index="2" role="tab" aria-selected="false">Civic Grounds</button>
                   </div>
-                  <div class="venue-chip chip-coords" id="venueGalleryCoords">14Â°18'46.9"N · 121Â°04'44.6"E</div>
+                  <div class="venue-chip chip-coords" id="venueGalleryCoords">14&deg;18'46.9"N &middot; 121&deg;04'44.6"E</div>
                 </div>
               </div>
             </div>
@@ -706,7 +811,7 @@
             <!-- Venue Details Content -->
             <div class="venue-card-body">
               <div class="venue-meta-header">
-                <span class="venue-subtag">HOST CHAPTER: AWS SBG PUP–BIÃ‘AN</span>
+                <span class="venue-subtag">HOST CHAPTER: AWS SBG PUP&ndash;BI&Ntilde;AN</span>
                 <h3 class="venue-name">PUP – Biñan People's Center Auditorium</h3>
                 <p class="venue-address">Biñan People's Center, Biñan, Laguna, Philippines</p>
               </div>
@@ -724,7 +829,7 @@
                   <div class="floor-info-col">
                     <div class="floor-title-row">
                       <h4>Main Stage Auditorium</h4>
-                      <span class="floor-view-cue" aria-hidden="true">View Photo â†’</span>
+                      <span class="floor-view-cue" aria-hidden="true">View Photo &rarr;</span>
                     </div>
                     <p>Keynotes, Cloud &amp; Applied AI tracks, Women in Tech panel, and closing ceremony.</p>
                     <span class="floor-spec">500+ Tiered Seats · Air-Conditioned</span>
@@ -738,7 +843,7 @@
                   <div class="floor-info-col">
                     <div class="floor-title-row">
                       <h4>SS Community Hub</h4>
-                      <span class="floor-view-cue" aria-hidden="true">View Photo â†’</span>
+                      <span class="floor-view-cue" aria-hidden="true">View Photo &rarr;</span>
                     </div>
                     <p>Partner booths, hands-on student demos, swag distribution, and mentorship stations.</p>
                     <span class="floor-spec">Interactive Expo Commons · Networking</span>
@@ -768,7 +873,7 @@
                   <span class="venue-chip-dot green"></span>
                   <span>LIVE INTERACTIVE MAP</span>
                 </div>
-                <div class="venue-chip chip-coords">BIÃ‘AN · LAGUNA</div>
+                <div class="venue-chip chip-coords">BI&Ntilde;AN &middot; LAGUNA</div>
               </div>
             </div>
 
@@ -851,7 +956,7 @@
                   href="https://www.google.com/maps/place/Bi%C3%B1an+People's+Center+Auditorium/@14.3130254,121.0790571,17z/data=!3m1!4b1!4m6!3m5!1s0x3397d70042017c71:0x8933329e6ace6ce4!8m2!3d14.3130254!4d121.0790571!16s%2Fg%2F11zddgfh6z" 
                   target="_blank"
                   rel="noopener">
-                  Open Google Maps â†—
+                  Open Google Maps &nearr;
                 </a>
                 <button type="button" class="btn btn-ghost btn-sm" id="btnCopyVenueAddr" aria-label="Copy venue address to clipboard">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -898,7 +1003,7 @@
           <h3>Claim your summit badge</h3>
           <p>Registration is 100% free through Luma. Claim your spot below before tickets run out.</p>
           <div class="register-cta-row">
-            <a class="btn btn-light" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">Register on Luma â†’</a>
+            <a class="btn btn-light" href="https://lu.ma/f8knjt7n" target="_blank" rel="noopener">Register on Luma &rarr;</a>
           </div>
           <p class="register-note">Limited seats available per venue. Instant confirmation via email.</p>
         </div>
@@ -1229,9 +1334,9 @@
         </div>
         <div class="foot-col">
           <h6>Connect</h6>
-          <a href="https://www.facebook.com/awsscdsouth" target="_blank" rel="noopener">Facebook</a>
-          <a href="https://www.linkedin.com/company/awsscdsouth" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="https://www.instagram.com/awsscd_southsummit/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.facebook.com/awsscdsouth" target="_blank" rel="noopener noreferrer" aria-label="AWS SCD South Summit Facebook">Facebook</a>
+          <a href="https://www.linkedin.com/company/awsscdsouth" target="_blank" rel="noopener noreferrer" aria-label="AWS SCD South Summit LinkedIn">LinkedIn</a>
+          <a href="https://www.instagram.com/awsscd_southsummit/" target="_blank" rel="noopener noreferrer" aria-label="AWS SCD South Summit Instagram">Instagram</a>
           <a href="mailto:partners@awsscd2026.org">Contact us</a>
         </div>
       </div>
@@ -1351,7 +1456,7 @@
     </div>
   </aside>
 
-  <script type="module" src="assets/js/main.js?v=20260910-no-emoji"></script>
+  <script type="module" src="assets/js/main.js"></script>
 
   <script>
     /* Branded splash intro: show on entry, then fade out to reveal the site.

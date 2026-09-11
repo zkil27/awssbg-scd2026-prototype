@@ -1,5 +1,5 @@
 /* =========================================================
-   SCD South Summit 2026 Ã¢â‚¬â€ Component styles
+   SCD South Summit 2026 — Component styles
    Depends on theme.css (CSS variables)
    ========================================================= */
 
@@ -65,7 +65,7 @@ html.show-clean-scrollbar::-webkit-scrollbar-thumb:hover {
 
 /* Reactive compute-grid background canvas.
    Sits above the <body> painted grid but behind all page content
-   (.page/footer are z-index:1). Non-interactive and decorative â€” colors are
+   (.page/footer are z-index:1). Non-interactive and decorative - colors are
    drawn at runtime from the theme.css brand tokens by computeGrid.js. */
 #computeGrid {
   position: fixed;
@@ -293,7 +293,7 @@ header.nav {
   width: 100%;
   height: var(--nav-h);
   box-sizing: border-box;
-  z-index: 200;
+  z-index: 350;
   background: var(--nav-bg);
   border-bottom: 1px solid var(--line);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
@@ -325,7 +325,10 @@ header.nav::after {
 header.nav.nav-in-hero,
 header.nav:hover,
 header.nav:focus-within,
-header.nav.nav-visible {
+header.nav.nav-visible,
+.staggered-menu-wrapper[data-open] header.nav,
+html[data-staggered-menu-open] header.nav,
+body.staggered-menu-open header.nav {
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
@@ -335,6 +338,16 @@ header.nav.nav-visible {
               border-color .25s ease,
               backdrop-filter .25s ease,
               box-shadow .35s ease;
+}
+
+.staggered-menu-wrapper[data-open] header.nav,
+html[data-staggered-menu-open] header.nav,
+body.staggered-menu-open header.nav {
+  background: transparent !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 header.nav.scrolled {
@@ -1265,18 +1278,7 @@ section {
   opacity: 0.9;
 }
 
-/* ===== EVENT DETAILS â€” HORIZONTAL "BLUEPRINT" TRACK =====
-   The #program section becomes a scroll-pinned horizontal pan on desktop.
-   Structure: #program (tall spacer) > .wrap > .blueprint-pin (a 100vh frame) >
-   .blueprint-track (flex row, translated by JS).
-
-   NOTE ON PINNING: `body { overflow-x: clip }` (theme.css) establishes a clip
-   context that breaks native `position: sticky` for viewport-relative pinning,
-   so we DON'T use sticky. Instead blueprintScroll.js manually pins the frame:
-   it's position:absolute at the top before the window, position:fixed while in
-   the pin window, and position:absolute at the bottom after it. The pin-state
-   classes below (.is-before / .is-pinned / .is-after) are toggled by JS.
-/* ===== EVENT DETAILS â€” HORIZONTAL "BLUEPRINT" TRACK =====
+/* ===== EVENT DETAILS - HORIZONTAL "BLUEPRINT" TRACK =====
    The #program section becomes a scroll-pinned horizontal pan on desktop.
    Structure: #program (tall spacer) > .wrap > .blueprint-pin (a 100vh frame) >
    .blueprint-track (flex row, translated by JS).
@@ -1365,35 +1367,35 @@ html[data-theme="dark"] #program {
   --bp-card-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
   --bp-card-header-border: rgba(255, 255, 255, 0.1);
   
-  --bp-row-border-left: rgba(255, 255, 255, 0.15);
+  --bp-row-border-left: rgba(68, 179, 254, 0.2);
   --bp-row-border-bottom: rgba(255, 255, 255, 0.06);
-  --bp-row-hover: rgba(255, 255, 255, 0.04);
+  --bp-row-hover: rgba(68, 179, 254, 0.08);
   
-  --bp-chip-bg: #080e1a;
-  --bp-chip-border: rgba(255, 255, 255, 0.18);
+  --bp-chip-bg: rgba(68, 179, 254, 0.08);
+  --bp-chip-border: rgba(68, 179, 254, 0.2);
   --bp-chip-name: #ffffff;
   
-  --bp-time-range-bg: rgba(255, 255, 255, 0.08);
-  --bp-time-range-color: #cbd5e1;
-  --bp-time-range-border: rgba(255, 255, 255, 0.14);
+  --bp-time-range-bg: rgba(68, 179, 254, 0.12);
+  --bp-time-range-color: #ffffff;
+  --bp-time-range-border: rgba(68, 179, 254, 0.3);
   
-  --bp-focus-btn-bg: #0d1527;
+  --bp-focus-btn-bg: rgba(13, 21, 39, 0.9);
   --bp-focus-btn-color: #ffffff;
-  --bp-focus-btn-border: rgba(255, 255, 255, 0.25);
-  --bp-focus-btn-dot: var(--purple);
-  --bp-focus-btn-hover-bg: #ffffff;
-  --bp-focus-btn-hover-color: #060e1a;
+  --bp-focus-btn-border: rgba(68, 179, 254, 0.35);
+  --bp-focus-btn-dot: var(--cyan);
+  --bp-focus-btn-hover-bg: var(--blue);
+  --bp-focus-btn-hover-color: #050d1a;
   
-  --bp-switcher-bg: #0d1527;
-  --bp-switcher-border: rgba(68, 179, 254, 0.25);
+  --bp-switcher-bg: rgba(13, 21, 39, 0.85);
+  --bp-switcher-border: rgba(68, 179, 254, 0.3);
   --bp-switcher-tab-color: #94a3b8;
-  --bp-switcher-tab-active-bg: var(--purple);
-  --bp-switcher-tab-active-color: #060e1a;
+  --bp-switcher-tab-active-bg: var(--blue);
+  --bp-switcher-tab-active-color: #050d1a;
   
-  --bp-progress-bg: rgba(0, 0, 0, 0.25);
+  --bp-progress-bg: rgba(255, 255, 255, 0.2);
 
-  --bp-backdrop-base: #090514;
-  --bp-noise-spectrum-opacity: 0.62;
+  --bp-backdrop-base: #060814;
+  --bp-noise-spectrum-opacity: 0.85;
   --bp-noise-ambient-opacity: 0.5;
   --bp-noise-spectrum-blend: screen;
   --bp-noise-grain-opacity: 0.48;
@@ -1402,23 +1404,23 @@ html[data-theme="dark"] #program {
 html[data-theme="dark"] .blueprint-panel--agenda h3,
 html[data-theme="dark"] .blueprint-panel--intro .bp-title,
 html[data-theme="dark"] .blueprint-panel--schedule .bp-sched-title {
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
 }
 
 html[data-theme="dark"] .blueprint-panel--agenda p,
 html[data-theme="dark"] .blueprint-panel--intro .bp-lead,
 html[data-theme="dark"] .blueprint-panel--schedule .bp-sched-sub {
-  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
 }
 
 html[data-theme="dark"] .bp-meta-label,
 html[data-theme="dark"] .bp-meta-index,
 html[data-theme="dark"] .bp-meta-count {
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
 }
 
 html[data-theme="dark"] .blueprint-panel--agenda .bp-num {
-  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.35);
 }
 
 #program {
@@ -2521,6 +2523,7 @@ html:not(.bp-active) .bp-shader-canvas {
   z-index: 0;
   display: block !important;
   border-radius: 20px;
+  overflow: hidden;
   opacity: 0.88;
 }
 
@@ -2534,6 +2537,7 @@ html:not(.bp-active) .bp-shader-canvas {
     z-index: 0;
     display: block !important;
     border-radius: 20px;
+    overflow: hidden;
     opacity: 0.88;
   }
 }
@@ -3461,7 +3465,7 @@ html[data-theme="light"] .venue-chip-counter {
 }
 
 /* Responsive */
-@media (max-width: 992px) {
+@media (max-width: 768px) {
   .venue-grid {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -5759,7 +5763,7 @@ html[data-theme="dark"] .sponsor-cta-banner {
   outline-offset: 3px;
 }
 
-/* Mini standing cards Ã¢â‚¬â€ same portrait template, smaller scale */
+/* Mini standing cards — same portrait template, smaller scale */
 .merch-explorer[data-mode="focus"] .merch-card {
   aspect-ratio: .82 / 1;
   width: 100%;
@@ -5939,7 +5943,7 @@ html[data-theme="dark"] .sponsor-cta-banner {
   font-size: 12px;
 }
 
-/* Large standing portrait Ã¢â‚¬â€ same template, increased size */
+/* Large standing portrait — same template, increased size */
 .merch-spotlight-card {
   position: relative;
   width: min(100%, 420px);
@@ -6230,8 +6234,15 @@ footer {
   }
 }
 
+/* Never show the mobile AssistiveTouch pod on desktop PC monitors or devices with mouse cursors */
+@media (pointer: fine) and (min-width: 769px) {
+  .assistive-nav {
+    display: none !important;
+  }
+}
+
 /* Phone: tighten the container padding and heavy card interiors so content
-   gets real width back on 320â€“480px screens. */
+   gets real width back on 320-480px screens. */
 @media (max-width: 640px) {
   .wrap { padding: 0 20px; }
 
@@ -8562,8 +8573,10 @@ html[data-theme="dark"]::view-transition {
   view-transition-name: navbar;
 }
 
-#assistivePod {
-  view-transition-name: assistive-pod;
+@media (max-width: 980px) {
+  #assistivePod {
+    view-transition-name: assistive-pod;
+  }
 }
 
 #splashScreen {

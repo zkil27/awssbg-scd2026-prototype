@@ -90,6 +90,7 @@ function measurePanels() {
  */
 function measure() {
   if (!section || !track) return;
+  if (!homeVisible()) return;
 
   viewportWidth = window.innerWidth;
 
@@ -328,49 +329,69 @@ function deactivate() {
   active = false;
   engaged = false;
 
-  document.documentElement.classList.remove('bp-active');
-
   if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
   if (resizeObserver) { resizeObserver.disconnect(); resizeObserver = null; }
 
-  if (track) {
-    track.style.transform = '';
-    track.style.willChange = '';
-    track.style.removeProperty('--bp-track-pad-right');
-  }
-  const allPanels = track ? track.querySelectorAll('.blueprint-panel') : [];
-  allPanels.forEach((el) => {
-    el.style.opacity = '';
-    el.style.transform = '';
-    el.classList.remove('is-focused');
-    const numEl = el.querySelector('.bp-num');
-    if (numEl) {
-      numEl.style.transform = '';
-      numEl.style.removeProperty('--bp-bar-scale');
+  // On desktop PC, preserve bp-active and layout styles across page switches
+  // so that navigating between pages never flashes the mobile fallback layout.
+  if (!shouldEnhance()) {
+    document.documentElement.classList.remove('bp-active');
+
+    if (track) {
+      track.style.transform = '';
+      track.style.willChange = '';
+      track.style.removeProperty('--bp-track-pad-right');
     }
-    const bodyEl = el.querySelector('.bp-agenda-body');
-    if (bodyEl) {
-      bodyEl.style.transform = '';
+    const allPanels = track ? track.querySelectorAll('.blueprint-panel') : [];
+    allPanels.forEach((el) => {
+      el.style.opacity = '';
+      el.style.transform = '';
+      el.classList.remove('is-focused');
+      const numEl = el.querySelector('.bp-num');
+      if (numEl) {
+        numEl.style.transform = '';
+        numEl.style.removeProperty('--bp-bar-scale');
+      }
+      const bodyEl = el.querySelector('.bp-agenda-body');
+      if (bodyEl) {
+        bodyEl.style.transform = '';
+      }
+    });
+    panelData = [];
+    if (fill) fill.style.width = '';
+    if (pin) {
+      pin.classList.remove('bp-engaged', 'is-before', 'is-pinned', 'is-after');
+      pin.style.backgroundPosition = '';
+      pin.style.clipPath = '';
     }
-  });
-  panelData = [];
-  if (fill) fill.style.width = '';
-  if (pin) {
-    pin.classList.remove('bp-engaged', 'is-before', 'is-pinned', 'is-after');
-    pin.style.backgroundPosition = '';
-    pin.style.clipPath = '';
+    if (strokeWrapEl) strokeWrapEl.style.opacity = '0';
+    lastArch = -1;
+    setShaderScroll(0);
+    pinState = '';
+    if (section) {
+      section.style.removeProperty('--bp-extra');
+    }
   }
-  if (strokeWrapEl) strokeWrapEl.style.opacity = '0';
-  lastArch = -1;
-  setShaderScroll(0);
-  pinState = '';
-  if (section) section.style.removeProperty('--bp-extra');
 }
+
+/** Expose synchronous measurement for page transitions to query accurate geometry. */
+window.__measureBlueprint = function() {
+  if (shouldEnhance() && section && track) {
+    measure();
+  }
+};
+
+/** Expose synchronous reconciliation so router can guarantee blueprint layout before snapshots. */
+window.__reconcileBlueprint = function() {
+  reconcile();
+};
 
 /** Enable or disable to match the current guard + page visibility. */
 function reconcile() {
   if (shouldEnhance() && homeVisible()) {
     activate();
+    measure();
+    render(currentScroll());
     // A late measure after layout settles keeps the final panel flush.
     requestAnimationFrame(measure);
   } else {

@@ -14,14 +14,28 @@ whenever you edit or extend this project.
   absolute or root-relative (`/`) asset paths.
 - Do not add a `package.json` build pipeline or a JS framework unless explicitly asked.
 - **Sanctioned exception — Lenis (smooth scroll).** [Lenis](https://github.com/darkroomengineering/lenis)
-  is the single approved third-party dependency. It powers site-wide smooth scrolling and
-  drives the `#program` ("The Blueprint") horizontal-pan section. It is imported as a **CDN
-  ES module** (e.g. `https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.mjs`) from
-  `modules/smoothScroll.js` — this keeps the zero-build, no-`package.json` promise intact.
-  This is a one-off exception and is **not** a precedent for adding other libraries; everything
-  else stays vanilla. Lenis must be **disabled** (never created) when the user prefers reduced
-  motion or is on a touch / non-`(pointer: fine)` device, so those users get native scrolling
-  and a plain vertical layout.
+  powers site-wide smooth scrolling and drives the `#program` ("The Blueprint") horizontal-pan
+  section. It is imported as a **CDN ES module** (e.g. `https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.mjs`)
+  from `modules/smoothScroll.js` — this keeps the zero-build, no-`package.json` promise intact.
+  Lenis must be **disabled** (never created) when the user prefers reduced motion or is on a
+  touch / non-`(pointer: fine)` device, so those users get native scrolling and a plain
+  vertical layout.
+- **Sanctioned exception — OGL (WebGL background).** [OGL](https://github.com/oframe/ogl) is a
+  minimal WebGL library used only to render the animated "grainient" shader background. Unlike
+  Lenis, it is **vendored locally** at `assets/js/vendor/ogl.js` and imported by
+  `modules/grainient.js` — no CDN, npm, or build step — so the zero-build promise holds.
+- **Sanctioned exception — GSAP (menu animation).** [GSAP](https://gsap.com) powers the layered
+  "staggered menu" drawer in `modules/staggeredMenu.js`. The module self-loads GSAP as a CDN ES
+  module (`https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm`) through its own `ensureGSAP()` loader,
+  preferring `window.gsap` if present; `index.html` also eager-loads `gsap.min.js` so the menu
+  animates on first open without a lazy-load delay. Keep the built-in non-animated fallback for
+  when GSAP is unavailable. No npm/build step is introduced.
+- **These three (Lenis, OGL, GSAP) are the complete set of sanctioned dependencies.** They are not
+  a precedent for adding others; everything else stays vanilla.
+- **`docs/reference/react-bits/` is reference source, not a dependency.** Its `.jsx` files are the
+  upstream [reactbits.dev](https://reactbits.dev) originals that the vanilla `modules/grainient.js`
+  and `modules/staggeredMenu.js` were ported from. They are never imported or shipped, and there
+  is no React runtime in this project. Keep them as read-only reference only.
 
 ## File & Naming Conventions
 

@@ -5,6 +5,7 @@
 
 import { initTheme } from './modules/theme.js';
 import { initRouter } from './modules/routing.js';
+import { initStaggeredMenu } from './modules/staggeredMenu.js';
 import { initAssistiveTouch } from './modules/assistiveTouch.js';
 import { initSmoothScroll } from './modules/smoothScroll.js';
 import { initCountdown } from './modules/countdown.js';
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize core system modules
     initTheme();
     initRouter();
+    initStaggeredMenu();
     initAssistiveTouch();
     // Smooth scroll (Lenis) — before content/reveal so its showPage wrap and
     // scroll source are ready for the blueprint horizontal pan. No-ops on

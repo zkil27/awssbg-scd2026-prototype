@@ -10,7 +10,7 @@
 
 ---
 
-> Hosted by the **AWS Student Builder Groups â€“ CALABARZON** (South Luzon, Philippines). This site provides event information and a lightweight, zeroâ€‘build deployment pipeline.
+> Hosted by the **AWS Student Builder Groups – CALABARZON** (South Luzon, Philippines). This site provides event information and a lightweight, zero-build deployment pipeline.
 
 ## Table of Contents
 - [Features](#features)
@@ -27,19 +27,19 @@
 
 The portal showcases a modern, responsive UI built with vanilla web technologies, ensuring maximum compatibility and lightning-fast load times.
 
-- **Dynamic Light/Dark Theme** â€“ CSS-variables driven, persisted via `localStorage` (defaults to light mode).
-- **Custom Theme Toggle** â€“ 58Ã—32 px sliding pill with mathematically precise Sun and Moon SVG icons.
-- **Responsive Layout** â€“ Fluid spacing, glass-morphism cards, and mobile-friendly navigation.
-- **Zero-Build Deployment** â€“ Works directly on GitHub Pages and static hosts â€” no bundlers or complex build steps required.
+- **Dynamic Light/Dark Theme** – CSS-variables driven, persisted via `localStorage` (defaults to light mode).
+- **Custom Theme Toggle** – 58×32 px sliding pill with mathematically precise Sun and Moon SVG icons.
+- **Responsive Layout** – Fluid spacing, glass-morphism cards, and mobile-friendly navigation.
+- **Zero-Build Deployment** – Works directly on GitHub Pages and static hosts — no bundlers or complex build steps required.
 
 ---
 
 ## Tech Stack
 
-- **HTML5** â€“ Semantic markup and SVG symbol definitions.
-- **CSS3** â€“ Custom properties, modern layout (Flexbox/Grid), transitions, and the Cyber-Pill switch.
-- **JavaScript (ES6+)** â€“ Modular UI logic, data layer isolation, and SPA-style routing.
-- **GitHub Pages / Vercel** â€“ Frictionless static site hosting.
+- **HTML5** – Semantic markup and SVG symbol definitions.
+- **CSS3** – Custom properties, modern layout (Flexbox/Grid), transitions, and the Cyber-Pill switch.
+- **JavaScript (ES6+)** – Modular UI logic, data layer isolation, and SPA-style routing.
+- **GitHub Pages / Vercel** – Frictionless static site hosting.
 
 ---
 
@@ -48,10 +48,10 @@ The portal showcases a modern, responsive UI built with vanilla web technologies
 Because the project relies on native ES Modules (`<script type="module">`), a local HTTP server is recommended:
 
 ```bash
-# Option 1 â€“ Python built-in server (Mac/Linux/Windows)
+# Option 1 – Python built-in server (Mac/Linux/Windows)
 python -m http.server 8000
 
-# Option 2 â€“ Node.js serve utility
+# Option 2 – Node.js serve utility
 npx serve .
 ```
 
@@ -63,17 +63,17 @@ Once running, open `http://localhost:8000` (or the port shown by the server) in 
 
 ```text
 awssbg-scd2026-prototype/
-â”œâ”€â”€ index.html                   # Core layout & modal templates
-â”œâ”€â”€ styles.css                   # Component styles & responsive layouts
-â”œâ”€â”€ theme.css                    # Design system tokens & color palettes
-â”œâ”€â”€ assets/
-â”‚   â”œâ”€â”€ images/                  # All media (logos, primer graphic, speaker headshots)
-â”‚   â””â”€â”€ js/
-â”‚       â”œâ”€â”€ main.js              # Central application entry point
-â”‚       â”œâ”€â”€ data/                # Pure Data Layer (Content Objects)
-â”‚       â””â”€â”€ modules/             # Functional UI Presentation Layer
-â”‚                                # (incl. computeGrid.js — reactive grid background)
-â””â”€â”€ docs/                        # Documentation Hub (See below)
+├── index.html                   # Core layout & modal templates
+├── styles.css                   # Component styles & responsive layouts
+├── theme.css                    # Design system tokens & color palettes
+├── assets/
+│   ├── images/                  # All media (logos, primer graphic, speaker headshots)
+│   └── js/
+│       ├── main.js              # Central application entry point
+│       ├── data/                # Pure Data Layer (Content Objects)
+│       └── modules/             # Functional UI Presentation Layer
+│                                # (incl. computeGrid.js � reactive grid background)
+└── docs/                        # Documentation Hub (See below)
 ```
 
 ---
@@ -104,6 +104,6 @@ This repository is open source and licensed under the [MIT License](./LICENSE).
 
 <br>
 <div align="center">
-  <p><i>Organized by AWS Student Builder Groups â€” CALABARZON</i></p>
+  <p><i>Organized by AWS Student Builder Groups — CALABARZON</i></p>
   <p><b>Event Date: October 7, 2026</b></p>
 </div>

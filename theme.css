@@ -488,6 +488,8 @@ footer,
   position: relative;
   width: 58px;
   height: 32px;
+  box-sizing: border-box;
+  margin: 0;
   border-radius: 20px;
   border: 1px solid var(--line-strong, rgba(0, 0, 0, 0.15));
   background: var(--bg-3, #E5E7EB);

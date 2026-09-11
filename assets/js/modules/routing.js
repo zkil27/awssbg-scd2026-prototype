@@ -45,9 +45,23 @@ let isNavigating = false;
 let currentTransition = null;
 
 /**
+ * Calculate the static top position of an element relative to the document,
+ * unaffected by current window.scrollY or layout shifts.
+ */
+function getElementDocTop(el) {
+    let top = 0;
+    let curr = el;
+    while (curr) {
+        top += curr.offsetTop || 0;
+        curr = curr.offsetParent;
+    }
+    return top;
+}
+
+/**
  * Perform the synchronous DOM update for a page switch.
  */
-function switchPageDOM(name, record = true) {
+function switchPageDOM(name, record = true, targetSection = null) {
     // toggle active page container
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
@@ -58,7 +72,7 @@ function switchPageDOM(name, record = true) {
     document.documentElement.setAttribute('data-page', name);
 
     // update active nav button indicators
-    document.querySelectorAll('.navbtn, .dock-tab, .assistive-hud-item').forEach(b => {
+    document.querySelectorAll('.navbtn, .dock-tab, .assistive-hud-item, .sm-panel-item').forEach(b => {
         const on = b.dataset.page === name;
         b.classList.toggle('active', on);
         if (on) b.setAttribute('aria-current', 'page');
@@ -67,25 +81,72 @@ function switchPageDOM(name, record = true) {
 
     // keep the Android back button inside the site
     if (record) {
-        history.pushState({ page: name }, '', name === 'home' ? location.pathname + location.search : '#' + name);
+        if (targetSection) {
+            const sec = String(targetSection).replace(/^#/, '');
+            history.pushState({ page: name, section: sec }, '', '#' + sec);
+        } else {
+            history.pushState({ page: name }, '', name === 'home' ? location.pathname + location.search : '#' + name);
+        }
     }
 
     // merch came back stuck on the last opened card
     if (window.clearMerchFocus) window.clearMerchFocus();
 
-    // Scroll to top instantly inside the transition update callback so the incoming snapshot is at top
-    if (window.__lenis) {
-        window.__lenis.scrollTo(0, { immediate: true });
+    // If switching to home, ensure blueprint is reconciled and measured first
+    if (name === 'home') {
+        if (window.__reconcileBlueprint) window.__reconcileBlueprint();
+        else if (window.__measureBlueprint) window.__measureBlueprint();
     }
-    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Crucial: resize Lenis immediately after DOM is switched and layout heights updated
+    // so that Lenis's limit is refreshed and does NOT clamp targetY to an old page's height!
+    if (window.__lenis) {
+        window.__lenis.resize();
+    }
+
+    let targetY = 0;
+    if (targetSection) {
+        const el = typeof targetSection === 'string' ? document.querySelector(targetSection) : targetSection;
+        if (el) {
+            const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 76;
+            const docTop = getElementDocTop(el);
+            targetY = Math.max(0, docTop - navH + 10);
+        }
+    }
+
+    // Scroll instantly inside the transition update callback so incoming snapshot is already at the target
+    if (window.__lenis) {
+        window.__lenis.resize();
+        window.__lenis.scrollTo(targetY, { immediate: true });
+    }
+    window.scrollTo({ top: targetY, behavior: 'instant' });
     updateNavState();
 }
 
-export function showPage(name, record = true, animate = true) {
+export function showPage(name, record = true, animate = true, targetSection = null) {
     if (isNavigating) return currentTransition;
 
     const currentPage = document.documentElement.getAttribute('data-page') || 'home';
     if (name === currentPage) {
+        if (targetSection) {
+            const el = typeof targetSection === 'string' ? document.querySelector(targetSection) : targetSection;
+            if (el) {
+                const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 76;
+                const docTop = getElementDocTop(el);
+                const targetY = Math.max(0, docTop - navH + 10);
+                if (window.__lenis) {
+                    window.__lenis.scrollTo(targetY, {
+                        duration: 1.1,
+                        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+                    });
+                } else {
+                    window.scrollTo({ top: targetY, behavior: 'smooth' });
+                }
+                const sec = String(targetSection).replace(/^#/, '');
+                history.pushState({ page: name, section: sec }, '', '#' + sec);
+                return null;
+            }
+        }
         if (window.__lenis) {
             window.__lenis.scrollTo(0);
         } else {
@@ -98,7 +159,7 @@ export function showPage(name, record = true, animate = true) {
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!supportsVT || prefersReducedMotion || !animate) {
-        switchPageDOM(name, record);
+        switchPageDOM(name, record, targetSection);
         return null;
     }
 
@@ -107,13 +168,26 @@ export function showPage(name, record = true, animate = true) {
 
     try {
         currentTransition = document.startViewTransition(() => {
-            switchPageDOM(name, record);
+            switchPageDOM(name, record, targetSection);
         });
 
         const cleanup = () => {
             isNavigating = false;
             currentTransition = null;
             document.documentElement.classList.remove('in-page-transition');
+            if (targetSection) {
+                const el = typeof targetSection === 'string' ? document.querySelector(targetSection) : targetSection;
+                if (el) {
+                    if (window.__measureBlueprint) window.__measureBlueprint();
+                    if (window.__lenis) window.__lenis.resize();
+                    const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 76;
+                    const finalY = Math.max(0, getElementDocTop(el) - navH + 10);
+                    if (window.__lenis) {
+                        window.__lenis.scrollTo(finalY, { immediate: true });
+                    }
+                    window.scrollTo({ top: finalY, behavior: 'instant' });
+                }
+            }
         };
 
         currentTransition.finished.then(cleanup, cleanup);
@@ -123,7 +197,7 @@ export function showPage(name, record = true, animate = true) {
         isNavigating = false;
         currentTransition = null;
         document.documentElement.classList.remove('in-page-transition');
-        switchPageDOM(name, record);
+        switchPageDOM(name, record, targetSection);
         return null;
     }
 }
@@ -140,7 +214,6 @@ export function initRouter() {
     }
 
     const initial = parseRoute();
-    document.documentElement.setAttribute('data-page', initial);
 
     window.addEventListener('popstate', (e) => {
         const page = (e.state && e.state.page) || parseRoute();
@@ -154,10 +227,14 @@ export function initRouter() {
     updateNavState();
     initNavAutoHide();
 
-    // Delegated click handler for all [data-page] elements (nav, footer, brand, hero CTA, HUD)
+    // Delegated click handler for all interactive [data-page] elements (nav, footer, brand, hero CTA, HUD)
     document.addEventListener('click', (e) => {
-        const target = e.target.closest('[data-page]');
-        if (!target) return;
+        // Never intercept external links or target=_blank links
+        const extLink = e.target.closest('a[target="_blank"], a[href^="http"], a[href^="mailto:"]');
+        if (extLink) return;
+
+        const target = e.target.closest('button[data-page], a[data-page], [role="button"][data-page]');
+        if (!target || target === document.documentElement || target === document.body) return;
         const page = target.getAttribute('data-page');
         if (page && PAGES.includes(page)) {
             e.preventDefault();
@@ -168,8 +245,28 @@ export function initRouter() {
 
     history.replaceState({ page: initial }, '', location.href);
     if (initial !== 'home') {
-        if (window.showPage) window.showPage(initial, false, false);
-        else showPage(initial, false, false);
+        switchPageDOM(initial, false);
+    } else {
+        document.documentElement.setAttribute('data-page', 'home');
+        const hashTarget = (location.hash || '').replace(/^#/, '');
+        if (hashTarget && !PAGES.includes(hashTarget)) {
+            const targetSelector = hashTarget === 'agenda' ? '#program' : '#' + hashTarget;
+            setTimeout(() => {
+                const el = document.querySelector(targetSelector);
+                if (el) {
+                    if (window.__measureBlueprint) window.__measureBlueprint();
+                    if (window.__lenis) window.__lenis.resize();
+                    const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 76;
+                    const docTop = getElementDocTop(el);
+                    const targetY = Math.max(0, docTop - navH + 10);
+                    if (window.__lenis) {
+                        window.__lenis.scrollTo(targetY, { immediate: true });
+                    } else {
+                        window.scrollTo({ top: targetY, behavior: 'instant' });
+                    }
+                }
+            }, 100);
+        }
     }
 
     window.showPage = showPage;

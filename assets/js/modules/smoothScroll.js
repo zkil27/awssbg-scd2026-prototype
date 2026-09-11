@@ -25,7 +25,7 @@
 const LENIS_CDN = 'https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.mjs';
 
 /** Minimum viewport width for the enhanced (Lenis + horizontal pan) experience. */
-export const DESKTOP_MIN_WIDTH = 1024;
+export const DESKTOP_MIN_WIDTH = 980;
 
 /* ================================ State ================================= */
 
