@@ -5282,14 +5282,15 @@ html[data-theme="dark"] .hero-logo-frame {
   gap: 14px;
   width: max-content;
   will-change: transform;
+  --marquee-duration: 80s;
 }
 
 .marquee-row--left .marquee-track {
-  animation: marqueeScrollLeft 36s linear infinite;
+  animation: marqueeScrollLeft var(--marquee-duration) linear infinite;
 }
 
 .marquee-row--right .marquee-track {
-  animation: marqueeScrollRight 36s linear infinite;
+  animation: marqueeScrollRight var(--marquee-duration) linear infinite;
 }
 
 .sponsors-marquee-shell:hover .marquee-track {
